@@ -148,6 +148,22 @@ export interface Collection {
   order: number;
 }
 
+/** Spaced-repetition state for one saved post (see lib/recall.ts). */
+export interface RecallCard {
+  /** Bookmark id */
+  id: string;
+  /** Next time the post should resurface (ms epoch). */
+  due: number;
+  /** Current interval in days. */
+  interval: number;
+  /** SM-2 style ease factor. */
+  ease: number;
+  reps: number;
+  lapses: number;
+  state: 'new' | 'learning' | 'review' | 'done';
+  lastReviewedAt?: number;
+}
+
 export interface SyncRun {
   id: string;
   source: Source;

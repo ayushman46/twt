@@ -1,12 +1,13 @@
 import Dexie, { type EntityTable } from 'dexie';
 import { DEFAULT_CATEGORIES } from '@twtdash/shared';
-import type { Bookmark, Category, Collection, SyncRun } from './types';
+import type { Bookmark, Category, Collection, RecallCard, SyncRun } from './types';
 
 export class TwtdashDB extends Dexie {
   bookmarks!: EntityTable<Bookmark, 'id'>;
   categories!: EntityTable<Category, 'id'>;
   collections!: EntityTable<Collection, 'id'>;
   syncRuns!: EntityTable<SyncRun, 'id'>;
+  recall!: EntityTable<RecallCard, 'id'>;
 
   constructor() {
     super('twtdash');
@@ -19,6 +20,10 @@ export class TwtdashDB extends Dexie {
     // v2: `updatedAt` powers incremental live updates; [archived+category] gives index-only counts.
     this.version(2).stores({
       bookmarks: 'id, savedAt, createdAt, updatedAt, author.handle, category, [archived+category], *tags, *collections, *sources, *facets, starred, archived, read',
+    });
+    // v3: spaced-repetition state for Recall, kept apart from bookmarks so reviews never touch library rows.
+    this.version(3).stores({
+      recall: 'id, due, state',
     });
   }
 }

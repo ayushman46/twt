@@ -3,6 +3,10 @@
  * a few seconds after the library has settled — never while it is busy.
  */
 export const loadInsights = () => import('@/views/InsightsView');
+export const loadRecall = () => import('@/views/RecallView');
+export const loadShelf = () => import('@/views/ShelfView');
+export const loadAsk = () => import('@/views/AskView');
+export const loadWrapped = () => import('@/views/WrappedView');
 
 let warmed = false;
 

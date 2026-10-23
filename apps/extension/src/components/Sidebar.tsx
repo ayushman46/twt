@@ -1,6 +1,10 @@
 import {
   Archive,
   BookOpen,
+  Brain,
+  Gift,
+  Library,
+  MessagesSquare,
   ChartColumn,
   ChevronRight,
   Crown,
@@ -28,7 +32,7 @@ import type { Scope } from '@/lib/query';
 import { viewerItem } from '@/lib/storage';
 import type { Facet } from '@/lib/types';
 import { useSettings, useStorageItem } from '@/hooks/data';
-import { loadInsights } from '@/lazy-screens';
+import { loadAsk, loadInsights, loadRecall, loadShelf, loadWrapped } from '@/lazy-screens';
 import { useLibrary } from '@/hooks/library';
 import { navigate, sameScope, scopeHash, type Route } from '@/hooks/route';
 import { useUi } from '@/store/ui';
@@ -188,6 +192,13 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
           <NavItem icon={<Archive />} label="Archive" count={n(lib.counts.archived)} active={isScope({ kind: 'archived' })} onClick={() => go('#/library/archived')} />
           <NavItem icon={<ChartColumn />} label="Insights" active={route.page === 'insights'} onClick={() => go('#/insights')} onIntent={() => void loadInsights()} />
         </div>
+
+        <Section id="discover" title="Discover">
+          <NavItem icon={<Brain />} label="Recall" active={route.page === 'recall'} onClick={() => go('#/recall')} onIntent={() => void loadRecall()} />
+          <NavItem icon={<Library />} label="Shelf" active={route.page === 'shelf'} onClick={() => go('#/shelf')} onIntent={() => void loadShelf()} />
+          <NavItem icon={<MessagesSquare />} label="Ask your bookmarks" active={route.page === 'ask'} onClick={() => go('#/ask')} onIntent={() => void loadAsk()} />
+          <NavItem icon={<Gift />} label="Wrapped" active={route.page === 'wrapped'} onClick={() => go('#/wrapped')} onIntent={() => void loadWrapped()} />
+        </Section>
 
         <Section id="categories" title="Categories" action={<SectionAction label="Manage categories" onClick={() => go('#/settings/categories')} icon={<Settings />} />}>
           {shownCats.map((c) => (

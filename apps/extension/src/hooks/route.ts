@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Scope, ScopeKind } from '@/lib/query';
 
-export type Page = 'home' | 'library' | 'insights' | 'settings' | 'welcome';
+export type Page = 'home' | 'library' | 'insights' | 'settings' | 'welcome' | 'recall' | 'shelf' | 'ask' | 'wrapped';
 
 export interface Route {
   page: Page;
@@ -25,7 +25,8 @@ export function parseHash(hash: string): Route {
     return { page, scope: { kind: 'all' }, q };
   }
   if (page === 'settings') return { page, scope: { kind: 'all' }, section: parts[1] ?? 'general' };
-  if (page === 'insights' || page === 'welcome' || page === 'home') return { page, scope: { kind: 'all' } };
+  if (page === 'shelf' || page === 'ask') return { page, scope: { kind: 'all' }, section: parts[1], q };
+  if (page === 'insights' || page === 'welcome' || page === 'home' || page === 'recall' || page === 'wrapped') return { page, scope: { kind: 'all' }, section: parts[1] };
   return { page: 'home', scope: { kind: 'all' } };
 }
 

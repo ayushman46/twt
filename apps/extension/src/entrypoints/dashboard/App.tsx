@@ -20,11 +20,15 @@ import { HomeView } from '@/views/HomeView';
 import { LibraryView } from '@/views/LibraryView';
 import { WelcomeView } from '@/views/WelcomeView';
 
-import { loadInsights, warmLaterScreens } from '@/lazy-screens';
+import { loadAsk, loadInsights, loadRecall, loadShelf, loadWrapped, warmLaterScreens } from '@/lazy-screens';
 import { SettingsView } from '@/views/SettingsView';
 
 // Heavy, rarely-first screens load on demand (charts library, settings forms).
 const InsightsView = lazy(() => loadInsights().then((m) => ({ default: m.InsightsView })));
+const RecallView = lazy(() => loadRecall().then((m) => ({ default: m.RecallView })));
+const ShelfView = lazy(() => loadShelf().then((m) => ({ default: m.ShelfView })));
+const AskView = lazy(() => loadAsk().then((m) => ({ default: m.AskView })));
+const WrappedView = lazy(() => loadWrapped().then((m) => ({ default: m.WrappedView })));
 
 function ScreenFallback() {
   return (
@@ -134,7 +138,7 @@ function Shell() {
       }
       if (g) {
         g = false;
-        const dest = { h: '#/home', a: '#/library/all', u: '#/library/unread', s: '#/library/starred', i: '#/insights', c: '#/settings/categories' }[e.key];
+        const dest = { h: '#/home', a: '#/library/all', u: '#/library/unread', s: '#/library/starred', i: '#/insights', c: '#/settings/categories', r: '#/recall', l: '#/shelf', q: '#/ask', w: '#/wrapped' }[e.key];
         if (dest) {
           e.preventDefault();
           navigate(dest);
@@ -168,6 +172,14 @@ function Shell() {
       <LibraryView route={route} settings={settings} aiAvailable={aiReady(settings)} onAi={(ids) => void runAi(ids, !!ids)} />
     ) : route.page === 'insights' ? (
       <InsightsView />
+    ) : route.page === 'recall' ? (
+      <RecallView />
+    ) : route.page === 'shelf' ? (
+      <ShelfView route={route} />
+    ) : route.page === 'ask' ? (
+      <AskView route={route} settings={settings} />
+    ) : route.page === 'wrapped' ? (
+      <WrappedView />
     ) : route.page === 'settings' ? (
       <SettingsView route={route} settings={settings} update={update} onAi={(ids, force) => void runAi(ids, force)} />
     ) : route.page === 'welcome' ? (
