@@ -1,0 +1,27 @@
+# Dependencies & build output
+node_modules/
+.output/
+.wxt/
+.next/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# Secrets & local deployment config
+.env
+.env.*
+!.env.example
+.vercel
+
+# Benchmark scratch (browser profile, preview build, multi-MB traces)
+apps/extension/bench/.profile/
+apps/extension/preview/dist/
+apps/extension/bench/results/*-trace.json
+
+# Local tooling
+.claude/
+*.log
+.DS_Store
+Thumbs.db

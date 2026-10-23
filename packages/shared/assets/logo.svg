@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="sx-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7B61FF"/>
+      <stop offset=".55" stop-color="#B14CF2"/>
+      <stop offset="1" stop-color="#FF5C9D"/>
+    </linearGradient>
+    <linearGradient id="sx-gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="sx-mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6D4BFF"/>
+      <stop offset="1" stop-color="#E0479A"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="url(#sx-bg)"/>
+  <rect width="128" height="64" rx="30" fill="url(#sx-gloss)"/>
+  <rect x="31" y="27" width="56" height="74" rx="10" fill="#fff" fill-opacity=".28" transform="rotate(-10 59 64)"/>
+  <path d="M44 24h44a7 7 0 0 1 7 7v71.2a3.2 3.2 0 0 1-5 2.6L66 88 42 104.8a3.2 3.2 0 0 1-5-2.6V31a7 7 0 0 1 7-7z" fill="#fff"/>
+  <path d="M53 41.5Q66 51.5 79 41.5Q69 54.5 79 67.5Q66 57.5 53 67.5Q63 54.5 53 41.5Z" fill="url(#sx-mark)"/>
+</svg>

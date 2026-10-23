@@ -1,0 +1,12 @@
+# Only apps/web (+ packages/shared, which it imports) is deployed.
+node_modules
+**/node_modules
+apps/extension
+release
+.claude
+**/.next
+**/.output
+**/.wxt
+**/.env*
+!**/.env.example
+*.log

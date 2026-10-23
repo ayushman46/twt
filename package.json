@@ -1,0 +1,19 @@
+{
+  "name": "twtdash",
+  "private": true,
+  "description": "twtdash — sync, auto-categorize and beautifully browse your X (Twitter) bookmarks.",
+  "scripts": {
+    "install:all": "npm --prefix apps/extension install && npm --prefix apps/web install",
+    "ext:dev": "npm --prefix apps/extension run dev",
+    "ext:dev:firefox": "npm --prefix apps/extension run dev:firefox",
+    "ext:build": "npm --prefix apps/extension run build",
+    "ext:zip": "npm --prefix apps/extension run zip && npm --prefix apps/extension run zip:firefox",
+    "ext:test": "npm --prefix apps/extension test",
+    "ext:typecheck": "npm --prefix apps/extension run compile",
+    "ext:preview": "npm --prefix apps/extension run preview:ui",
+    "web:dev": "npm --prefix apps/web run dev",
+    "web:build": "npm --prefix apps/web run build",
+    "web:start": "npm --prefix apps/web run start",
+    "release": "npm run ext:test && npm run ext:zip && node -e \"const fs=require('fs');fs.mkdirSync('apps/web/public/downloads',{recursive:true});fs.copyFileSync('apps/extension/.output/twtdash-extension-1.0.0-chrome.zip','apps/web/public/downloads/twtdash-chrome.zip');fs.copyFileSync('apps/extension/.output/twtdash-extension-1.0.0-firefox.zip','apps/web/public/downloads/twtdash-firefox.zip')\" && npm run web:build"
+  }
+}

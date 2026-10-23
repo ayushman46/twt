@@ -1,0 +1,313 @@
+@import 'tailwindcss' source('..');
+@import '@fontsource-variable/geist';
+@import '@fontsource/instrument-serif/400.css';
+@import '@fontsource/instrument-serif/400-italic.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * twtdash design tokens. Light and dark are separately tuned, not inverted.
+ */
+:root {
+  color-scheme: light;
+  --bg: #f6f6f9;
+  --bg-2: #efeff4;
+  --panel: #ffffff;
+  --panel-2: #f3f3f7;
+  --panel-3: #e9e9f0;
+  --sidebar: #fbfbfd;
+  --line: rgb(20 18 40 / 0.07);
+  --line-strong: rgb(20 18 40 / 0.12);
+  --fg: #0c0b12;
+  --fg-2: #33313f;
+  --muted: #6c6a7a;
+  --faint: #9c9aab;
+  --accent: #6a4cff;
+  --accent-hover: #5a3bf2;
+  --accent-soft: rgb(106 76 255 / 0.09);
+  --accent-fg: #ffffff;
+  --ring: rgb(106 76 255 / 0.4);
+  --mark: rgb(255 200 0 / 0.38);
+  --good: #12a150;
+  --bad: #dc2b3f;
+  --grad-1: #7b61ff;
+  --grad-2: #b14cf2;
+  --grad-3: #ff5c9d;
+  --shadow-card: 0 1px 1px rgb(16 14 40 / 0.03), 0 2px 8px -2px rgb(16 14 40 / 0.05);
+  --shadow-hover: 0 1px 2px rgb(16 14 40 / 0.04), 0 16px 40px -16px rgb(40 20 90 / 0.22);
+  --shadow-pop: 0 30px 80px -24px rgb(30 16 70 / 0.35), 0 0 0 1px rgb(20 18 40 / 0.06);
+  --glass: rgb(255 255 255 / 0.72);
+  --glow: rgb(123 97 255 / 0.18);
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #07070b;
+  --bg-2: #0b0b11;
+  --panel: #0f0f16;
+  --panel-2: #16161f;
+  --panel-3: #1f1f2a;
+  --sidebar: #0a0a10;
+  --line: rgb(255 255 255 / 0.06);
+  --line-strong: rgb(255 255 255 / 0.11);
+  --fg: #f4f3f8;
+  --fg-2: #d3d1de;
+  --muted: #9a98ab;
+  --faint: #66647a;
+  --accent: #9479ff;
+  --accent-hover: #a58eff;
+  --accent-soft: rgb(148 121 255 / 0.13);
+  --accent-fg: #ffffff;
+  --ring: rgb(148 121 255 / 0.5);
+  --mark: rgb(250 204 21 / 0.28);
+  --good: #4ade80;
+  --bad: #ff6b7d;
+  --shadow-card: 0 0 0 1px rgb(255 255 255 / 0.015), 0 1px 0 rgb(255 255 255 / 0.03) inset;
+  --shadow-hover: 0 24px 50px -24px rgb(0 0 0 / 0.9), 0 0 0 1px rgb(255 255 255 / 0.04), 0 0 40px -20px rgb(148 121 255 / 0.35);
+  --shadow-pop: 0 36px 90px -24px rgb(0 0 0 / 0.9), 0 0 0 1px rgb(255 255 255 / 0.08);
+  --glass: rgb(12 12 18 / 0.72);
+  --glow: rgb(148 121 255 / 0.22);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-panel-3: var(--panel-3);
+  --color-sidebar: var(--sidebar);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-fg: var(--accent-fg);
+  --color-good: var(--good);
+  --color-bad: var(--bad);
+  --color-glass: var(--glass);
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji';
+  --font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
+  --shadow-card: var(--shadow-card);
+  --shadow-hover: var(--shadow-hover);
+  --shadow-pop: var(--shadow-pop);
+  --animate-fade-in: fade-in 0.25s ease both;
+  --animate-rise: rise 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-indeterminate: indeterminate 1.3s ease-in-out infinite;
+  --animate-float: float 8s ease-in-out infinite;
+  --animate-pop: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-slide-in: slide-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.06);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'ss02', 'cv11';
+    letter-spacing: -0.006em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: rgb(148 121 255 / 0.28);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  button {
+    cursor: pointer;
+  }
+  mark {
+    background: var(--mark);
+    color: inherit;
+    border-radius: 4px;
+    padding: 0 2px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+@layer utilities {
+  .scroll-area {
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Brand gradient */
+  .bg-brand {
+    background-image: linear-gradient(135deg, var(--grad-1) 0%, var(--grad-2) 55%, var(--grad-3) 100%);
+  }
+  .text-brand {
+    background-image: linear-gradient(120deg, var(--grad-1) 0%, var(--grad-2) 50%, var(--grad-3) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .serif-accent {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  /* Primary CTA: gradient, inner highlight, colored glow */
+  .btn-brand {
+    background-image: linear-gradient(135deg, var(--grad-1) 0%, var(--grad-2) 60%, var(--grad-3) 130%);
+    color: #fff;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
+      inset 0 -1px 0 rgb(0 0 0 / 0.12),
+      0 10px 28px -12px rgb(150 80 255 / 0.75);
+  }
+  .btn-brand:hover {
+    filter: brightness(1.08) saturate(1.05);
+  }
+  /* Gradient hairline border (works on any background) */
+  .ring-brand {
+    position: relative;
+  }
+  .ring-brand::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--grad-1), var(--grad-2), var(--grad-3));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+  }
+  .skeleton {
+    background: linear-gradient(90deg, var(--panel-2) 25%, var(--panel-3) 37%, var(--panel-2) 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+  }
+  .glow-accent {
+    box-shadow:
+      0 8px 24px -10px rgb(123 97 255 / 0.65),
+      inset 0 1px 0 rgb(255 255 255 / 0.18);
+  }
+  /* Soft aurora used behind heroes */
+  .aurora {
+    background:
+      radial-gradient(40% 55% at 15% 20%, rgb(123 97 255 / 0.22), transparent 70%),
+      radial-gradient(35% 50% at 55% 0%, rgb(177 76 242 / 0.16), transparent 70%),
+      radial-gradient(30% 45% at 90% 25%, rgb(255 92 157 / 0.14), transparent 70%);
+  }
+  /* Skip style/layout/text shaping for off-screen sections until they scroll into view. */
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 640px;
+  }
+  .dot-grid {
+    background-image: radial-gradient(var(--line-strong) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
