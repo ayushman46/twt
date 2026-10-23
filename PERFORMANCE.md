@@ -67,6 +67,8 @@ Run-to-run noise on this machine is roughly ±20–25 %, so only larger moves ar
 
 Real extension bundles: dashboard startup JS **749 KB** (was ≈1.57 MB), popup **408 KB**, AI SDK (310 KB) and Insights (15 KB) on demand; Chrome zip **624 KB** (was 771 KB).
 
+*Update:* AI now runs on NVIDIA's free OpenAI-compatible API through a small `fetch` client. The on-demand AI chunk shrank from 310 KB to **4 KB**, and the Chrome zip from 624 KB to **554 KB**.
+
 ## Known trade-offs / not fixed
 
 - Under 4× throttling, scroll p95 frame (133 ms) is worse than the baseline's 33 ms: the baseline only scrolled through cards it had already rendered (and covered less distance), while virtualization mounts new cards as you go. At full speed scrolling is a locked 60 FPS.

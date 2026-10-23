@@ -1,4 +1,4 @@
-import { AI_MODELS, BRAND, FALLBACK_CATEGORY_ID, PRICING, estimateCostUsd } from '@twtdash/shared';
+import { AI_BATCH_SIZE, AI_MODELS, BRAND, FALLBACK_CATEGORY_ID, NVIDIA_KEY_PREFIX, NVIDIA_KEYS_URL, PRICING } from '@twtdash/shared';
 import { useLiveQuery } from 'dexie-react-hooks';
 import {
   Bot,
@@ -311,22 +311,44 @@ function AiSection({ settings, update, onAi }: { settings: Settings; update: Upd
   const isPro = settings.license?.status === 'active';
   const setProvider = (provider: AiProvider) => void update((s) => ({ ai: { ...s.ai, provider } }));
   const ready = settings.ai.provider === 'byok' ? !!settings.ai.apiKey : settings.ai.provider === 'pro' ? isPro : false;
-  const cost = estimateCostUsd(Math.max(pending, 1000), settings.ai.model, settings.ai.summaries);
+  const requests = Math.ceil(Math.max(pending, 1000) / AI_BATCH_SIZE);
+  const [checking, setChecking] = useState(false);
 
   const saveKey = async () => {
     const trimmed = key.trim();
-    if (trimmed && !trimmed.startsWith('sk-ant-')) {
-      toast.error('That doesn’t look like an Anthropic API key (it should start with sk-ant-).');
+    if (trimmed && !trimmed.startsWith(NVIDIA_KEY_PREFIX)) {
+      toast.error(`That doesn’t look like an NVIDIA API key (it should start with ${NVIDIA_KEY_PREFIX}).`);
       return;
     }
-    // Optional permission lets the extension call api.anthropic.com directly.
-    await browser.permissions?.request({ origins: ['https://api.anthropic.com/*'] }).catch(() => false);
-    await update((s) => ({ ai: { ...s.ai, apiKey: trimmed } }));
-    toast.success(trimmed ? 'API key saved on this device' : 'API key removed');
+    if (!trimmed) {
+      await update((s) => ({ ai: { ...s.ai, apiKey: '' } }));
+      toast.success('API key removed');
+      return;
+    }
+    // Optional permission lets the extension call integrate.api.nvidia.com directly.
+    await browser.permissions?.request({ origins: ['https://integrate.api.nvidia.com/*'] }).catch(() => false);
+    setChecking(true);
+    try {
+      const { testApiKey } = await import('@/lib/ai');
+      await testApiKey(trimmed, settings.ai.model);
+      await update((s) => ({ ai: { ...s.ai, apiKey: trimmed } }));
+      toast.success('Key works — saved on this device');
+    } catch (err) {
+      const code = (err as { code?: string }).code;
+      if (code === 'auth') {
+        toast.error(err instanceof Error ? err.message : 'NVIDIA rejected this key.');
+      } else {
+        // Couldn't confirm (offline, busy, model hiccup) — keep the key; the run will report real problems.
+        await update((s) => ({ ai: { ...s.ai, apiKey: trimmed } }));
+        toast.warning(`Key saved, but NVIDIA didn’t confirm it yet: ${err instanceof Error ? err.message : 'unknown error'}`);
+      }
+    } finally {
+      setChecking(false);
+    }
   };
 
   return (
-    <Section title="AI organization" description="Let Claude read your saved posts and pick categories, add topical tags and write one-line gists. Far more accurate than keyword rules.">
+    <Section title="AI organization" description="Let an AI model read your saved posts and pick categories, add topical tags and write one-line gists. Far more accurate than keyword rules.">
       <div className="grid gap-3 md:grid-cols-3">
         <ProviderCard active={settings.ai.provider === 'off'} onClick={() => setProvider('off')} icon={<ShieldCheck />} title="Off" body="On-device keyword sorting only. Nothing leaves your browser." />
         <ProviderCard
@@ -337,7 +359,7 @@ function AiSection({ settings, update, onAi }: { settings: Settings; update: Upd
           badge={<Badge className="ml-auto hidden bg-accent text-white xl:inline-flex">No key needed</Badge>}
           body="Works instantly with your Pro plan. Posts are processed and never stored."
         />
-        <ProviderCard active={settings.ai.provider === 'byok'} onClick={() => setProvider('byok')} icon={<KeyRound />} title="Your Anthropic key" body="Free. Requests go straight from your browser to Anthropic, billed to your account." />
+        <ProviderCard active={settings.ai.provider === 'byok'} onClick={() => setProvider('byok')} icon={<KeyRound />} title="Free NVIDIA key" body="Free. Requests go straight from your browser to NVIDIA’s API with your own key." />
       </div>
 
       {settings.ai.provider === 'pro' && !isPro ? (
@@ -356,23 +378,23 @@ function AiSection({ settings, update, onAi }: { settings: Settings; update: Upd
       ) : null}
 
       {settings.ai.provider === 'byok' ? (
-        <Group title="Anthropic API">
+        <Group title="NVIDIA API (free)">
           <div className="space-y-3 px-4 py-4">
             <div className="flex gap-2">
-              <Input type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder="sk-ant-…" autoComplete="off" spellCheck={false} className="font-mono text-[13px]" />
-              <Button variant="primary" onClick={() => void saveKey()} disabled={key.trim() === settings.ai.apiKey}>
-                Save key
+              <Input type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder="nvapi-…" autoComplete="off" spellCheck={false} className="font-mono text-[13px]" />
+              <Button variant="primary" onClick={() => void saveKey()} disabled={checking || key.trim() === settings.ai.apiKey}>
+                {checking ? 'Checking…' : 'Save key'}
               </Button>
             </div>
             <p className="text-[12px] text-muted">
-              Stored only in this browser’s extension storage and sent only to api.anthropic.com. Create a key at{' '}
-              <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noreferrer" className="text-accent hover:underline">
-                console.anthropic.com
-              </a>
-              .
+              Stored only in this browser’s extension storage and sent only to integrate.api.nvidia.com. Get a free key at{' '}
+              <a href={NVIDIA_KEYS_URL} target="_blank" rel="noreferrer" className="text-accent hover:underline">
+                build.nvidia.com
+              </a>{' '}
+              — sign in, open any model and click “Get API Key”. No credit card.
             </p>
           </div>
-          <Row label="Model" description={`≈ $${cost < 0.1 ? cost.toFixed(3) : cost.toFixed(2)} per ${fmtNumber(Math.max(pending, 1000))} posts`}>
+          <Row label="Model" description={`Free · about ${fmtNumber(requests)} requests per ${fmtNumber(Math.max(pending, 1000))} posts`}>
             <select
               value={settings.ai.model}
               onChange={(e) => void update((s) => ({ ai: { ...s.ai, model: e.target.value } }))}
@@ -575,7 +597,7 @@ function PlanSection({ settings, update }: { settings: Settings; update: Update 
           </div>
           <div className="mt-1 text-[26px] font-semibold tracking-tight">$0</div>
           <ul className="mt-3 space-y-1.5 text-[13px] text-fg-2">
-            {['Unlimited bookmarks & sync', 'On-device smart categories', 'Search operators, collections, tags, notes', 'Insights & exports', 'AI with your own Anthropic key'].map((f) => (
+            {['Unlimited bookmarks & sync', 'On-device smart categories', 'Search operators, collections, tags, notes', 'Insights & exports', 'AI with your own free NVIDIA key'].map((f) => (
               <li key={f} className="flex gap-2">
                 <Check className="mt-0.5 size-3.5 shrink-0 text-good" /> {f}
               </li>
@@ -693,8 +715,8 @@ function AboutSection() {
             <ExternalLink />
           </Button>
         </Row>
-        <Row label="Support" description={BRAND.supportEmail}>
-          <Button size="sm" variant="ghost" onClick={() => window.open(`mailto:${BRAND.supportEmail}`)}>
+        <Row label="Support" description={BRAND.supportLabel}>
+          <Button size="sm" variant="ghost" onClick={() => window.open(BRAND.supportUrl, '_blank', 'noopener')}>
             <ExternalLink />
           </Button>
         </Row>

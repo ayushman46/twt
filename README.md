@@ -21,7 +21,8 @@ twtdash is a browser extension that syncs every post you've bookmarked on X, sor
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white" />
   <img alt="Tailwind CSS v4" src="https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white" />
   <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white" />
-  <img alt="Claude" src="https://img.shields.io/badge/AI-Claude-D97757?logo=anthropic&logoColor=white" />
+  <img alt="NVIDIA NIM" src="https://img.shields.io/badge/AI-NVIDIA_NIM_(free)-76B900?logo=nvidia&logoColor=white" />
+  <img alt="Runs on $0" src="https://img.shields.io/badge/stack_cost-%240-22C55E" />
   <img alt="Local-first" src="https://img.shields.io/badge/data-local--first-22C55E" />
 </p>
 
@@ -75,8 +76,8 @@ X bookmarks become a junk drawer. They have no search worth using, no categories
       17 built-in categories, scored from post text, link cards, quoted posts and linked domains. Ambiguous posts lean on what you usually save from that author. You can add keywords, create your own categories and re-sort at any time, and manual choices are never overwritten.
     </td>
     <td valign="top">
-      <h3>✨ Optional Claude AI</h3>
-      Claude picks categories, adds topical tags and writes one-line gists. You can <b>bring your own Anthropic key</b> (free; your browser talks to Anthropic directly) or use <b>twtdash Pro</b> (hosted, no key). The model is <code>claude-opus-5-5</code>, with structured JSON output.
+      <h3>✨ Optional AI, free</h3>
+      Open models on <b>NVIDIA's free API</b> pick categories, add topical tags and write one-line gists. Paste your own free <code>nvapi-…</code> key from <a href="https://build.nvidia.com">build.nvidia.com</a> (no credit card; your browser talks to NVIDIA directly), or use <b>twtdash Pro</b> (hosted, no key). You can choose Nemotron 3.5 Lightning, DeepSeek V4.1 Flash, Nemotron 3 Super or Kimi K2.6.
     </td>
   </tr>
   <tr>
@@ -164,7 +165,7 @@ flowchart LR
   bridge -- runtime message --> bg["background.ts<br/>service worker<br/>parse → classify → merge → order"]
   bg --> db[("IndexedDB<br/>Dexie 4")]
   db -- incremental live deltas --> ui["Dashboard · Popup<br/>React 19"]
-  ui -. optional .-> ai["Claude<br/>your key or Pro"]
+  ui -. optional .-> ai["NVIDIA API (free)<br/>your key or Pro"]
 ```
 
 | Captured operation | What twtdash does with it |
@@ -258,7 +259,7 @@ twt/
 │   │   ├── preview/          runs the UI in a normal tab with a fake extension API + 10k-post bench data
 │   │   └── bench/            benchmark, CPU-profile/trace analysis, smoke test, README screenshots
 │   └── web/                  Next.js 16: landing, install guide, privacy/terms, and the Pro API
-├── packages/shared/          category taxonomy, Claude prompt + output parser, API contract, brand
+├── packages/shared/          category taxonomy, AI prompt + transport + parser, API contract, brand
 ├── release/                  prebuilt, ready-to-load extension + store zips
 ├── docs/screenshots/
 ├── PERFORMANCE.md            the performance investigation, with before/after numbers
@@ -271,10 +272,10 @@ twt/
 | UI | React 19, Tailwind CSS v4, Radix UI, cmdk, sonner, lucide, Geist + Instrument Serif |
 | State and storage | Dexie 4 (IndexedDB) with compound indexes, zustand, an incremental live-delta store |
 | Search | Custom operator parser + cached lowercase scan, warmed in idle time |
-| AI | `@anthropic-ai/sdk`: Claude Opus 5.5, JSON-schema output, server-side fallback |
+| AI | NVIDIA's free OpenAI-compatible API (`integrate.api.nvidia.com`) via a 4 KB `fetch` client, with tolerant JSON extraction and batch splitting |
 | Website and API | Next.js 16 on Vercel: `/api/health`, `/api/categorize`, `/api/license/{activate,validate}` |
 | Billing | LemonSqueezy License API |
-| Quality | Vitest (48 tests), TypeScript strict, a puppeteer smoke test (15 checks), a reproducible benchmark harness |
+| Quality | Vitest (57 tests, plus an opt-in live NVIDIA check), TypeScript strict, a puppeteer smoke test (15 checks), a reproducible benchmark harness |
 
 <br />
 
@@ -289,7 +290,8 @@ npm run ext:preview      # dashboard in a normal tab with a fake extension API
                          #   http://localhost:5199/?demo    sample library
                          #   http://localhost:5199/?popup   toolbar popup
                          #   http://localhost:5199/?bench=10000   synthetic 10k-post library
-npm run ext:test         # 48 unit tests: parser, categorizer, query language, search, ingest
+npm run ext:test         # 57 unit tests: parser, categorizer, query language, search, ingest, AI
+NVIDIA_API_KEY=nvapi-… npm run ext:test:live   # optional: real requests through every offered model
 npm run ext:typecheck
 npm run ext:zip          # Chrome + Firefox zips (+ Firefox sources zip) in apps/extension/.output
 npm run web:dev          # website + API on http://localhost:3000
@@ -318,34 +320,56 @@ node bench/screenshots.mjs                      # regenerate docs/screenshots/*.
 
 ## ✦ twtdash Pro and the hosted API
 
-Free includes everything except hosted AI. **Pro** ($5/mo or $48/yr; prices live in [`packages/shared/src/brand.ts`](packages/shared/src/brand.ts)) adds Claude categorization, auto-tags and gists without an API key.
+Free includes everything except hosted AI. **Pro** ($5/mo or $48/yr; prices live in [`packages/shared/src/brand.ts`](packages/shared/src/brand.ts)) adds hosted AI categorization, auto-tags and gists without the user needing a key.
 
 1. Create a product in **LemonSqueezy** with license keys enabled.
 2. Deploy `apps/web` to Vercel with **root directory `apps/web`**, and set these environment variables:
 
    | Variable | Purpose |
    |---|---|
-   | `ANTHROPIC_API_KEY` | Required for `/api/categorize` |
-   | `TWTDASH_AI_MODEL` | Optional. Defaults to `claude-opus-5-5`; `claude-haiku-5-5` costs about 40× less at volume |
+   | `NVIDIA_API_KEY` | Free `nvapi-…` key from [build.nvidia.com](https://build.nvidia.com). Required for `/api/categorize` |
+   | `TWTDASH_AI_MODEL` | Optional. Defaults to `nvidia/nemotron-3.5-lightning-30b-a3b` |
+   | `AI_BASE_URL` | Optional. Any OpenAI-compatible endpoint; defaults to NVIDIA's free API |
    | `LEMONSQUEEZY_STORE_ID` | Rejects license keys from other stores |
    | `LEMONSQUEEZY_PRODUCT_IDS` | Optional comma-separated product allow-list |
    | `NEXT_PUBLIC_CHECKOUT_URL` | Your LemonSqueezy checkout link |
    | `NEXT_PUBLIC_CHROME_STORE_URL` / `NEXT_PUBLIC_FIREFOX_ADDON_URL` | Store buttons, once you're listed |
    | `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata and OG images |
 
-3. Build the extension against your deployment with `WXT_API_BASE=https://your-domain` (see [`apps/extension/.env.example`](apps/extension/.env.example)).
+3. The extension talks to `https://twtdash.vercel.app` by default. For a different deployment, build with `WXT_API_BASE=https://your-domain` (see [`apps/extension/.env.example`](apps/extension/.env.example)).
 4. Customers paste their license key in **Settings → Plan**. The extension activates it through `/api/license/activate`, then calls `/api/categorize` with the key and its instance id.
 
 `GET /api/health` reports whether AI and licensing are configured. Rate limits are in-memory per server instance, so move them to Upstash or Redis before you scale.
 
 **To test Pro end to end locally:**
 
-1. Set `TWTDASH_DEV_LICENSE=dev-key` and `ANTHROPIC_API_KEY` in `apps/web/.env.local`.
+1. Set `TWTDASH_DEV_LICENSE=dev-key` and `NVIDIA_API_KEY` in `apps/web/.env.local`.
 2. Run `npm run web:dev`.
 3. Build the extension with `WXT_API_BASE=http://localhost:3000`.
 4. Activate the license key `dev-key`.
 
 More detail is in [`apps/web/README.md`](apps/web/README.md).
+
+<br />
+
+## ✦ Runs on a $0 stack
+
+Every service twtdash depends on has a free tier, and none of them needs a credit card.
+
+| Need | Service | Cost | Notes |
+|---|---|---|---|
+| AI (each user's own key) | [NVIDIA API catalog](https://build.nvidia.com) | Free | Rate-limited, roughly 40 requests/min per key; twtdash sends 20 posts per request |
+| AI (hosted Pro) | NVIDIA API catalog | Free | Your own `NVIDIA_API_KEY` on the server. See the caveat below |
+| Website and API | [Vercel](https://vercel.com) Hobby | Free | Serves `twtdash.vercel.app`, so you don't need to buy a domain |
+| Payments and licenses | [Lemon Squeezy](https://lemonsqueezy.com) | Free to set up | No monthly fee or API key; Lemon Squeezy only takes a cut of each sale |
+| Support | [GitHub Issues](https://github.com/ayushman46/twt/issues) | Free | Linked from the extension, the site and the legal pages |
+| Distribution | Direct zip download · [Firefox AMO](https://addons.mozilla.org/developers/) · [Edge Add-ons](https://partner.microsoft.com/dashboard/microsoftedge/) | Free | The Chrome Web Store is the one exception, with a one-time $5 developer fee |
+| Code, CI and releases | GitHub | Free | |
+
+> [!IMPORTANT]
+> **Free tiers come with usage terms.**
+> - NVIDIA's free API falls under the [NVIDIA API Trial Terms](https://build.nvidia.com), which cover development and evaluation. If users bring their own keys, each person's use is their own. If you serve paying Pro customers from one shared key, that counts as production use. Before you charge for hosted AI, point `AI_BASE_URL` at a production-licensed provider.
+> - Vercel's Hobby plan is for non-commercial use. A free product is fine on it. Once you sell Pro, upgrade, or move to a host whose free tier allows commercial use.
 
 <br />
 
@@ -364,9 +388,9 @@ More detail is in [`apps/web/README.md`](apps/web/README.md).
 |---|---|
 | `storage`, `unlimitedStorage` | Your library is stored locally in IndexedDB; large libraries need more than the default quota |
 | `x.com`, `twitter.com` | Reads the bookmark data X loads in your own tab; never sends requests on your behalf |
-| `api.anthropic.com` *(optional)* | Requested only when you add your own Anthropic key |
+| `integrate.api.nvidia.com` *(optional)* | Requested only when you add your own NVIDIA key |
 
-There are no analytics, no trackers and no remote code. Nothing leaves your browser unless you turn on AI, and then only the post content needed to categorize it (text, author, link titles) goes to Anthropic or the Pro API.
+There are no analytics, no trackers and no remote code. Nothing leaves your browser unless you turn on AI, and then only the post content needed to categorize it (text, author, link titles) goes to NVIDIA's API or the Pro API.
 
 <br />
 
@@ -375,6 +399,7 @@ There are no analytics, no trackers and no remote code. Nothing leaves your brow
 - Sync depends on **X's private web API**, which can change without notice. The parser is defensive, and the code that would need updating is isolated to a few files.
 - Search uses substring and prefix matching, not typo-tolerant fuzzy matching. That trade-off is what makes a 10,000-post library start 3.3× faster.
 - The Firefox build loads as a temporary add-on until it's published on AMO.
+- AI quality depends on the open model you pick. Smaller models sometimes return malformed JSON for a batch; twtdash splits that batch and retries instead of failing the run.
 
 <br />
 

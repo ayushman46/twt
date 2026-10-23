@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BRAND } from "@twtdash/shared";
-import { BROWSERS, SUPPORT_EMAIL } from "@/lib/site";
+import { BROWSERS, SUPPORT_URL } from "@/lib/site";
 import { Wordmark } from "./logo";
 
 const COLUMNS = [
@@ -18,7 +18,7 @@ const COLUMNS = [
     links: [
       { href: "/install", label: "Install" },
       { href: "/install#first-sync", label: "First sync" },
-      { href: `mailto:${SUPPORT_EMAIL}`, label: "Contact" },
+      { href: SUPPORT_URL, label: "Contact" },
     ],
   },
   {

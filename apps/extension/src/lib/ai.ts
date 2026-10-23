@@ -1,18 +1,16 @@
 /**
  * AI categorization runner. Two providers share one prompt (packages/shared):
- *  - "byok": calls Claude directly from the browser with the user's own key
+ *  - "byok": calls NVIDIA's free API directly from the browser with the user's own key
  *  - "pro":  calls the hosted twtdash API with the user's license key
  */
-import Anthropic from '@anthropic-ai/sdk';
 import {
   AI_BATCH_SIZE,
+  AiCallError,
   API_PATHS,
-  buildCategorizeRequest,
   FALLBACK_CATEGORY_ID,
   INSTANCE_HEADER,
-  parseCategorizeOutput,
-  SERVER_FALLBACK_BETA,
-  supportsServerFallback,
+  requestCategorization,
+  verifyApiKey,
   type AiCategoryInput,
   type AiResult,
   type AiTweetInput,
@@ -55,19 +53,33 @@ export function toAiCategories(cats: Category[]): AiCategoryInput[] {
     }));
 }
 
+/** Translate a transport failure into something the UI can show and the runner can act on. */
+function toAiError(err: unknown, model: string): AiError | null {
+  if (!(err instanceof AiCallError)) return null;
+  if (err.kind === 'network') return new AiError('Could not reach NVIDIA. Check your connection.', 'network', true);
+  if (err.kind === 'refusal') return new AiError('The AI declined to categorize this batch.', 'refusal');
+  if (err.kind !== 'http') return null;
+  switch (err.status) {
+    // NVIDIA answers a bad or revoked key with 403 "Authorization failed".
+    case 401:
+    case 403:
+      return new AiError('NVIDIA rejected this API key. Check it in Settings → AI, or try another model.', 'auth');
+    case 404:
+      return new AiError(`Model "${model}" is not available on NVIDIA right now. Pick another in Settings → AI.`, 'config');
+    case 429:
+      return new AiError('NVIDIA’s free rate limit reached — slowing down.', 'rate', true);
+    default:
+      return new AiError(err.message, 'other', err.status >= 500);
+  }
+}
+
 async function callByok(apiKey: string, model: string, categories: AiCategoryInput[], tweets: AiTweetInput[], summaries: boolean): Promise<AiResult[]> {
-  const client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true, maxRetries: 2 });
   try {
-    const response = await client.beta.messages.create({
-      ...buildCategorizeRequest({ categories, tweets, summaries }),
-      model,
-      ...(supportsServerFallback(model) ? { betas: [SERVER_FALLBACK_BETA], fallbacks: 'default' as const } : {}),
-    });
-    if (response.stop_reason === 'refusal') {
-      throw new AiError('Claude declined to categorize this batch.', 'refusal');
-    }
-    if (response.stop_reason === 'max_tokens') {
-      // Output didn't fit: split the batch and try again.
+    const { results } = await requestCategorization({ apiKey, model, categories, tweets, summaries, signal: AbortSignal.timeout(90_000) });
+    return results;
+  } catch (err) {
+    if (err instanceof AiCallError && (err.kind === 'truncated' || err.kind === 'invalid_output')) {
+      // Smaller open models occasionally garble a long batch: split it and try again.
       if (tweets.length <= 1) return [];
       const mid = Math.ceil(tweets.length / 2);
       return [
@@ -75,25 +87,16 @@ async function callByok(apiKey: string, model: string, categories: AiCategoryInp
         ...(await callByok(apiKey, model, categories, tweets.slice(mid), summaries)),
       ];
     }
-    const text = response.content
-      .filter((b): b is Anthropic.Beta.BetaTextBlock => b.type === 'text')
-      .map((b) => b.text)
-      .join('');
-    return parseCategorizeOutput(
-      text,
-      tweets.map((t) => t.id),
-      categories.map((c) => c.id),
-    );
+    throw toAiError(err, model) ?? err;
+  }
+}
+
+/** Confirm a freshly entered key works (one tiny request). */
+export async function testApiKey(apiKey: string, model: string): Promise<void> {
+  try {
+    await verifyApiKey(apiKey, model, { signal: AbortSignal.timeout(30_000) });
   } catch (err) {
-    if (err instanceof AiError) throw err;
-    if (err instanceof Anthropic.AuthenticationError) throw new AiError('Your Anthropic API key was rejected. Check it in Settings → AI.', 'auth');
-    if (err instanceof Anthropic.PermissionDeniedError) throw new AiError('This API key does not have access to that model.', 'auth');
-    if (err instanceof Anthropic.NotFoundError) throw new AiError(`Model "${model}" was not found for this key.`, 'config');
-    if (err instanceof Anthropic.RateLimitError) throw new AiError('Anthropic rate limit reached — slowing down.', 'rate', true);
-    if (err instanceof Anthropic.BadRequestError) throw new AiError(err.message, 'other');
-    if (err instanceof Anthropic.APIConnectionError) throw new AiError('Could not reach Anthropic. Check your connection.', 'network', true);
-    if (err instanceof Anthropic.APIError) throw new AiError(err.message, 'other', (err.status ?? 0) >= 500);
-    throw err;
+    throw toAiError(err, model) ?? err;
   }
 }
 

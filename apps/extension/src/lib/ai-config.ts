@@ -1,11 +1,12 @@
 /**
- * Lightweight AI helpers that don't pull in the Anthropic SDK. The runner
- * (`./ai`) is loaded with a dynamic import only when AI actually runs.
+ * Lightweight AI helpers for the startup bundle. The runner (`./ai`) is
+ * loaded with a dynamic import only when AI actually runs.
  */
+import { BRAND } from '@twtdash/shared';
 import { db } from './db';
 import type { Settings } from './storage';
 
-export const API_BASE: string = (import.meta.env.WXT_API_BASE as string | undefined)?.replace(/\/$/, '') || 'https://twtdash.app';
+export const API_BASE: string = (import.meta.env.WXT_API_BASE as string | undefined)?.replace(/\/$/, '') || BRAND.website;
 
 export type AiErrorCode = 'auth' | 'license' | 'rate' | 'refusal' | 'network' | 'config' | 'other';
 

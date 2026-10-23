@@ -85,9 +85,9 @@ const FAQS: Array<{ q: string; a: React.ReactNode }> = [
     q: "Do I need Pro to use AI?",
     a: (
       <>
-        No. AI categorization, auto-tags and gists are free with your own Anthropic API key — requests go straight from
-        your browser to Anthropic, and you pay Anthropic directly for what you use. Pro is for people who would rather not
-        manage a key at all.
+        No. AI categorization, auto-tags and gists are free with your own NVIDIA API key — it takes a minute to create one
+        at build.nvidia.com, needs no credit card, and requests go straight from your browser to NVIDIA. Pro is for people
+        who would rather not manage a key at all.
       </>
     ),
   },
@@ -95,12 +95,12 @@ const FAQS: Array<{ q: string; a: React.ReactNode }> = [
     q: "What is your refund policy?",
     a: (
       <>
-        If Pro isn&apos;t right for you, email{" "}
+        If Pro isn&apos;t right for you, contact us on{" "}
         <a
-          href={`mailto:${BRAND.supportEmail}`}
+          href={BRAND.supportUrl}
           className="text-brand-soft underline decoration-brand-soft/40 underline-offset-2 hover:decoration-current"
         >
-          {BRAND.supportEmail}
+          {BRAND.supportLabel}
         </a>{" "}
         within 14 days of your purchase for a full refund. You can cancel anytime and keep Pro until the end of the period
         you&apos;ve paid for.
@@ -170,9 +170,9 @@ export function Faq() {
           }
           description={
             <>
-              Can&apos;t find what you need? Email{" "}
-              <a href={`mailto:${BRAND.supportEmail}`} className="text-zinc-200 underline decoration-white/30 underline-offset-2 hover:decoration-current">
-                {BRAND.supportEmail}
+              Can&apos;t find what you need? Ask on{" "}
+              <a href={BRAND.supportUrl} className="text-zinc-200 underline decoration-white/30 underline-offset-2 hover:decoration-current">
+                {BRAND.supportLabel}
               </a>
               .
             </>

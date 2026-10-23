@@ -14,7 +14,7 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   try {
     res = await fetch(API_BASE + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
   } catch {
-    throw new Error('Could not reach twtdash.app. Check your connection and try again.');
+    throw new Error('Could not reach the twtdash server. Check your connection and try again.');
   }
   const data = (await res.json().catch(() => null)) as T | { error?: { message?: string } } | null;
   if (!data) throw new Error(`License server error (${res.status}).`);

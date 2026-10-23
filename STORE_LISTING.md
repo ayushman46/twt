@@ -35,8 +35,8 @@ Grid, list, table and media-gallery views. Collections, tags, private notes, sta
 ★ INSIGHTS
 See what you save over time, your category mix, who you learn from most, and when you bookmark.
 
-★ OPTIONAL AI (CLAUDE)
-Turn on AI to get sharper categories, automatic tags and one-line gists — free with your own Anthropic API key, or with twtdash Pro (no key needed).
+★ OPTIONAL AI (FREE)
+Turn on AI to get sharper categories, automatic tags and one-line gists — free with your own NVIDIA API key (build.nvidia.com, no credit card), or with twtdash Pro (no key needed).
 
 ★ PRIVATE BY DESIGN
 Your library lives in your browser. No account, no tracking, no ads. Nothing leaves your device unless you switch on AI.
@@ -56,12 +56,12 @@ twtdash helps users organize, search and revisit the posts they have bookmarked 
 - **storage** — Saves the user's settings (theme, layout, sync options, optional API/license key) locally.
 - **unlimitedStorage** — The user's bookmark library is stored locally in IndexedDB and can exceed the default quota for large libraries.
 - **Host permission: https://x.com/*, https://twitter.com/*** — Required to read the bookmark/like data X loads for the signed-in user on their own bookmarks page, to auto-scroll that page during a sync the user starts, and to capture posts the user bookmarks in real time. The extension does not run on any other site.
-- **Optional host permission: https://api.anthropic.com/*** — Requested only if the user chooses to enable AI with their own Anthropic API key, so post text can be sent directly to Anthropic for categorization.
+- **Optional host permission: https://integrate.api.nvidia.com/*** — Requested only if the user chooses to enable AI with their own NVIDIA API key, so post text can be sent directly to NVIDIA's API for categorization.
 - **Remote code** — None. All code ships in the package.
 
 ## Data usage disclosures (Chrome privacy tab)
 
-- Collects: **Website content** (posts the user has bookmarked/liked on X) — stored locally only. If the user enables AI, post text, author handle and link domains are sent to Anthropic (directly, or via the twtdash API for Pro users) solely to categorize them; not stored by twtdash.
+- Collects: **Website content** (posts the user has bookmarked/liked on X) — stored locally only. If the user enables AI, post text, author handle and link domains are sent to NVIDIA's API (directly, or via the twtdash API for Pro users) solely to categorize them; not stored by twtdash.
 - Not sold to third parties; not used for unrelated purposes; not used for creditworthiness or lending.
 - Privacy policy URL: https://twtdash.app/privacy
 

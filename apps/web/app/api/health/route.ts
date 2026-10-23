@@ -1,4 +1,4 @@
-import { isAiConfigured } from "@/lib/anthropic";
+import { isAiConfigured } from "@/lib/llm";
 import { json, preflight } from "@/lib/cors";
 import { isLicensingConfigured } from "@/lib/license";
 

@@ -7,9 +7,10 @@ auto-categorizes them and gives you a fast, local-first library.
   Open Graph/Twitter images, `sitemap.xml`, `robots.txt` and icons.
 - **API:** the endpoints the extension calls, implementing the contract in
   [`packages/shared/src/api.ts`](../../packages/shared/src/api.ts): health, license activation/validation
-  (LemonSqueezy) and hosted AI categorization (Claude).
+  (LemonSqueezy) and hosted AI categorization (NVIDIA's free API catalog).
 
-Stack: Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS v4 · `@anthropic-ai/sdk`.
+Stack: Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS v4. AI calls use plain `fetch` against
+NVIDIA's OpenAI-compatible endpoint — no SDK, and every service in the stack has a free tier.
 
 ## Project layout
 
@@ -27,7 +28,7 @@ lib/
   cors.ts                     CORS headers, JSON + ApiErrorBody helpers, body parsing
   license.ts                  LemonSqueezy License API + dev license + validation cache
   rate-limit.ts               in-memory sliding-window limits
-  anthropic.ts                Claude call + SDK error mapping
+  llm.ts                      NVIDIA (OpenAI-compatible) call + error mapping
   validate.ts                 request-body validation
   site.ts                     public env-driven config (store URLs, checkout, site URL)
 public/downloads/             drop twtdash-chrome.zip / twtdash-firefox.zip here
@@ -62,7 +63,7 @@ npm run lint       # eslint
 1. Import the repository in Vercel and set **Root Directory** to `apps/web`. Framework preset: Next.js.
 2. Keep **"Include files outside the root directory in the Build Step"** enabled (the default) — the build needs
    `packages/shared`.
-3. Add the environment variables below (at least `ANTHROPIC_API_KEY`, `LEMONSQUEEZY_STORE_ID` and
+3. Add the environment variables below (at least `NVIDIA_API_KEY`, `LEMONSQUEEZY_STORE_ID` and
    `NEXT_PUBLIC_CHECKOUT_URL` for production), then deploy.
 
 `/api/categorize` exports `maxDuration = 120` seconds; a 50-post batch normally finishes well inside that.
@@ -71,15 +72,16 @@ npm run lint       # eslint
 
 | Variable | Scope | Purpose |
 | --- | --- | --- |
-| `ANTHROPIC_API_KEY` | server | Enables hosted AI. Without it `/api/categorize` returns `500 server_misconfigured`. |
-| `TWTDASH_AI_MODEL` | server | Claude model. Default `claude-opus-5-5`; `claude-haiku-5-5` is far cheaper for high volume. |
+| `NVIDIA_API_KEY` | server | Free `nvapi-…` key from [build.nvidia.com](https://build.nvidia.com). Enables hosted AI; without it `/api/categorize` returns `500 server_misconfigured`. |
+| `TWTDASH_AI_MODEL` | server | Model id on NVIDIA's catalog. Default `nvidia/nemotron-3.5-lightning-30b-a3b`. |
+| `AI_BASE_URL` | server | Optional OpenAI-compatible base URL. Default `https://integrate.api.nvidia.com/v1`. |
 | `LEMONSQUEEZY_STORE_ID` | server | Reject license keys from other LemonSqueezy stores (recommended). |
 | `LEMONSQUEEZY_PRODUCT_IDS` | server | Optional comma list of product IDs that count as Pro. |
 | `TWTDASH_DEV_LICENSE` | server | A key that is always valid (`plan: "Pro (dev)"`) without calling LemonSqueezy. Dev only. |
 | `NEXT_PUBLIC_CHECKOUT_URL` | public | LemonSqueezy checkout link for Pro (falls back to `#pricing`). |
 | `NEXT_PUBLIC_CHROME_STORE_URL` | public | Chrome Web Store listing. Unset → buttons go to the manual-install steps. |
 | `NEXT_PUBLIC_FIREFOX_ADDON_URL` | public | Firefox Add-ons listing. Unset → buttons go to the manual-install steps. |
-| `NEXT_PUBLIC_SITE_URL` | public | Canonical URL for metadata, OG images, sitemap (default `https://twtdash.app`). |
+| `NEXT_PUBLIC_SITE_URL` | public | Canonical URL for metadata, OG images, sitemap (default `https://twtdash.vercel.app`). |
 
 `NEXT_PUBLIC_*` values are inlined at build time — redeploy after changing them.
 
@@ -98,10 +100,10 @@ return errors as `ApiErrorBody`:
 | `bad_request` | 400 | Invalid JSON or body |
 | `unauthorized` | 401 | Missing `Authorization` or `x-twtdash-instance` |
 | `license_invalid` | 401 | License not found, inactive instance, expired, disabled, or wrong store/product |
-| `refusal` | 422 | Claude declined the batch |
-| `rate_limited` | 429 | Per-license limit hit, or Anthropic is rate limiting (`Retry-After` is set) |
-| `server_misconfigured` | 500 | No / rejected `ANTHROPIC_API_KEY` |
-| `upstream_error` | 502 | LemonSqueezy or Anthropic unreachable/failed, truncated or unparseable output |
+| `refusal` | 422 | The model's content filter declined the batch |
+| `rate_limited` | 429 | Per-license limit hit, or NVIDIA is rate limiting (`Retry-After` is set when provided) |
+| `server_misconfigured` | 500 | No / rejected `NVIDIA_API_KEY`, or the configured model isn't available |
+| `upstream_error` | 502 | LemonSqueezy or NVIDIA unreachable/failed, truncated or unparseable output |
 
 ### `GET /api/health`
 
@@ -109,7 +111,7 @@ return errors as `ApiErrorBody`:
 { "ok": true, "ai": true, "licensing": true }
 ```
 
-`ai` is true when `ANTHROPIC_API_KEY` is set. `licensing` is true when license checks are locked to your store
+`ai` is true when `NVIDIA_API_KEY` is set. `licensing` is true when license checks are locked to your store
 (`LEMONSQUEEZY_STORE_ID` / `LEMONSQUEEZY_PRODUCT_IDS`) or a dev license is configured.
 
 ### Licensing — `POST /api/license/activate` and `POST /api/license/validate`
@@ -138,12 +140,17 @@ Headers: `Authorization: Bearer <licenseKey>` and `x-twtdash-instance: <instance
 `model` and token `usage`.
 
 Pipeline: auth headers → license validation (positive results cached in memory for 10 minutes) → body validation →
-server config check → rate limit → Claude → `parseCategorizeOutput`.
+server config check → rate limit → NVIDIA chat completion → `parseCategorizeOutput`.
 
-The Claude request is built with the same `buildCategorizeRequest` the extension uses for bring-your-own-key, so
-results match either way. Opus/Sonnet/Fable models also get Anthropic's server-side refusal fallback
-(`server-side-fallback-2026-07-01`, `fallbacks: "default"`). The route checks `stop_reason` before reading output
-(`refusal` → 422, `max_tokens` → 502) and maps SDK errors by class. Post contents and license keys are never logged.
+The request goes through the same `requestCategorization` the extension uses for bring-your-own-key
+(`packages/shared/src/ai.ts`), so results match either way. Open models occasionally wrap JSON in fences or add
+reasoning text; `extractJson` strips those before validation. `finish_reason` is checked (`content_filter` → 422,
+`length` → 502). Post contents and license keys are never logged.
+
+> **Free-tier note.** NVIDIA's API catalog is free but governed by the NVIDIA API Trial Terms, which are aimed at
+> development and evaluation; serving paying customers from one shared key counts as production use. The
+> bring-your-own-key path (each user's own free key) has no such issue. Before charging for hosted AI, move
+> `AI_BASE_URL` / `NVIDIA_API_KEY` to a production-licensed OpenAI-compatible provider.
 
 **Rate limits** (per license): 30 requests per rolling minute and 3,000 posts per rolling 24 hours. They live in
 process memory (`lib/rate-limit.ts`), and so does the license cache. **Serverless instances don't share memory**, so
@@ -155,7 +162,7 @@ as Upstash Redis (`@upstash/ratelimit`) — the route only depends on `checkRate
 ```bash
 # .env.local
 TWTDASH_DEV_LICENSE=sm-dev-123
-ANTHROPIC_API_KEY=sk-ant-...      # omit to see 500 server_misconfigured
+NVIDIA_API_KEY=nvapi-...         # omit to see 500 server_misconfigured
 ```
 
 ```bash
@@ -183,7 +190,7 @@ curl -s http://localhost:3000/api/categorize \
     { "id": "1", "category": "ai", "tags": ["evals", "prompting"], "summary": "Write evaluation graders before prompts when building eval sets." },
     { "id": "2", "category": "dev", "tags": ["react", "performance", "state management"], "summary": "" }
   ],
-  "model": "claude-opus-5-5",
+  "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
   "usage": { "input_tokens": 1234, "output_tokens": 210 }
 }
 ```

@@ -6,7 +6,7 @@ import { Aurora } from "@/components/ui/aurora";
 import { Eyebrow } from "@/components/ui/section-heading";
 import { ButtonLink } from "@/components/ui/button-link";
 import { pageMetadata } from "@/lib/metadata";
-import { CHROME_STORE_URL, DOWNLOADS, FIREFOX_ADDON_URL, SUPPORT_EMAIL } from "@/lib/site";
+import { CHROME_STORE_URL, DOWNLOADS, FIREFOX_ADDON_URL, SUPPORT_LABEL, SUPPORT_URL } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Install",
@@ -249,7 +249,7 @@ export default function InstallPage() {
                   Stuck?
                 </h2>
                 <p className="mt-1 text-sm text-zinc-400">
-                  Email <a className="text-zinc-200 underline decoration-white/30 underline-offset-2 hover:decoration-current" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>{" "}
+                  Open an issue on <a className="text-zinc-200 underline decoration-white/30 underline-offset-2 hover:decoration-current" href={SUPPORT_URL}>{SUPPORT_LABEL}</a>{" "}
                   and we&apos;ll help you get set up.
                 </p>
               </div>

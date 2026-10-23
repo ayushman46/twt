@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PRICING } from "@twtdash/shared";
 import { LegalPage } from "@/components/legal/legal-page";
 import { pageMetadata } from "@/lib/metadata";
-import { LEGAL_EFFECTIVE_DATE, SUPPORT_EMAIL } from "@/lib/site";
+import { LEGAL_EFFECTIVE_DATE, SUPPORT_LABEL, SUPPORT_URL } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Terms of Service",
@@ -11,7 +11,7 @@ export const metadata: Metadata = pageMetadata({
   path: "/terms",
 });
 
-const mail = <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>;
+const mail = <a href={SUPPORT_URL}>{SUPPORT_LABEL}</a>;
 
 export default function TermsPage() {
   return (
@@ -46,7 +46,7 @@ export default function TermsPage() {
         its website at any time, some features may stop working until we release an update.
       </p>
       <p>
-        Optional AI features rely on Anthropic, and payments are handled by LemonSqueezy. Your use of those services is
+        Optional AI features rely on NVIDIA&apos;s API, and payments are handled by LemonSqueezy. Your use of those services is
         also subject to their terms. See our <Link href="/privacy">Privacy Policy</Link> for what is shared with them and
         when.
       </p>
@@ -54,8 +54,8 @@ export default function TermsPage() {
       <h2 id="your-data">3. Your data</h2>
       <p>
         Your library belongs to you and is stored locally in your browser. We don&apos;t have a copy, so you are responsible
-        for keeping backups — use the built-in JSON, CSV or Markdown export. If you use your own Anthropic API key, you are
-        responsible for that key and for any charges Anthropic bills you.
+        for keeping backups — use the built-in JSON, CSV or Markdown export. If you use your own NVIDIA API key, you are
+        responsible for that key and for complying with NVIDIA&apos;s terms for it.
       </p>
 
       <h2 id="subscriptions">4. Pro subscriptions and billing</h2>
@@ -88,7 +88,7 @@ export default function TermsPage() {
 
       <h2 id="refunds">5. Refunds</h2>
       <p>
-        If Pro isn&apos;t right for you, email {mail} within <strong>14 days</strong> of your initial purchase or of a
+        If Pro isn&apos;t right for you, contact us at {mail} within <strong>14 days</strong> of your initial purchase or of a
         renewal charge, and we&apos;ll refund that payment in full — no questions asked. After 14 days, payments are
         non-refundable except where required by law.
       </p>
@@ -109,7 +109,7 @@ export default function TermsPage() {
           attempt to bypass rate limits or license checks, overload or disrupt our services, or probe them for
           vulnerabilities without our permission (good-faith security reports to {mail} are welcome);
         </li>
-        <li>send content to the hosted AI that violates Anthropic&apos;s usage policies.</li>
+        <li>send content to the hosted AI that violates NVIDIA&apos;s terms of use for its API.</li>
       </ul>
       <p>We may suspend or revoke a license that is used in breach of these rules.</p>
 

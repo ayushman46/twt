@@ -18,7 +18,8 @@ export const DOWNLOADS = {
   firefox: "/downloads/twtdash-firefox.zip",
 } as const;
 
-export const SUPPORT_EMAIL = BRAND.supportEmail;
+export const SUPPORT_URL = BRAND.supportUrl;
+export const SUPPORT_LABEL = BRAND.supportUrl.replace(/^https?:\/\//, "");
 
 export const LEGAL_EFFECTIVE_DATE = "October 23, 2026";
 

@@ -284,8 +284,8 @@ export function Features() {
           </FeatureCard>
 
           <FeatureCard icon={Wand2} title="AI gists & auto-tags" visual={<AiVisual />}>
-            Optional Claude-powered categorization, tags and one-line gists — with twtdash Pro, or free with your own
-            Anthropic API key.
+            Optional AI categorization, tags and one-line gists from open models on NVIDIA&apos;s API — free with your own
+            NVIDIA key, or with twtdash Pro and no key at all.
           </FeatureCard>
           <FeatureCard icon={Search} title="Instant search with operators" delay={0.05} className="lg:col-span-2" visual={<SearchVisual />}>
             Full-text search across everything you&apos;ve saved, with operators like <code className="font-mono text-zinc-300">from:</code>,{" "}

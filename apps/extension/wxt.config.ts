@@ -24,7 +24,7 @@ export default defineConfig({
       'Sync, auto-categorize and beautifully browse your X (Twitter) bookmarks. Local-first, instant search, collections, tags and insights.',
     permissions: ['storage', 'unlimitedStorage'],
     host_permissions: ['https://x.com/*', 'https://twitter.com/*'],
-    optional_host_permissions: ['https://api.anthropic.com/*'],
+    optional_host_permissions: ['https://integrate.api.nvidia.com/*'],
     action: {
       default_title: 'twtdash',
     },

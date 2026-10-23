@@ -2,7 +2,7 @@
 /**
  * Capture README screenshots from the production preview build with the
  * sample library. Output: docs/screenshots/*.webp
- *   node bench/screenshots.mjs [--skip-build]
+ *   node bench/screenshots.mjs [--skip-build] [--only=name,name]
  */
 import { spawn, execSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, rmSync } from 'node:fs';
@@ -39,7 +39,10 @@ const browser = await puppeteer.launch({
   args: ['--no-first-run', '--hide-scrollbars'],
 });
 
+const only = process.argv.find((a) => a.startsWith('--only='))?.slice(7).split(',');
+
 async function save(page, name, clip) {
+  if (only && !only.includes(name)) return;
   const buf = await page.screenshot({ type: 'png', clip });
   await sharp(buf).webp({ quality: 88 }).toFile(join(out, `${name}.webp`));
   console.log(`saved ${name}.webp`);
@@ -110,6 +113,9 @@ try {
   await p.close();
 
   p = await open('#/settings/ai');
+  // Show the free bring-your-own-key setup rather than the "Off" state.
+  await p.evaluate(() => [...document.querySelectorAll('button')].find((b) => b.textContent?.includes('Free NVIDIA key'))?.click());
+  await sleep(700);
   await save(p, 'settings-ai');
   await p.close();
 

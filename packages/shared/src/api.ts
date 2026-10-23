@@ -15,7 +15,7 @@ export const API_PATHS = {
 /** GET /api/health */
 export interface HealthResponse {
   ok: true;
-  /** ANTHROPIC_API_KEY is configured */
+  /** NVIDIA_API_KEY is configured */
   ai: boolean;
   /** License validation is configured (LemonSqueezy store/product or a dev key) */
   licensing: boolean;

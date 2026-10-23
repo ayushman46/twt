@@ -1,12 +1,12 @@
 import { INSTANCE_HEADER } from "@twtdash/shared";
-import { CategorizeError, categorizeWithClaude, isAiConfigured } from "@/lib/anthropic";
+import { CategorizeError, categorizeWithAi, isAiConfigured } from "@/lib/llm";
 import { apiError, json, preflight, readJsonBody } from "@/lib/cors";
 import { LicenseServerError, licenseFingerprint, validateLicenseCached } from "@/lib/license";
 import { checkRateLimit, recordPosts } from "@/lib/rate-limit";
 import { validateCategorizeRequest } from "@/lib/validate";
 
 export const runtime = "nodejs";
-// A 50-post batch at low effort normally finishes well inside this.
+// A 50-post batch normally finishes well inside this.
 export const maxDuration = 120;
 
 /**
@@ -15,7 +15,7 @@ export const maxDuration = 120;
  * Headers: `Authorization: Bearer <licenseKey>`, `x-twtdash-instance: <instanceId>`
  * Body:    CategorizeApiRequest → CategorizeApiResponse
  *
- * Order: auth → license → body → server config → rate limit → Claude.
+ * Order: auth → license → body → server config → rate limit → AI.
  * Post contents and license keys are never logged.
  */
 export async function POST(request: Request) {
@@ -62,9 +62,9 @@ export async function POST(request: Request) {
     return apiError(429, "rate_limited", limit.message, { "Retry-After": String(limit.retryAfterSeconds) });
   }
 
-  // 6. Claude
+  // 6. AI (NVIDIA API catalog by default)
   try {
-    const result = await categorizeWithClaude(payload);
+    const result = await categorizeWithAi(payload);
     recordPosts(limiterKey, payload.tweets.length);
     return json(result);
   } catch (err) {

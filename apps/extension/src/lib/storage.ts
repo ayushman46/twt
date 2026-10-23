@@ -1,5 +1,5 @@
 import { storage } from 'wxt/utils/storage';
-import { DEFAULT_AI_MODEL, type LicenseStatus } from '@twtdash/shared';
+import { DEFAULT_AI_MODEL, isKnownModel, type LicenseStatus } from '@twtdash/shared';
 import type { Source } from './types';
 
 export type ViewMode = 'grid' | 'list' | 'table' | 'gallery';
@@ -59,7 +59,11 @@ export const DEFAULT_SETTINGS: Settings = {
 export const settingsItem = storage.defineItem<Settings>('local:settings', { fallback: DEFAULT_SETTINGS });
 
 export function mergeSettings(s: Partial<Settings> | null | undefined): Settings {
-  return { ...DEFAULT_SETTINGS, ...s, ai: { ...DEFAULT_SETTINGS.ai, ...s?.ai } };
+  const ai = { ...DEFAULT_SETTINGS.ai, ...s?.ai };
+  // Earlier builds used Claude: retire stale model ids and Anthropic keys.
+  if (!isKnownModel(ai.model)) ai.model = DEFAULT_AI_MODEL;
+  if (ai.apiKey.startsWith('sk-ant-')) ai.apiKey = '';
+  return { ...DEFAULT_SETTINGS, ...s, ai };
 }
 
 export async function getSettings(): Promise<Settings> {

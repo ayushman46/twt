@@ -21,7 +21,7 @@ const FREE_FEATURES = [
   "Collections, tags, notes & bulk actions",
   "Insights dashboard",
   "Export JSON / CSV / Markdown",
-  "AI with your own Anthropic key",
+  "AI with your own free NVIDIA key",
 ] as const;
 
 const PRO_FEATURES = [

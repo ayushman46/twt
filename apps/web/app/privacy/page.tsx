@@ -3,7 +3,7 @@ import Link from "next/link";
 import { BRAND } from "@twtdash/shared";
 import { LegalPage } from "@/components/legal/legal-page";
 import { pageMetadata } from "@/lib/metadata";
-import { LEGAL_EFFECTIVE_DATE, SITE_URL, SUPPORT_EMAIL } from "@/lib/site";
+import { LEGAL_EFFECTIVE_DATE, SITE_URL, SUPPORT_LABEL, SUPPORT_URL } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
@@ -12,7 +12,7 @@ export const metadata: Metadata = pageMetadata({
   path: "/privacy",
 });
 
-const mail = <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>;
+const mail = <a href={SUPPORT_URL}>{SUPPORT_LABEL}</a>;
 
 export default function PrivacyPage() {
   return (
@@ -43,8 +43,8 @@ export default function PrivacyPage() {
         </li>
         <li>
           <strong>AI features are off by default.</strong> If you turn them on, the posts being categorized are sent to
-          Anthropic — directly from your browser with your own API key, or through the twtdash API if you use twtdash
-          Pro. We do not store them.
+          NVIDIA&apos;s API — directly from your browser with your own API key, or through the twtdash API if you use
+          twtdash Pro. We do not store them.
         </li>
         <li>
           <strong>Pro licenses are checked with LemonSqueezy</strong>, our payment provider.
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
           collections, tags, private notes, and star, archive and read states.
         </li>
         <li>
-          <strong>Settings</strong> — your preferences, and, if you provide them, your own Anthropic API key and your
+          <strong>Settings</strong> — your preferences, and, if you provide them, your own NVIDIA API key and your
           twtdash Pro license key, together with the license details returned when it is activated (plan, status, expiry,
           and the name and email address on the purchase).
         </li>
@@ -110,23 +110,24 @@ export default function PrivacyPage() {
         together with your category names and descriptions. Nothing else from your library is sent. There are two ways to
         use AI:
       </p>
-      <h3>Bring your own Anthropic API key (free)</h3>
+      <h3>Bring your own NVIDIA API key (free)</h3>
       <p>
-        The extension sends the fields above <strong>directly from your browser to Anthropic&apos;s API</strong>{" "}
-        (<code>api.anthropic.com</code>), authenticated with your own API key. These requests do not pass through twtdash
-        servers, and we never see your key or the content. Your key is stored only in the extension&apos;s local storage and
-        is sent only to Anthropic. Anthropic processes these requests under its own terms and privacy policy, available at{" "}
-        <a href="https://www.anthropic.com/legal/privacy">anthropic.com/legal/privacy</a>.
+        The extension sends the fields above <strong>directly from your browser to NVIDIA&apos;s API</strong>{" "}
+        (<code>integrate.api.nvidia.com</code>), authenticated with your own API key. These requests do not pass through
+        twtdash servers, and we never see your key or the content. Your key is stored only in the extension&apos;s local
+        storage and is sent only to NVIDIA. NVIDIA processes these requests under the NVIDIA API Trial Terms of Service you
+        accepted when creating your key and under its privacy policy, available at{" "}
+        <a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/">nvidia.com/en-us/about-nvidia/privacy-policy</a>.
       </p>
       <h3>twtdash Pro (no API key needed)</h3>
       <p>
         The extension sends the same fields over HTTPS to the twtdash API (<code>/api/categorize</code>), together with
         your license key and device instance ID so we can confirm your subscription. The twtdash API forwards the content
-        to Anthropic&apos;s API to generate categories, tags and gists, returns the results to your browser, and{" "}
+        to NVIDIA&apos;s API to generate categories, tags and gists, returns the results to your browser, and{" "}
         <strong>does not store the content</strong>. It is processed in memory only for the duration of the request, and we
         do not log post contents or license keys. To enforce fair-use limits we keep short-lived, in-memory request counts
-        keyed to a one-way hash of your license key. Anthropic processes the content as our service provider under its
-        commercial terms.
+        keyed to a one-way hash of your license key. NVIDIA processes the content as our service provider under the
+        terms of our NVIDIA API account.
       </p>
       <p>
         Like most web services, our hosting provider may record standard technical request metadata — such as IP address,
@@ -168,7 +169,7 @@ export default function PrivacyPage() {
           X bookmarks — and features that are prominent in its user interface.
         </li>
         <li>
-          We transfer data only when needed to provide a feature you have turned on (sending posts to Anthropic for AI
+          We transfer data only when needed to provide a feature you have turned on (sending posts to NVIDIA for AI
           categorization, or your license key to LemonSqueezy for verification), to comply with applicable law, or to
           protect against malware, spam, phishing or other fraud or abuse.
         </li>
@@ -182,7 +183,7 @@ export default function PrivacyPage() {
       <h2 id="this-website">This website</h2>
       <p>
         {SITE_URL.replace(/^https?:\/\//, "")} does not use cookies, analytics or third-party trackers, and fonts are served
-        from our own domain. If you email us, we use your message and address only to reply and keep a record of the
+        from our own domain. If you contact us, we use your message only to reply and keep a record of the
         conversation.
       </p>
 
@@ -205,7 +206,7 @@ export default function PrivacyPage() {
 
       <h2 id="security">Security</h2>
       <p>
-        All network requests twtdash makes — to x.com, to Anthropic, to the twtdash API and to LemonSqueezy — use HTTPS.
+        All network requests twtdash makes — to x.com, to NVIDIA, to the twtdash API and to LemonSqueezy — use HTTPS.
         Your API key and license key stay in your browser&apos;s extension storage. Keep your device and browser profile
         secure, as anyone with access to them can access your local library.
       </p>

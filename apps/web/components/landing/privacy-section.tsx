@@ -18,7 +18,7 @@ const POINTS = [
   {
     icon: KeyRound,
     title: "AI is opt-in",
-    body: "Bring your own Anthropic key and posts go straight from your browser to Anthropic. With Pro, they pass through our API to Anthropic and are never stored.",
+    body: "Bring your own free NVIDIA key and posts go straight from your browser to NVIDIA. With Pro, they pass through our API to NVIDIA and are never stored.",
   },
   {
     icon: Database,
@@ -88,7 +88,7 @@ function DataFlowDiagram() {
     <figure className="relative">
       <figcaption className="sr-only">
         Diagram: inside your browser, twtdash reads your X bookmarks page and stores your library in IndexedDB. Only if
-        you turn on AI are post texts sent to Anthropic.
+        you turn on AI are post texts sent to NVIDIA&apos;s API.
       </figcaption>
       <div aria-hidden="true" className="flex flex-col items-stretch gap-3">
         <div className="rounded-2xl border border-dashed border-white/15 bg-black/20 p-4 sm:p-5">
@@ -120,7 +120,7 @@ function DataFlowDiagram() {
         <div className="mx-auto flex w-full max-w-sm items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-sm">
           <EyeOff className="size-5 shrink-0 text-zinc-500" />
           <div>
-            <div className="font-medium text-zinc-200">Anthropic API</div>
+            <div className="font-medium text-zinc-200">NVIDIA API</div>
             <div className="text-xs text-zinc-500">Only if you turn on AI — post text, author and links</div>
           </div>
         </div>

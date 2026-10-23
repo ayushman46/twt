@@ -10,7 +10,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^1.1.0",
     "@twtdash/shared": "file:../../packages/shared",
     "clsx": "^2.1.1",
     "lucide-react": "^1.61.0",
