@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   transpilePackages: ["@twtdash/shared"],
+  experimental: {
+    // English (app/(en)) and Hindi (app/hi) have separate root layouts, so
+    // unmatched URLs need a standalone 404: app/global-not-found.tsx.
+    globalNotFound: true,
+  },
   outputFileTracingRoot: monorepoRoot,
   turbopack: {
     root: monorepoRoot,

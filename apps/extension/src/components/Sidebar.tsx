@@ -26,7 +26,7 @@ import {
   Sun,
 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
-import { FACET_LABELS } from '@/lib/facets';
+import { catName, useT } from '@/i18n';
 import { fmtCompact } from '@/lib/format';
 import type { Scope } from '@/lib/query';
 import { viewerItem } from '@/lib/storage';
@@ -124,6 +124,7 @@ function SectionAction({ label, onClick, icon }: { label: string; onClick: () =>
 }
 
 export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () => void }) {
+  const t = useT();
   const lib = useLibrary();
   const [settings, update] = useSettings();
   const viewer = useStorageItem(viewerItem, null);
@@ -160,7 +161,7 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
             isPro ? 'btn-brand' : 'bg-panel-2 text-muted ring-1 ring-line',
           )}
         >
-          {isPro ? 'Pro' : 'Free'}
+          {isPro ? 'Pro' : t('common.free')}
         </span>
       </div>
 
@@ -171,7 +172,7 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
           className="flex h-9 w-full items-center gap-2 rounded-[10px] border border-line bg-panel px-3 text-[13px] text-faint shadow-card transition-colors hover:border-line-strong hover:text-muted"
         >
           <Search className="size-4" />
-          <span className="flex-1 text-left">Search or jump to…</span>
+          <span className="min-w-0 flex-1 truncate text-left">{t('sidebar.searchOrJump')}</span>
           <Kbd>{navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
           <Kbd>K</Kbd>
         </button>
@@ -180,32 +181,32 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
       <nav className="scroll-area flex-1 px-3 pb-4">
         {lib.partial ? (
           <div className="flex items-center gap-2 px-2.5 pt-2 text-[11.5px] text-faint">
-            <span className="bg-brand size-1.5 animate-pulse rounded-full" /> Loading your library…
+            <span className="bg-brand size-1.5 animate-pulse rounded-full" /> {t('sidebar.loading')}
           </div>
         ) : null}
         <div className="space-y-0.5 pt-2">
-          <NavItem icon={<House />} label="Home" active={route.page === 'home'} onClick={() => go('#/home')} />
-          <NavItem icon={<Layers />} label="All bookmarks" count={n(lib.counts.all)} active={isScope({ kind: 'all' })} onClick={() => go('#/library/all')} />
-          <NavItem icon={<Inbox />} label="Unread" count={n(lib.counts.unread)} active={isScope({ kind: 'unread' })} onClick={() => go('#/library/unread')} />
-          <NavItem icon={<Star />} label="Starred" count={n(lib.counts.starred)} active={isScope({ kind: 'starred' })} onClick={() => go('#/library/starred')} />
-          {lib.counts.likes ? <NavItem icon={<Heart />} label="Likes" count={n(lib.counts.likes)} active={isScope({ kind: 'likes' })} onClick={() => go('#/library/likes')} /> : null}
-          <NavItem icon={<Archive />} label="Archive" count={n(lib.counts.archived)} active={isScope({ kind: 'archived' })} onClick={() => go('#/library/archived')} />
-          <NavItem icon={<ChartColumn />} label="Insights" active={route.page === 'insights'} onClick={() => go('#/insights')} onIntent={() => void loadInsights()} />
+          <NavItem icon={<House />} label={t('nav.home')} active={route.page === 'home'} onClick={() => go('#/home')} />
+          <NavItem icon={<Layers />} label={t('nav.all')} count={n(lib.counts.all)} active={isScope({ kind: 'all' })} onClick={() => go('#/library/all')} />
+          <NavItem icon={<Inbox />} label={t('nav.unread')} count={n(lib.counts.unread)} active={isScope({ kind: 'unread' })} onClick={() => go('#/library/unread')} />
+          <NavItem icon={<Star />} label={t('nav.starred')} count={n(lib.counts.starred)} active={isScope({ kind: 'starred' })} onClick={() => go('#/library/starred')} />
+          {lib.counts.likes ? <NavItem icon={<Heart />} label={t('nav.likes')} count={n(lib.counts.likes)} active={isScope({ kind: 'likes' })} onClick={() => go('#/library/likes')} /> : null}
+          <NavItem icon={<Archive />} label={t('nav.archive')} count={n(lib.counts.archived)} active={isScope({ kind: 'archived' })} onClick={() => go('#/library/archived')} />
+          <NavItem icon={<ChartColumn />} label={t('nav.insights')} active={route.page === 'insights'} onClick={() => go('#/insights')} onIntent={() => void loadInsights()} />
         </div>
 
-        <Section id="discover" title="Discover">
-          <NavItem icon={<Brain />} label="Recall" active={route.page === 'recall'} onClick={() => go('#/recall')} onIntent={() => void loadRecall()} />
-          <NavItem icon={<Library />} label="Shelf" active={route.page === 'shelf'} onClick={() => go('#/shelf')} onIntent={() => void loadShelf()} />
-          <NavItem icon={<MessagesSquare />} label="Ask your bookmarks" active={route.page === 'ask'} onClick={() => go('#/ask')} onIntent={() => void loadAsk()} />
-          <NavItem icon={<Gift />} label="Wrapped" active={route.page === 'wrapped'} onClick={() => go('#/wrapped')} onIntent={() => void loadWrapped()} />
+        <Section id="discover" title={t('sidebar.discover')}>
+          <NavItem icon={<Brain />} label={t('nav.recall')} active={route.page === 'recall'} onClick={() => go('#/recall')} onIntent={() => void loadRecall()} />
+          <NavItem icon={<Library />} label={t('nav.shelf')} active={route.page === 'shelf'} onClick={() => go('#/shelf')} onIntent={() => void loadShelf()} />
+          <NavItem icon={<MessagesSquare />} label={t('nav.ask')} active={route.page === 'ask'} onClick={() => go('#/ask')} onIntent={() => void loadAsk()} />
+          <NavItem icon={<Gift />} label={t('nav.wrapped')} active={route.page === 'wrapped'} onClick={() => go('#/wrapped')} onIntent={() => void loadWrapped()} />
         </Section>
 
-        <Section id="categories" title="Categories" action={<SectionAction label="Manage categories" onClick={() => go('#/settings/categories')} icon={<Settings />} />}>
+        <Section id="categories" title={t('sidebar.categories')} action={<SectionAction label={t('sidebar.manageCategories')} onClick={() => go('#/settings/categories')} icon={<Settings />} />}>
           {shownCats.map((c) => (
             <NavItem
               key={c.id}
               icon={<span aria-hidden>{c.emoji}</span>}
-              label={c.name}
+              label={catName(c)}
               count={n(lib.counts.categories.get(c.id))}
               accent={c.color}
               active={isScope({ kind: 'category', value: c.id })}
@@ -215,12 +216,12 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
           {empty.length && withCount.length ? (
             <button type="button" onClick={() => setShowEmpty((x) => !x)} className="flex h-7 w-full items-center gap-2 rounded-lg px-2.5 text-[12px] text-faint hover:text-muted">
               <ChevronRight className={cn('size-3.5 transition-transform', showEmpty && 'rotate-90')} />
-              {showEmpty ? 'Hide empty' : `${empty.length} empty`}
+              {showEmpty ? t('sidebar.hideEmpty') : t('sidebar.nEmpty', { count: empty.length })}
             </button>
           ) : null}
         </Section>
 
-        <Section id="collections" title="Collections" action={<SectionAction label="New collection" onClick={() => openCollectionDialog()} icon={<Plus />} />}>
+        <Section id="collections" title={t('common.collections')} action={<SectionAction label={t('sidebar.newCollection')} onClick={() => openCollectionDialog()} icon={<Plus />} />}>
           {lib.collections.map((c) => (
             <NavItem
               key={c.id}
@@ -237,19 +238,19 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
               onClick={() => openCollectionDialog()}
               className="flex h-8 w-full items-center gap-2.5 rounded-[9px] border border-dashed border-line-strong px-2.5 text-[12.5px] text-muted transition-colors hover:border-accent/50 hover:text-fg"
             >
-              <Plus className="size-3.5" /> Create a collection
+              <Plus className="size-3.5" /> {t('sidebar.createCollection')}
             </button>
           ) : null}
         </Section>
 
         {(Object.keys(FACET_ICONS) as Facet[]).some((f) => lib.counts.facets.get(f)) ? (
-          <Section id="smart" title="Smart views">
+          <Section id="smart" title={t('sidebar.smartViews')}>
             {(Object.keys(FACET_ICONS) as Facet[]).map((f) =>
               lib.counts.facets.get(f) ? (
                 <NavItem
                   key={f}
                   icon={FACET_ICONS[f]}
-                  label={FACET_LABELS[f]}
+                  label={t(`facet.${f}`)}
                   count={n(lib.counts.facets.get(f))}
                   active={isScope({ kind: 'facet', value: f })}
                   onClick={() => go(scopeHash({ kind: 'facet', value: f }))}
@@ -260,7 +261,7 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
         ) : null}
 
         {authors.length ? (
-          <Section id="authors" title="Top authors">
+          <Section id="authors" title={t('sidebar.topAuthors')}>
             {authors.map((a) => (
               <NavItem
                 key={a.handle}
@@ -274,27 +275,27 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
             {lib.authors.length > 6 ? (
               <button type="button" onClick={() => setShowAllAuthors((x) => !x)} className="flex h-7 w-full items-center gap-2 rounded-lg px-2.5 text-[12px] text-faint hover:text-muted">
                 <ChevronRight className={cn('size-3.5 transition-transform', showAllAuthors && 'rotate-90')} />
-                {showAllAuthors ? 'Show fewer' : 'Show more'}
+                {showAllAuthors ? t('sidebar.showFewer') : t('sidebar.showMore')}
               </button>
             ) : null}
           </Section>
         ) : null}
 
         {lib.tags.length ? (
-          <Section id="tags" title="Tags">
+          <Section id="tags" title={t('common.tags')}>
             <div className="flex flex-wrap gap-1 px-1.5 pt-0.5">
-              {lib.tags.slice(0, 16).map(([t, n]) => (
+              {lib.tags.slice(0, 16).map(([tag, n]) => (
                 <button
-                  key={t}
+                  key={tag}
                   type="button"
-                  onClick={() => go(scopeHash({ kind: 'tag', value: t }))}
+                  onClick={() => go(scopeHash({ kind: 'tag', value: tag }))}
                   className={cn(
                     'h-6 max-w-full truncate rounded-full px-2 text-[11.5px] transition-colors',
-                    isScope({ kind: 'tag', value: t }) ? 'btn-brand' : 'bg-panel-2 text-fg-2 ring-1 ring-line hover:bg-panel-3',
+                    isScope({ kind: 'tag', value: tag }) ? 'btn-brand' : 'bg-panel-2 text-fg-2 ring-1 ring-line hover:bg-panel-3',
                   )}
-                  title={`${n} posts`}
+                  title={t('common.posts', { count: n })}
                 >
-                  #{t}
+                  #{tag}
                 </button>
               ))}
             </div>
@@ -306,7 +307,7 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
         {aiState.running ? (
           <div className="rounded-xl bg-accent-soft px-3 py-2.5 ring-1 ring-accent/20">
             <div className="flex items-center gap-2 text-[12px] font-medium text-fg">
-              <Sparkles className="size-3.5 animate-pulse text-accent" /> AI organizing… <span className="tabular ml-auto text-muted">{aiState.done}/{aiState.total}</span>
+              <Sparkles className="size-3.5 animate-pulse text-accent" /> {t('sidebar.aiOrganizing')} <span className="tabular ml-auto text-muted">{aiState.done}/{aiState.total}</span>
             </div>
             <div className="mt-2 h-1 overflow-hidden rounded-full bg-accent/15">
               <div className="bg-brand h-full rounded-full transition-[width] duration-500" style={{ width: `${aiState.total ? (aiState.done / aiState.total) * 100 : 0}%` }} />
@@ -320,9 +321,9 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
           >
             <span aria-hidden className="aurora absolute inset-0 opacity-80" />
             <span className="relative flex items-center gap-2 text-[12.5px] font-semibold">
-              <Crown className="size-3.5 text-accent" /> Unlock twtdash Pro
+              <Crown className="size-3.5 text-accent" /> {t('sidebar.unlockPro')}
             </span>
-            <span className="relative mt-0.5 block text-[11.5px] leading-snug text-muted">AI sorting, auto-tags & one-line gists — no API key.</span>
+            <span className="relative mt-0.5 block text-[11.5px] leading-snug text-muted">{t('sidebar.proPitch')}</span>
           </button>
         ) : null}
 
@@ -335,22 +336,22 @@ export function Sidebar({ route, onNavigate }: { route: Route; onNavigate?: () =
           <button type="button" onClick={() => go('#/settings/general')} className="flex min-w-0 flex-1 items-center gap-2 rounded-[9px] px-1.5 py-1 text-left hover:bg-panel-2">
             {viewer ? <Avatar name={viewer.handle} handle={viewer.handle} size={24} /> : <span className="grid size-6 place-items-center rounded-full bg-panel-3 text-muted"><Settings className="size-3.5" /></span>}
             <span className="min-w-0">
-              <span className="block truncate text-[12.5px] font-medium text-fg">{viewer ? `@${viewer.handle}` : 'Settings'}</span>
-              <span className="block truncate text-[11px] text-faint">{viewer ? 'Connected to X' : 'Preferences & plan'}</span>
+              <span className="block truncate text-[12.5px] font-medium text-fg">{viewer ? `@${viewer.handle}` : t('nav.settings')}</span>
+              <span className="block truncate text-[11px] text-faint">{viewer ? t('sidebar.connected') : t('sidebar.prefsPlan')}</span>
             </span>
           </button>
-          <Tip label={dark ? 'Light mode' : 'Dark mode'}>
+          <Tip label={dark ? t('sidebar.lightMode') : t('sidebar.darkMode')}>
             <button
               type="button"
               onClick={() => void update({ theme: dark ? 'light' : 'dark' })}
               className="grid size-8 place-items-center rounded-[9px] text-muted hover:bg-panel-2 hover:text-fg"
-              aria-label="Toggle theme"
+              aria-label={t('sidebar.toggleTheme')}
             >
               {dark ? <Sun className="size-4" /> : <Moon className="size-4" />}
             </button>
           </Tip>
-          <Tip label="Settings">
-            <button type="button" onClick={() => go('#/settings/general')} className={cn('grid size-8 place-items-center rounded-[9px] hover:bg-panel-2 hover:text-fg', route.page === 'settings' ? 'text-accent' : 'text-muted')} aria-label="Settings">
+          <Tip label={t('nav.settings')}>
+            <button type="button" onClick={() => go('#/settings/general')} className={cn('grid size-8 place-items-center rounded-[9px] hover:bg-panel-2 hover:text-fg', route.page === 'settings' ? 'text-accent' : 'text-muted')} aria-label={t('nav.settings')}>
               <Settings className="size-4" />
             </button>
           </Tip>

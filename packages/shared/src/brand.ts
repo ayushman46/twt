@@ -20,4 +20,6 @@ export const BRAND = {
 export const PRICING = {
   currency: 'USD',
   pro: { monthly: 5, yearly: 48 },
+  /** Pro in Indian rupees, shown to visitors from India. */
+  inr: { monthly: 99, yearly: 799 },
 } as const;

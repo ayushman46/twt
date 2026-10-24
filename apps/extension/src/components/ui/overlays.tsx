@@ -1,6 +1,7 @@
 import { Dialog as D, DropdownMenu as M, Popover as P, Switch as S, Tooltip as T } from 'radix-ui';
 import { Check, ChevronRight, X } from 'lucide-react';
 import { cloneElement, useState, type ComponentPropsWithoutRef, type ReactElement, type ReactNode, type SyntheticEvent } from 'react';
+import { t } from '@/i18n/core';
 import { cn } from './primitives';
 
 /* Tooltip */
@@ -188,11 +189,11 @@ export function Dialog({
             className,
           )}
         >
-          {title ? <D.Title className="pr-8 text-[16px] font-semibold tracking-tight">{title}</D.Title> : <D.Title className="sr-only">Dialog</D.Title>}
-          {description ? <D.Description className="mt-1 text-sm text-muted">{description}</D.Description> : <D.Description className="sr-only">Dialog</D.Description>}
+          {title ? <D.Title className="pr-8 text-[16px] font-semibold tracking-tight">{title}</D.Title> : <D.Title className="sr-only">{t('common.dialog')}</D.Title>}
+          {description ? <D.Description className="mt-1 text-sm text-muted">{description}</D.Description> : <D.Description className="sr-only">{t('common.dialog')}</D.Description>}
           <div className={cn(title || description ? 'mt-4' : '')}>{children}</div>
           {!hideClose ? (
-            <D.Close className="absolute top-4 right-4 grid size-7 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg" aria-label="Close">
+            <D.Close className="absolute top-4 right-4 grid size-7 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg" aria-label={t('common.close')}>
               <X className="size-4" />
             </D.Close>
           ) : null}

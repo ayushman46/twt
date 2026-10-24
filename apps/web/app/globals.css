@@ -25,6 +25,9 @@
   --color-accent: #ff94bf; /* soft pink for secondary highlights */
   --color-paper: #fafafa;
 
+  /* Secondary text: a touch lighter than stock zinc-500 so small copy passes WCAG AA (≥4.5:1) on every surface. */
+  --color-zinc-500: #84848e;
+
   --animate-float: float 9s ease-in-out infinite;
   --animate-shimmer: shimmer 3.2s linear infinite;
   --animate-blink: blink 1.1s steps(2, start) infinite;
@@ -86,6 +89,95 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-brand);
   outline-offset: 3px;
+}
+
+/* ---------- Hindi pages (html lang="hi") ---------- */
+
+/* Latin from Geist, Devanagari from Noto Sans Devanagari (loaded only by app/hi/layout.tsx). */
+html:lang(hi) body {
+  font-family: var(--font-geist), var(--font-deva), ui-sans-serif, system-ui, sans-serif;
+}
+/* Negative tracking collides matras and conjuncts; Latin islands marked lang="en" keep theirs. */
+:lang(hi) {
+  letter-spacing: 0;
+}
+h1:lang(hi) {
+  line-height: 1.2;
+}
+h2:lang(hi) {
+  line-height: 1.3;
+}
+h3:lang(hi) {
+  line-height: 1.45;
+}
+.leading-none:lang(hi),
+.leading-tight:lang(hi),
+.leading-snug:lang(hi) {
+  line-height: 1.45;
+}
+/* The serif italic accent has no Devanagari: use a bold upright sans instead of a faux italic. */
+.font-display:lang(hi) {
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* ---------- Currency & billing period (lib/head-script.ts + components/landing/pricing.tsx) ---------- */
+
+html:not([data-currency="inr"]):not(:lang(hi)) .cur-inr,
+html[data-currency="usd"] .cur-inr,
+html[data-currency="inr"] .cur-usd,
+html:not([data-currency]):lang(hi) .cur-usd,
+[data-period="monthly"] .per-yearly,
+[data-period="yearly"] .per-monthly {
+  display: none !important;
+}
+/* Active ₹/$ button follows <html data-currency> so it is right before hydration too. */
+html[data-currency="inr"] .cur-btn[data-cur-btn="inr"],
+html[data-currency="usd"] .cur-btn[data-cur-btn="usd"],
+html:not([data-currency]):not(:lang(hi)) .cur-btn[data-cur-btn="usd"],
+html:not([data-currency]):lang(hi) .cur-btn[data-cur-btn="inr"] {
+  background-color: #fff;
+  color: var(--color-ink);
+}
+
+/* ---------- Reveal on scroll (CSS + a few lines in lib/head-script.ts; no animation library) ---------- */
+
+html[data-rv] [data-reveal]:not([data-shown]) {
+  opacity: 0;
+}
+html[data-rv] [data-reveal][data-shown] {
+  animation: reveal-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--rd, 0s) backwards;
+}
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--ry, 18px), 0);
+  }
+}
+
+/* FAQ <details>: animate open/close where ::details-content is supported. */
+:root {
+  interpolate-size: allow-keywords;
+}
+.faq-item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    block-size 0.3s ease-out,
+    opacity 0.3s ease-out,
+    content-visibility 0.3s allow-discrete;
+}
+.faq-item[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+
+/* Skip layout and paint for long sections until they near the viewport. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }
 
 @media (prefers-reduced-motion: reduce) {

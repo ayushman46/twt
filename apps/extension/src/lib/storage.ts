@@ -1,5 +1,6 @@
 import { storage } from 'wxt/utils/storage';
 import { DEFAULT_AI_MODEL, isKnownModel, type LicenseStatus } from '@twtdash/shared';
+import { isLanguagePref, type LanguagePref } from '@/i18n/codes';
 import type { Source } from './types';
 
 export type ViewMode = 'grid' | 'list' | 'table' | 'gallery';
@@ -18,6 +19,8 @@ export interface LicenseInfo {
 
 export interface Settings {
   theme: 'system' | 'light' | 'dark';
+  /** UI language; 'auto' follows the browser. */
+  language: LanguagePref;
   defaultView: ViewMode;
   density: 'comfortable' | 'compact';
   showSummaries: boolean;
@@ -43,6 +46,7 @@ export interface Settings {
 
 export const DEFAULT_SETTINGS: Settings = {
   theme: 'system',
+  language: 'auto',
   defaultView: 'grid',
   density: 'comfortable',
   showSummaries: true,
@@ -63,7 +67,8 @@ export function mergeSettings(s: Partial<Settings> | null | undefined): Settings
   // Earlier builds used Claude: retire stale model ids and Anthropic keys.
   if (!isKnownModel(ai.model)) ai.model = DEFAULT_AI_MODEL;
   if (ai.apiKey.startsWith('sk-ant-')) ai.apiKey = '';
-  return { ...DEFAULT_SETTINGS, ...s, ai };
+  const language = isLanguagePref(s?.language) ? s.language : DEFAULT_SETTINGS.language;
+  return { ...DEFAULT_SETTINGS, ...s, ai, language };
 }
 
 export async function getSettings(): Promise<Settings> {

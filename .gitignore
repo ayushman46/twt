@@ -25,3 +25,6 @@ apps/extension/bench/results/*-trace.json
 *.log
 .DS_Store
 Thumbs.db
+
+# Large generated media (keep local, not in git)
+promo/

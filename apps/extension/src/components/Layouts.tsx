@@ -1,6 +1,7 @@
 /** The four library layouts, all virtualized (only on-screen items are mounted). */
 import { Play, Star } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useT } from '@/i18n';
 import { fmtCompact, fmtShortDate, mediaUrl } from '@/lib/format';
 import type { Bookmark, Category, Media } from '@/lib/types';
 import { Avatar, Verified } from './Brand';
@@ -89,6 +90,7 @@ const ListRow = memo(function ListRow({
   onOpen: (id: string) => void;
   onToggleSelect: (id: string) => void;
 }) {
+  const t = useT();
   const thumb = b.media[0]?.url ?? b.card?.image ?? b.quoted?.media[0]?.url;
   return (
     <div
@@ -114,13 +116,13 @@ const ListRow = memo(function ListRow({
           {b.starred ? <Star className="size-3.5 shrink-0 fill-amber-400 text-amber-400" /> : null}
         </div>
         <p className="mt-0.5 line-clamp-2 text-[13.5px] leading-[1.5] text-fg-2">
-          <Highlight text={b.summary && !b.text ? b.summary : b.text || b.card?.title || b.article?.title || (b.media.length ? 'Media post' : '')} re={re} />
+          <Highlight text={b.summary && !b.text ? b.summary : b.text || b.card?.title || b.article?.title || (b.media.length ? t('common.mediaPost') : '')} re={re} />
         </p>
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
           <CategoryChip category={category} className="h-5 text-[11px]" />
-          {b.tags.slice(0, 2).map((t) => (
-            <span key={t} className="h-5 truncate rounded-full bg-panel-2 px-2 text-[11px] leading-5 text-muted">
-              #{t}
+          {b.tags.slice(0, 2).map((tag) => (
+            <span key={tag} className="h-5 truncate rounded-full bg-panel-2 px-2 text-[11px] leading-5 text-muted">
+              #{tag}
             </span>
           ))}
           {showMetrics && b.metrics.likes ? <span className="text-[11.5px] text-faint">♥ {fmtCompact(b.metrics.likes)}</span> : null}
@@ -171,6 +173,7 @@ const ROW = 46;
 
 /** Windowed table: fixed-height rows between two spacer rows. */
 export function TableLayout(p: LayoutProps) {
+  const t = useT();
   const re = useMemo(() => highlightRegex(p.highlight), [p.highlight]);
   const bodyRef = useRef<HTMLTableSectionElement>(null);
   const [range, setRange] = useState({ start: 0, end: 40 });
@@ -239,12 +242,12 @@ export function TableLayout(p: LayoutProps) {
                   }}
                 />
               </th>
-              <th className="px-2 py-2.5">Post</th>
-              <th className="px-2 py-2.5">Author</th>
-              <th className="px-2 py-2.5">Category</th>
-              <th className="px-2 py-2.5 text-right">Likes</th>
-              <th className="px-2 py-2.5 text-right">Views</th>
-              <th className="px-3 py-2.5 text-right">Saved</th>
+              <th className="px-2 py-2.5">{t('layout.post')}</th>
+              <th className="px-2 py-2.5">{t('layout.author')}</th>
+              <th className="px-2 py-2.5">{t('common.category')}</th>
+              <th className="px-2 py-2.5 text-right">{t('layout.likes')}</th>
+              <th className="px-2 py-2.5 text-right">{t('layout.views')}</th>
+              <th className="px-3 py-2.5 text-right">{t('layout.saved')}</th>
             </tr>
           </thead>
           <tbody ref={bodyRef}>
@@ -267,7 +270,7 @@ export function TableLayout(p: LayoutProps) {
                       {!b.read ? <span className="bg-brand size-1.5 shrink-0 rounded-full" /> : null}
                       {b.starred ? <Star className="size-3.5 shrink-0 fill-amber-400 text-amber-400" /> : null}
                       <span className="truncate text-fg">
-                        <Highlight text={(b.text || b.card?.title || b.article?.title || 'Media post').replace(/\s+/g, ' ')} re={re} />
+                        <Highlight text={(b.text || b.card?.title || b.article?.title || t('common.mediaPost')).replace(/\s+/g, ' ')} re={re} />
                       </span>
                     </div>
                   </td>
@@ -304,6 +307,7 @@ const tileKey = (t: Tile) => t.key;
 const tileEstimate = () => 200;
 
 export function GalleryLayout(p: LayoutProps) {
+  const t = useT();
   const tiles = useMemo(() => p.items.flatMap((b) => b.media.map((m, i): Tile => ({ b, m, key: `${b.id}:${i}` }))), [p.items]);
   const render = useCallback(
     ({ b, m }: Tile) => (
@@ -329,6 +333,6 @@ export function GalleryLayout(p: LayoutProps) {
     ),
     [p.onOpen, p.selection],
   );
-  if (!tiles.length) return <div className="py-20 text-center text-sm text-muted">No images or videos in this view.</div>;
+  if (!tiles.length) return <div className="py-20 text-center text-sm text-muted">{t('layout.noMedia')}</div>;
   return <VirtualMasonry items={tiles} getKey={tileKey} estimate={tileEstimate} render={render} minColWidth={190} maxCols={12} gap={10} squareRatio={1} />;
 }

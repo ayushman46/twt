@@ -21,16 +21,15 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
+import { catDescription, catName, tMaybe, tOr, useT, type ExtraKey, type MessageKey } from '@/i18n';
 import { deleteTag, renameTag, setArchived, setRead, setStarred } from '@/lib/actions';
 import { DEMO_PREFIX } from '@/lib/demo';
 import { exportCsv, exportJson, exportMarkdown } from '@/lib/export';
-import { FACET_LABELS } from '@/lib/facets';
-import { fmtNumber, plural } from '@/lib/format';
+import { fmtNumber } from '@/lib/format';
 import { applyOperators, matchesScope, OPERATOR_HELP, parseQuery, SORT_LABELS, type SortKey } from '@/lib/query';
 import { usePaintMark } from '@/lib/perf';
 import { searchIndex } from '@/lib/scan-search';
 import type { Settings, ViewMode } from '@/lib/storage';
-import type { Facet } from '@/lib/types';
 import { useLibrary } from '@/hooks/library';
 import { navigate, type Route } from '@/hooks/route';
 import { useUi } from '@/store/ui';
@@ -41,20 +40,21 @@ import { GalleryLayout, ListLayout, MasonryGrid, TableLayout, virtualRegistry, t
 import { SyncButton } from '@/components/SyncControl';
 import { Menu, MenuContent, MenuItem, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuSeparator, MenuTrigger, Popover, PopoverContent, PopoverTrigger, Tip } from '@/components/ui/overlays';
 import { Button, EmptyState, Input, Kbd, cn } from '@/components/ui/primitives';
+import { VoiceSearchButton } from '@/components/VoiceSearchButton';
 
-const VIEW_OPTIONS: Array<{ id: ViewMode; label: string; icon: ReactNode }> = [
-  { id: 'grid', label: 'Grid', icon: <LayoutGrid /> },
-  { id: 'list', label: 'List', icon: <List /> },
-  { id: 'table', label: 'Table', icon: <Table2 /> },
-  { id: 'gallery', label: 'Media', icon: <Images /> },
+const VIEW_OPTIONS: Array<{ id: ViewMode; label: MessageKey; icon: ReactNode }> = [
+  { id: 'grid', label: 'view.grid', icon: <LayoutGrid /> },
+  { id: 'list', label: 'view.list', icon: <List /> },
+  { id: 'table', label: 'view.table', icon: <Table2 /> },
+  { id: 'gallery', label: 'view.gallery', icon: <Images /> },
 ];
 
-const QUICK_FILTERS: Array<{ op: string; label: string; icon: ReactNode }> = [
-  { op: 'has:image', label: 'Images', icon: <Images /> },
-  { op: 'has:video', label: 'Videos', icon: <Film /> },
-  { op: 'has:link', label: 'Links', icon: <Link2 /> },
-  { op: 'is:thread', label: 'Threads', icon: <ListTree /> },
-  { op: 'is:long', label: 'Long reads', icon: <FileText /> },
+const QUICK_FILTERS: Array<{ op: string; label: MessageKey; icon: ReactNode }> = [
+  { op: 'has:image', label: 'facet.image', icon: <Images /> },
+  { op: 'has:video', label: 'facet.video', icon: <Film /> },
+  { op: 'has:link', label: 'facet.link', icon: <Link2 /> },
+  { op: 'is:thread', label: 'facet.thread', icon: <ListTree /> },
+  { op: 'is:long', label: 'facet.long', icon: <FileText /> },
 ];
 
 function toggleOperator(query: string, op: string): string {
@@ -64,30 +64,31 @@ function toggleOperator(query: string, op: string): string {
 }
 
 function ScopeHeader({ route, count }: { route: Route; count: number }) {
+  const t = useT();
   const lib = useLibrary();
   const openCollectionDialog = useUi((s) => s.openCollectionDialog);
   const { scope } = route;
   let icon: ReactNode = null;
-  let title = 'All bookmarks';
+  let title = t('nav.all');
   let description: ReactNode = null;
   let actions: ReactNode = null;
 
   switch (scope.kind) {
     case 'unread':
-      title = 'Unread';
-      description = 'New saves you haven’t opened yet. Open a post to mark it read.';
+      title = t('nav.unread');
+      description = t('library.unreadDesc');
       break;
     case 'starred':
-      title = 'Starred';
-      description = 'Your favorites — the best of the best.';
+      title = t('nav.starred');
+      description = t('library.starredDesc');
       break;
     case 'archived':
-      title = 'Archive';
-      description = 'Hidden from your library, never deleted.';
+      title = t('nav.archive');
+      description = t('library.archiveDesc');
       break;
     case 'likes':
-      title = 'Likes';
-      description = 'Posts you’ve liked on X.';
+      title = t('nav.likes');
+      description = t('library.likesDesc');
       break;
     case 'category': {
       const c = lib.categoryMap.get(scope.value ?? '');
@@ -96,8 +97,8 @@ function ScopeHeader({ route, count }: { route: Route; count: number }) {
           {c.emoji}
         </span>
       ) : null;
-      title = c?.name ?? 'Category';
-      description = c?.description;
+      title = c ? catName(c) : t('common.category');
+      description = c ? catDescription(c) : null;
       break;
     }
     case 'collection': {
@@ -107,11 +108,11 @@ function ScopeHeader({ route, count }: { route: Route; count: number }) {
           {c.emoji}
         </span>
       ) : null;
-      title = c?.name ?? 'Collection';
-      description = c?.description || (c?.xFolderId ? 'Synced from your X bookmark folder.' : null);
+      title = c?.name ?? t('common.collection');
+      description = c?.description || (c?.xFolderId ? t('library.xFolder') : null);
       actions = c ? (
         <Button size="sm" variant="ghost" onClick={() => openCollectionDialog({ editId: c.id })}>
-          <Pencil /> Edit
+          <Pencil /> {t('common.edit')}
         </Button>
       ) : null;
       break;
@@ -122,29 +123,29 @@ function ScopeHeader({ route, count }: { route: Route; count: number }) {
       actions = (
         <Menu>
           <MenuTrigger asChild>
-            <Button size="icon-sm" variant="ghost" aria-label="Tag actions">
+            <Button size="icon-sm" variant="ghost" aria-label={t('library.tagActions')}>
               <Ellipsis />
             </Button>
           </MenuTrigger>
           <MenuContent>
             <MenuItem
               onSelect={() => {
-                const next = prompt('Rename tag', tag);
+                const next = prompt(t('library.renameTag'), tag);
                 if (next && next.trim() && next !== tag) void renameTag(tag, next).then(() => navigate(`#/library/tag/${encodeURIComponent(next.trim().toLowerCase())}`));
               }}
             >
-              <Pencil /> Rename tag
+              <Pencil /> {t('library.renameTag')}
             </MenuItem>
             <MenuItem
               danger
               onSelect={() => {
                 void deleteTag(tag).then(() => {
-                  toast(`Removed #${tag} from all posts`);
+                  toast(t('library.tagRemoved', { tag }));
                   navigate('#/library/all');
                 });
               }}
             >
-              <Trash /> Delete tag
+              <Trash /> {t('library.deleteTag')}
             </MenuItem>
           </MenuContent>
         </Menu>
@@ -159,13 +160,13 @@ function ScopeHeader({ route, count }: { route: Route; count: number }) {
       const isDemo = lib.bookmarks.some((b) => b.author.handle === scope.value && b.id.startsWith(DEMO_PREFIX));
       actions = isDemo ? null : (
         <Button size="sm" variant="ghost" onClick={() => window.open(`https://x.com/${scope.value}`, '_blank', 'noopener')}>
-          <ExternalLink /> Profile
+          <ExternalLink /> {t('library.profile')}
         </Button>
       );
       break;
     }
     case 'facet':
-      title = FACET_LABELS[scope.value as Facet] ?? 'Smart view';
+      title = tMaybe(`facet.${scope.value}`) ?? t('library.smartView');
       break;
   }
 
@@ -185,6 +186,7 @@ function ScopeHeader({ route, count }: { route: Route; count: number }) {
 }
 
 export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Route; settings: Settings; aiAvailable: boolean; onAi: (ids?: string[]) => void }) {
+  const t = useT();
   const lib = useLibrary();
   const query = useUi((s) => s.query);
   const setQuery = useUi((s) => s.setQuery);
@@ -388,13 +390,13 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
                   }
                 }
               }}
-              placeholder="Search text, authors, notes…  try from:  has:video  cat:ai"
+              placeholder={t('library.searchPlaceholder')}
               className="h-11 rounded-[14px] pr-24 pl-10 text-[14px]"
               spellCheck={false}
             />
             <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1">
               {query ? (
-                <button type="button" onClick={() => setQuery('')} className="grid size-6 place-items-center rounded-md text-muted hover:bg-panel-2 hover:text-fg" aria-label="Clear search">
+                <button type="button" onClick={() => setQuery('')} className="grid size-6 place-items-center rounded-md text-muted hover:bg-panel-2 hover:text-fg" aria-label={t('library.clearSearch')}>
                   <X className="size-3.5" />
                 </button>
               ) : (
@@ -403,11 +405,11 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
               <Popover>
                 <PopoverTrigger asChild>
                   <button type="button" className="h-6 rounded-md px-1.5 text-[11.5px] font-medium text-muted hover:bg-panel-2 hover:text-fg">
-                    Filters
+                    {t('library.filters')}
                   </button>
                 </PopoverTrigger>
                 <PopoverContent align="end" className="w-[360px] p-2">
-                  <div className="px-2 pt-1 pb-2 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">Search operators — click to add</div>
+                  <div className="px-2 pt-1 pb-2 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">{t('library.operatorsHint')}</div>
                   {OPERATOR_HELP.map((o) => (
                     <button
                       key={o.op}
@@ -419,7 +421,7 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
                       className="flex w-full items-center gap-3 rounded-lg px-2 py-1.5 text-left hover:bg-panel-2"
                     >
                       <code className="w-36 shrink-0 truncate text-[12px] text-accent">{o.example}</code>
-                      <span className="truncate text-[12.5px] text-muted">{o.description}</span>
+                      <span className="truncate text-[12.5px] text-muted">{tOr(`op.${o.op}` as ExtraKey, o.description)}</span>
                     </button>
                   ))}
                 </PopoverContent>
@@ -427,20 +429,22 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
             </div>
           </div>
 
+          <VoiceSearchButton className="shrink-0" purpose="Speak your search" onResult={(text) => { if (text) setQuery(text); }} />
+
           <Menu>
             <MenuTrigger asChild>
               <Button size="md" variant="outline" className="h-11 rounded-[14px]">
-                <ArrowUpDown /> <span className="hidden sm:inline">{SORT_LABELS[effectiveSort]}</span>
+                <ArrowUpDown /> <span className="hidden sm:inline">{tOr(`sort.${effectiveSort}`, SORT_LABELS[effectiveSort])}</span>
               </Button>
             </MenuTrigger>
             <MenuContent className="w-48">
-              <MenuLabel>Sort by</MenuLabel>
+              <MenuLabel>{t('library.sortBy')}</MenuLabel>
               <MenuRadioGroup value={effectiveSort} onValueChange={(v) => setSort(v as SortKey)}>
                 {(Object.keys(SORT_LABELS) as SortKey[])
                   .filter((k) => k !== 'relevance' || scores)
                   .map((k) => (
                     <MenuRadioItem key={k} value={k}>
-                      {SORT_LABELS[k]}
+                      {tOr(`sort.${k}`, SORT_LABELS[k])}
                     </MenuRadioItem>
                   ))}
               </MenuRadioGroup>
@@ -449,11 +453,11 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
 
           <div className="flex h-11 items-center rounded-[14px] border border-line-strong bg-panel p-1 shadow-card">
             {VIEW_OPTIONS.map((v, i) => (
-              <Tip key={v.id} label={v.label} shortcut={String(i + 1)}>
+              <Tip key={v.id} label={t(v.label)} shortcut={String(i + 1)}>
                 <button
                   type="button"
                   onClick={() => setView(v.id)}
-                  aria-label={`${v.label} view`}
+                  aria-label={t('library.viewLabel', { name: t(v.label) })}
                   aria-pressed={view === v.id}
                   className={cn('grid h-full w-9 place-items-center rounded-[10px] transition-all [&_svg]:size-4', view === v.id ? 'bg-panel-3 text-fg shadow-card' : 'text-muted hover:text-fg')}
                 >
@@ -463,32 +467,32 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
             ))}
           </div>
 
-          <Tip label={selectMode ? 'Done selecting' : 'Select posts'} shortcut="X">
-            <Button size="icon" variant={selectMode ? 'soft' : 'outline'} className="h-11 w-11 rounded-[14px]" onClick={() => (selectMode ? (setSelectMode(false), clearSelection()) : setSelectMode(true))} aria-label="Select mode">
+          <Tip label={selectMode ? t('library.doneSelecting') : t('library.selectPosts')} shortcut="X">
+            <Button size="icon" variant={selectMode ? 'soft' : 'outline'} className="h-11 w-11 rounded-[14px]" onClick={() => (selectMode ? (setSelectMode(false), clearSelection()) : setSelectMode(true))} aria-label={t('library.selectMode')}>
               <ListChecks />
             </Button>
           </Tip>
 
           <Menu>
             <MenuTrigger asChild>
-              <Button size="icon" variant="outline" className="h-11 w-11 rounded-[14px]" aria-label="More">
+              <Button size="icon" variant="outline" className="h-11 w-11 rounded-[14px]" aria-label={t('common.more')}>
                 <Ellipsis />
               </Button>
             </MenuTrigger>
             <MenuContent className="w-60">
-              <MenuItem disabled={!unreadInView} onSelect={() => void setRead(items.filter((b) => !b.read).map((b) => b.id), true).then(() => toast.success(`Marked ${plural(unreadInView, 'post')} as read`))}>
-                <CheckCheck /> Mark all as read
+              <MenuItem disabled={!unreadInView} onSelect={() => void setRead(items.filter((b) => !b.read).map((b) => b.id), true).then(() => toast.success(t('library.markedRead', { count: unreadInView })))}>
+                <CheckCheck /> {t('library.markAllRead')}
               </MenuItem>
               {aiAvailable ? (
                 <MenuItem disabled={!items.length} onSelect={() => onAi(items.map((b) => b.id))}>
-                  <Sparkles /> Re-organize this view with AI
+                  <Sparkles /> {t('library.reorganizeAi')}
                 </MenuItem>
               ) : null}
               <MenuSeparator />
-              <MenuLabel>Export this view</MenuLabel>
-              <MenuItem onSelect={() => void exportMarkdown(items)}>Markdown (.md)</MenuItem>
-              <MenuItem onSelect={() => void exportCsv(items)}>Spreadsheet (.csv)</MenuItem>
-              <MenuItem onSelect={() => void exportJson(items)}>Backup (.json)</MenuItem>
+              <MenuLabel>{t('library.exportView')}</MenuLabel>
+              <MenuItem onSelect={() => void exportMarkdown(items)}>{t('common.exportMd')}</MenuItem>
+              <MenuItem onSelect={() => void exportCsv(items)}>{t('common.exportCsv')}</MenuItem>
+              <MenuItem onSelect={() => void exportJson(items)}>{t('common.exportJson')}</MenuItem>
             </MenuContent>
           </Menu>
         </div>
@@ -507,7 +511,7 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
                 )}
               >
                 {f.icon}
-                {f.label}
+                {t(f.label)}
               </button>
             );
           })}
@@ -527,7 +531,7 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
                     style={on ? { background: `color-mix(in oklab, ${c.color} 22%, transparent)` } : undefined}
                   >
                     <span>{c.emoji}</span>
-                    {c.name}
+                    {catName(c)}
                     <span className="text-faint tabular-nums">{n}</span>
                   </button>
                 );
@@ -539,7 +543,7 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
               onClick={() => onAi()}
               className="ml-auto inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-accent-soft px-3 text-[12.5px] font-medium text-accent hover:bg-accent/20"
             >
-              <Sparkles className="size-3.5" /> Organize {fmtNumber(pendingAi)} with AI
+              <Sparkles className="size-3.5" /> {t('library.organizeAi', { count: fmtNumber(pendingAi) })}
             </button>
           ) : null}
         </div>
@@ -549,26 +553,26 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
         {lib.loading ? (
           <LoadingGrid />
         ) : !lib.counts.total ? (
-          <EmptyState icon={<Sparkles />} title="Your library is empty" action={<SyncButton hasData={false} size="lg" />}>
-            Sync your X bookmarks and twtdash will sort them into categories automatically.
+          <EmptyState icon={<Sparkles />} title={t('library.emptyTitle')} action={<SyncButton hasData={false} size="lg" />}>
+            {t('library.emptyBody')}
           </EmptyState>
         ) : !items.length ? (
           <EmptyState
             icon={<SearchX />}
-            title={query ? 'No matches' : 'Nothing here yet'}
+            title={query ? t('library.noMatches') : t('library.nothingHere')}
             action={
               query ? (
                 <Button variant="secondary" onClick={() => setQuery('')}>
-                  Clear search
+                  {t('library.clearSearch')}
                 </Button>
               ) : (
                 <Button variant="secondary" onClick={() => navigate('#/library/all')}>
-                  View all bookmarks
+                  {t('library.viewAll')}
                 </Button>
               )
             }
           >
-            {query ? 'Try fewer words or remove a filter.' : route.scope.kind === 'unread' ? 'You’re all caught up. ✨' : 'Posts you add here will show up in this view.'}
+            {query ? t('library.tryFewer') : route.scope.kind === 'unread' ? t('library.caughtUp') : t('library.addHere')}
           </EmptyState>
         ) : view === 'grid' ? (
           <MasonryGrid {...layoutProps} />

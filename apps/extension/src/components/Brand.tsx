@@ -1,5 +1,6 @@
 import { BadgeCheck } from 'lucide-react';
 import { useId, useState } from 'react';
+import { t } from '@/i18n/core';
 import { avatarUrl, initials } from '@/lib/format';
 import { cn } from './ui/primitives';
 
@@ -74,5 +75,5 @@ export function Avatar({ src, name, handle, size = 40, className }: { src?: stri
 }
 
 export function Verified({ className }: { className?: string }) {
-  return <BadgeCheck className={cn('size-4 shrink-0 fill-[#1D9BF0] text-white', className)} aria-label="Verified" />;
+  return <BadgeCheck className={cn('size-4 shrink-0 fill-[#1D9BF0] text-white', className)} aria-label={t('brand.verified')} />;
 }

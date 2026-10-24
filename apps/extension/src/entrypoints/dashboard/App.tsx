@@ -2,6 +2,7 @@ import { Menu as MenuIcon } from 'lucide-react';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { Toaster, toast } from 'sonner';
 import { browser } from 'wxt/browser';
+import { t, useT } from '@/i18n';
 import { AiError, aiReady, pendingAiCount } from '@/lib/ai-config';
 import { ensureCategories } from '@/lib/db';
 import { licenseNeedsCheck, validateLicense } from '@/lib/license';
@@ -46,6 +47,7 @@ function isTyping(e: KeyboardEvent) {
 }
 
 function Shell() {
+  useT();
   const route = useRoute();
   const [settings, update, loaded] = useSettings();
   const lib = useLibrary();
@@ -100,12 +102,12 @@ function Shell() {
       try {
         const { runAiCategorization } = await import('@/lib/ai');
         const p = await runAiCategorization({ ids, force, signal: controller.signal, onProgress: (pr) => setAi({ done: pr.done, total: pr.total, failed: pr.failed }) });
-        if (p.total) toast.success(`AI organized ${p.done.toLocaleString()} posts`, { description: p.failed ? `${p.failed} couldn’t be processed — they’ll be retried later.` : undefined });
+        if (p.total) toast.success(t('app.aiOrganized', { count: p.done }), { description: p.failed ? t('app.aiPartial', { count: p.failed }) : undefined });
         setAi({ running: false });
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'AI organization failed';
+        const message = err instanceof Error ? err.message : t('app.aiFailed');
         setAi({ running: false, error: message });
-        toast.error(message, err instanceof AiError && (err.code === 'auth' || err.code === 'license' || err.code === 'config') ? { action: { label: 'Settings', onClick: () => navigate('#/settings/ai') } } : undefined);
+        toast.error(message, err instanceof AiError && (err.code === 'auth' || err.code === 'license' || err.code === 'config') ? { action: { label: t('nav.settings'), onClick: () => navigate('#/settings/ai') } } : undefined);
       }
     },
     [setAi],
@@ -209,7 +211,7 @@ function Shell() {
         <main className="flex min-w-0 flex-1 flex-col">
           {!fullBleedWelcome ? (
             <div className="sticky top-0 z-30 flex h-12 items-center gap-2 border-b border-line bg-bg/85 px-4 backdrop-blur lg:hidden">
-              <button type="button" onClick={() => setDrawer(true)} className="grid size-8 place-items-center rounded-lg hover:bg-panel-2" aria-label="Open menu">
+              <button type="button" onClick={() => setDrawer(true)} className="grid size-8 place-items-center rounded-lg hover:bg-panel-2" aria-label={t('nav.openMenu')}>
                 <MenuIcon className="size-5" />
               </button>
               <Logo className="size-6" />

@@ -12,6 +12,8 @@ const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
 export default defineConfig({
   root: r('./preview'),
+  // Parallel dev servers (one per contributor/agent) each need their own dep-optimizer cache.
+  cacheDir: process.env.VITE_CACHE_DIR || r('./node_modules/.vite'),
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: [

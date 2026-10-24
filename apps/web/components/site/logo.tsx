@@ -48,7 +48,7 @@ export function LogoMark({ id, className, title }: { id: string; className?: str
 /** "twt" + gradient "dash" — the twtdash wordmark as text (always lowercase). */
 export function WordmarkText({ className }: { className?: string }) {
   return (
-    <span className={clsx("font-semibold leading-none tracking-[-0.045em] text-white", className)}>
+    <span lang="en" className={clsx("font-semibold leading-none tracking-[-0.045em] text-white", className)}>
       twt<span className="text-brand-gradient pr-[0.04em]">dash</span>
     </span>
   );

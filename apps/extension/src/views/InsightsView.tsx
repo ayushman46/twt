@@ -1,10 +1,10 @@
-import { addDays, addMonths, format, startOfMonth, startOfWeek } from 'date-fns';
+import { addDays, addMonths, startOfMonth, startOfWeek } from 'date-fns';
 import { ArrowDownRight, ArrowUpRight, ChartColumn, Check, Table2 } from 'lucide-react';
 import { useMemo, useState, type ReactNode } from 'react';
 import { ColumnChart } from '@/components/ColumnChart';
-import { FACET_LABELS } from '@/lib/facets';
+import { catName, getLocale, rich, t, useLocale, useT, type MessageKey } from '@/i18n';
 import { usePaintMark } from '@/lib/perf';
-import { fmtCompact, fmtNumber } from '@/lib/format';
+import { fmtCompact, fmtDate, fmtMonthDay, fmtNumber } from '@/lib/format';
 import type { Bookmark, Facet } from '@/lib/types';
 import { useLibrary } from '@/hooks/library';
 import { navigate, scopeHash } from '@/hooks/route';
@@ -12,11 +12,11 @@ import { Avatar } from '@/components/Brand';
 import { EmptyState, cn } from '@/components/ui/primitives';
 
 type Range = '30d' | '90d' | '12m' | 'all';
-const RANGES: Array<{ id: Range; label: string }> = [
-  { id: '30d', label: 'Last 30 days' },
-  { id: '90d', label: 'Last 90 days' },
-  { id: '12m', label: 'Last 12 months' },
-  { id: 'all', label: 'All time' },
+const RANGES: Array<{ id: Range; label: MessageKey }> = [
+  { id: '30d', label: 'insights.range.30d' },
+  { id: '90d', label: 'insights.range.90d' },
+  { id: '12m', label: 'insights.range.12m' },
+  { id: 'all', label: 'insights.range.all' },
 ];
 const DAY = 86_400_000;
 
@@ -50,7 +50,7 @@ function StatTile({ label, value, delta, hint }: { label: string; value: string;
       <div className="text-[12.5px] text-muted">{label}</div>
       <div className="mt-1.5 text-[26px] leading-none font-semibold tracking-tight">{value}</div>
       {delta && delta.value === 0 ? (
-        <div className="mt-2 text-[12px] text-muted">Same as last week</div>
+        <div className="mt-2 text-[12px] text-muted">{t('home.sameAsLastWeek')}</div>
       ) : delta ? (
         <div className="mt-2 flex items-center gap-1 text-[12px] text-muted">
           <span className={cn('inline-flex items-center font-medium', up ? 'text-good' : 'text-fg-2')}>
@@ -96,6 +96,15 @@ function BarList({ rows, onSelect, max }: { rows: Array<{ key: string; label: Re
   );
 }
 
+const pad = (n: number) => String(n).padStart(2, '0');
+const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const ym = (d: Date | number) => {
+  const x = new Date(d);
+  return `${x.getFullYear()}-${pad(x.getMonth() + 1)}`;
+};
+/** "Oct '26" / "अक्तू॰ '26" */
+const monthShortYear = (d: Date) => `${fmtDate(d, { month: 'short' })} '${String(d.getFullYear()).slice(2)}`;
+
 interface Bucket {
   key: string;
   label: string;
@@ -112,32 +121,36 @@ function buildTimeline(list: Bookmark[], range: Range): { buckets: Bucket[]; uni
   const index = new Map<string, Bucket>();
   if (unit === 'week') {
     for (let d = startOfWeek(start, { weekStartsOn: 1 }); d.getTime() <= Date.now(); d = addDays(d, 7)) {
-      const b: Bucket = { key: format(d, 'yyyy-MM-dd'), label: format(d, 'MMM d'), full: `Week of ${format(d, 'MMM d, yyyy')}`, count: 0 };
+      const b: Bucket = { key: ymd(d), label: fmtMonthDay(d), full: t('insights.weekOf', { date: fmtDate(d, { month: 'short', day: 'numeric', year: 'numeric' }) }), count: 0 };
       buckets.push(b);
       index.set(b.key, b);
     }
     for (const x of list) {
-      const b = index.get(format(startOfWeek(x.savedAt, { weekStartsOn: 1 }), 'yyyy-MM-dd'));
+      const b = index.get(ymd(startOfWeek(x.savedAt, { weekStartsOn: 1 })));
       if (b) b.count++;
     }
   } else {
     for (let d = startOfMonth(start); d.getTime() <= Date.now(); d = addMonths(d, 1)) {
-      const b: Bucket = { key: format(d, 'yyyy-MM'), label: format(d, "MMM ''yy"), full: format(d, 'MMMM yyyy'), count: 0 };
+      const b: Bucket = { key: ym(d), label: monthShortYear(d), full: fmtDate(d, { month: 'long', year: 'numeric' }), count: 0 };
       buckets.push(b);
       index.set(b.key, b);
     }
     for (const x of list) {
-      const b = index.get(format(x.savedAt, 'yyyy-MM'));
+      const b = index.get(ym(x.savedAt));
       if (b) b.count++;
     }
   }
   return { buckets, unit };
 }
 
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+/** Monday-first weekday names in the active language (2024-01-01 was a Monday). */
+const weekdays = (weekday: 'short' | 'long') => Array.from({ length: 7 }, (_, i) => fmtDate(new Date(2024, 0, 1 + i), { weekday }));
 const LEVELS = [0, 18, 36, 58, 80, 100];
 
 function Heatmap({ list }: { list: Bookmark[] }) {
+  const locale = useLocale();
+  const DAYS = useMemo(() => weekdays('short'), [locale]); // eslint-disable-line react-hooks/exhaustive-deps
+  const LONG_DAYS = useMemo(() => weekdays('long'), [locale]); // eslint-disable-line react-hooks/exhaustive-deps
   const [hover, setHover] = useState<{ d: number; h: number } | null>(null);
   const grid = useMemo(() => {
     const g = Array.from({ length: 7 }, () => new Array(24).fill(0) as number[]);
@@ -155,12 +168,15 @@ function Heatmap({ list }: { list: Bookmark[] }) {
     grid.forEach((row, d) => row.forEach((v, h) => v > best.v && (best = { d, h, v })));
     return best;
   }, [grid]);
-  const hourLabel = (h: number) => format(new Date(2020, 0, 1, h), 'ha').toLowerCase();
+  const hourLabel = (h: number) => {
+    const s = fmtDate(new Date(2020, 0, 1, h), { hour: 'numeric' });
+    return getLocale() === 'en' ? s.toLowerCase().replace(/\s/g, '') : s;
+  };
 
   return (
     <div>
       <div className="overflow-x-auto">
-        <div className="inline-grid min-w-full grid-cols-[36px_repeat(24,minmax(14px,1fr))] gap-[3px]" role="grid" aria-label="Saves by day of week and hour">
+        <div className="inline-grid min-w-full grid-cols-[36px_repeat(24,minmax(14px,1fr))] gap-[3px]" role="grid" aria-label={t('insights.heatmapAria')}>
           <span />
           {Array.from({ length: 24 }, (_, h) => (
             <span key={h} className="pb-1 text-center text-[10px] text-faint">
@@ -175,7 +191,7 @@ function Heatmap({ list }: { list: Bookmark[] }) {
                   key={h}
                   role="gridcell"
                   tabIndex={-1}
-                  aria-label={`${DAYS[d]} ${hourLabel(h)}: ${v} saved`}
+                  aria-label={`${DAYS[d]} ${hourLabel(h)}: ${t('chart.saved', { count: v })}`}
                   onPointerEnter={() => setHover({ d, h })}
                   onPointerLeave={() => setHover(null)}
                   className={cn('h-[18px] rounded-[4px] transition-transform', hover?.d === d && hover?.h === h && 'scale-110 ring-2 ring-fg/30')}
@@ -190,20 +206,18 @@ function Heatmap({ list }: { list: Bookmark[] }) {
         <span className="min-h-[18px]">
           {hover ? (
             <>
-              <b className="font-semibold text-fg">{fmtNumber(grid[hover.d]![hover.h]!)} saved</b> · {DAYS[hover.d]} {hourLabel(hover.h)}–{hourLabel((hover.h + 1) % 24)}
+              <b className="font-semibold text-fg">{t('chart.saved', { count: fmtNumber(grid[hover.d]![hover.h]!) })}</b> · {DAYS[hover.d]} {hourLabel(hover.h)}–{hourLabel((hover.h + 1) % 24)}
             </>
           ) : peak.v > 0 ? (
-            <>
-              You save most on <b className="font-semibold text-fg">{DAYS[peak.d]}s around {hourLabel(peak.h)}</b>
-            </>
+            rich(t('insights.peak', { day: LONG_DAYS[peak.d], hour: hourLabel(peak.h) }), { b: (s) => <b className="font-semibold text-fg">{s}</b> })
           ) : null}
         </span>
         <span className="flex items-center gap-1.5">
-          Less
+          {t('insights.less')}
           {[0, 1, 2, 3, 4, 5].map((l) => (
             <span key={l} className="size-3 rounded-[3px]" style={{ background: cellColor(l) }} />
           ))}
-          More
+          {t('insights.more')}
         </span>
       </div>
     </div>
@@ -211,6 +225,8 @@ function Heatmap({ list }: { list: Bookmark[] }) {
 }
 
 export function InsightsView() {
+  const locale = useLocale();
+  useT();
   const lib = useLibrary();
   const [range, setRange] = useState<Range>('12m');
   const [showTable, setShowTable] = useState(false);
@@ -220,7 +236,7 @@ export function InsightsView() {
     return lib.bookmarks.filter((b) => b.savedAt >= start);
   }, [lib.bookmarks, range]);
 
-  const { buckets, unit } = useMemo(() => buildTimeline(list, range), [list, range]);
+  const { buckets, unit } = useMemo(() => buildTimeline(list, range), [list, range, locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const stats = useMemo(() => {
     const now = Date.now();
@@ -269,8 +285,8 @@ export function InsightsView() {
 
   if (!lib.counts.total) {
     return (
-      <EmptyState icon={<ChartColumn />} title="No insights yet">
-        Sync your bookmarks to see what you save, who you learn from and when.
+      <EmptyState icon={<ChartColumn />} title={t('insights.empty')}>
+        {t('insights.emptyBody')}
       </EmptyState>
     );
   }
@@ -282,10 +298,10 @@ export function InsightsView() {
     <div className="mx-auto w-full max-w-[1240px] px-5 pt-6 pb-16 sm:px-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-semibold tracking-tight">Insights</h1>
-          <p className="mt-0.5 text-[13.5px] text-muted">What you save, who you learn from, and when.</p>
+          <h1 className="text-[22px] font-semibold tracking-tight">{t('nav.insights')}</h1>
+          <p className="mt-0.5 text-[13.5px] text-muted">{t('insights.subtitle')}</p>
         </div>
-        <div className="flex rounded-xl border border-line-strong bg-panel p-0.5" role="radiogroup" aria-label="Time range">
+        <div className="flex max-w-full overflow-x-auto rounded-xl border border-line-strong bg-panel p-0.5 [scrollbar-width:none]" role="radiogroup" aria-label={t('insights.timeRange')}>
           {RANGES.map((r) => (
             <button
               key={r.id}
@@ -293,26 +309,26 @@ export function InsightsView() {
               role="radio"
               aria-checked={range === r.id}
               onClick={() => setRange(r.id)}
-              className={cn('inline-flex h-8 items-center gap-1 rounded-[9px] px-3 text-[12.5px] font-medium transition-colors', range === r.id ? 'bg-panel-2 text-fg shadow-card' : 'text-muted hover:text-fg')}
+              className={cn('inline-flex h-8 shrink-0 items-center gap-1 rounded-[9px] px-3 text-[12.5px] font-medium whitespace-nowrap transition-colors', range === r.id ? 'bg-panel-2 text-fg shadow-card' : 'text-muted hover:text-fg')}
             >
               {range === r.id ? <Check className="size-3.5" strokeWidth={3} /> : null}
-              {r.label}
+              {t(r.label)}
             </button>
           ))}
         </div>
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label="Saved in this period" value={fmtNumber(list.length)} hint={`${fmtNumber(lib.counts.total)} in your library`} />
-        <StatTile label="Saved this week" value={fmtNumber(stats.thisWeek)} delta={{ value: stats.thisWeek - stats.lastWeek, vs: 'vs last week' }} />
-        <StatTile label="Average per week" value={stats.perWeek >= 10 ? fmtCompact(Math.round(stats.perWeek)) : stats.perWeek.toFixed(1)} hint={`${readPct}% of these opened`} />
-        <StatTile label="Top category" value={topCat ? `${topCat.emoji} ${topCat.name}` : '—'} hint={stats.categories[0] ? `${fmtNumber(stats.categories[0][1])} posts` : undefined} />
+        <StatTile label={t('insights.savedInPeriod')} value={fmtNumber(list.length)} hint={t('insights.inLibrary', { count: fmtNumber(lib.counts.total) })} />
+        <StatTile label={t('home.savedThisWeek')} value={fmtNumber(stats.thisWeek)} delta={{ value: stats.thisWeek - stats.lastWeek, vs: t('insights.vsLastWeek') }} />
+        <StatTile label={t('insights.avgPerWeek')} value={stats.perWeek >= 10 ? fmtCompact(Math.round(stats.perWeek)) : stats.perWeek.toFixed(1)} hint={t('insights.opened', { pct: readPct })} />
+        <StatTile label={t('home.topCategory')} value={topCat ? `${topCat.emoji} ${catName(topCat)}` : '—'} hint={stats.categories[0] ? t('common.posts', { count: stats.categories[0][1] }) : undefined} />
       </div>
 
       <Panel
         className="mt-4"
-        title="Saved over time"
-        subtitle={`Posts saved per ${unit}`}
+        title={t('insights.overTime')}
+        subtitle={unit === 'week' ? t('insights.perWeek') : t('insights.perMonth')}
         action={
           <button
             type="button"
@@ -320,7 +336,7 @@ export function InsightsView() {
             aria-pressed={showTable}
             className={cn('inline-flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-[12px] font-medium', showTable ? 'bg-panel-2 text-fg' : 'text-muted hover:bg-panel-2 hover:text-fg')}
           >
-            <Table2 className="size-3.5" /> Table
+            <Table2 className="size-3.5" /> {t('insights.table')}
           </button>
         }
       >
@@ -329,8 +345,8 @@ export function InsightsView() {
             <table className="w-full text-[13px]">
               <thead className="sticky top-0 bg-panel-2 text-left text-[11.5px] text-muted">
                 <tr>
-                  <th className="px-3 py-2 font-medium">{unit === 'week' ? 'Week' : 'Month'}</th>
-                  <th className="px-3 py-2 text-right font-medium">Saved</th>
+                  <th className="px-3 py-2 font-medium">{unit === 'week' ? t('insights.week') : t('insights.month')}</th>
+                  <th className="px-3 py-2 text-right font-medium">{t('layout.saved')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
@@ -349,16 +365,17 @@ export function InsightsView() {
       </Panel>
 
       <div className="cv-auto mt-4 grid gap-4 lg:grid-cols-2">
-        <Panel title="Category mix" subtitle="Click a category to open it">
+        <Panel title={t('insights.categoryMix')} subtitle={t('insights.categoryMixSub')}>
           <BarList
             rows={stats.categories.slice(0, 10).map(([id, n]) => {
               const c = lib.categoryMap.get(id);
-              return { key: id, value: n, title: c?.name ?? id, label: <><span aria-hidden>{c?.emoji}</span><span className="truncate">{c?.name ?? id}</span></> };
+              const name = c ? catName(c) : id;
+              return { key: id, value: n, title: name, label: <><span aria-hidden>{c?.emoji}</span><span className="truncate">{name}</span></> };
             })}
             onSelect={(id) => navigate(scopeHash({ kind: 'category', value: id }))}
           />
         </Panel>
-        <Panel title="Who you learn from" subtitle="Authors you save most">
+        <Panel title={t('home.learnFrom')} subtitle={t('insights.authorsSub')}>
           <BarList
             rows={stats.authors.map((a) => ({
               key: a.handle,
@@ -377,15 +394,15 @@ export function InsightsView() {
       </div>
 
       <div className="cv-auto mt-4 grid gap-4 lg:grid-cols-[1.35fr_1fr]">
-        <Panel title="When you save" subtitle="Saves by day of week and hour (your local time)">
+        <Panel title={t('insights.whenSave')} subtitle={t('insights.whenSaveSub')}>
           <Heatmap list={list} />
         </Panel>
-        <Panel title="What you save" subtitle="Posts containing each type">
+        <Panel title={t('insights.whatSave')} subtitle={t('insights.whatSaveSub')}>
           <BarList
             max={list.length}
             rows={[
-              ...stats.facets.map(([f, n]) => ({ key: f, value: n, title: FACET_LABELS[f], label: <span>{FACET_LABELS[f]}</span> })),
-              { key: 'text', value: stats.textOnly, title: 'Text only', label: <span>Text only</span> },
+              ...stats.facets.map(([f, n]) => ({ key: f, value: n, title: t(`facet.${f}`), label: <span>{t(`facet.${f}`)}</span> })),
+              { key: 'text', value: stats.textOnly, title: t('insights.textOnly'), label: <span>{t('insights.textOnly')}</span> },
             ]}
             onSelect={(k) => k !== 'text' && navigate(scopeHash({ kind: 'facet', value: k }))}
           />
@@ -393,7 +410,7 @@ export function InsightsView() {
       </div>
 
       {stats.popular.length ? (
-        <Panel className="cv-auto mt-4" title="Most popular posts you saved" subtitle="By likes on X">
+        <Panel className="cv-auto mt-4" title={t('insights.popular')} subtitle={t('insights.popularSub')}>
           <ol className="divide-y divide-line">
             {stats.popular.map((b, i) => (
               <li key={b.id}>
@@ -401,7 +418,7 @@ export function InsightsView() {
                   <span className="w-5 text-center text-[13px] font-semibold text-faint tabular-nums">{i + 1}</span>
                   <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={30} />
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-[13.5px] text-fg">{b.text || b.card?.title || 'Media post'}</div>
+                    <div className="truncate text-[13.5px] text-fg">{b.text || b.card?.title || t('common.mediaPost')}</div>
                     <div className="text-[12px] text-muted">@{b.author.handle}</div>
                   </div>
                   <span className="text-[12.5px] font-medium text-fg-2 tabular-nums">♥ {fmtCompact(b.metrics.likes)}</span>

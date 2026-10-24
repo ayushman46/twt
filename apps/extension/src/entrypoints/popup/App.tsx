@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { ArrowUpRight, Heart, Inbox, LayoutDashboard, RefreshCw, Search, Settings, Square, Star, Zap } from 'lucide-react';
 import { useState } from 'react';
+import { catName, rich, useT } from '@/i18n';
 import { db } from '@/lib/db';
 import { fmtNumber, fmtRelative } from '@/lib/format';
 import { send } from '@/lib/messages';
@@ -17,6 +18,7 @@ async function openDashboard(hash = '') {
 }
 
 export function PopupApp() {
+  const t = useT();
   const [settings] = useSettings();
   useThemeClass(settings.theme);
   const sync = useSyncState();
@@ -61,12 +63,12 @@ export function PopupApp() {
           <div className="flex items-center gap-2">
             <Wordmark className="text-[16px]" />
             <span className={cn('rounded-full px-1.5 py-px text-[9.5px] font-semibold tracking-wider uppercase', isPro ? 'btn-brand' : 'bg-panel-2 text-muted ring-1 ring-line')}>
-              {isPro ? 'Pro' : 'Free'}
+              {isPro ? 'Pro' : t('common.free')}
             </span>
           </div>
-          <div className="text-[11.5px] text-muted">{active ? 'Syncing in an X tab…' : last.bookmark ? `Synced ${fmtRelative(last.bookmark)}` : 'Not synced yet'}</div>
+          <div className="truncate text-[11.5px] text-muted">{active ? t('sync.inXTab') : last.bookmark ? t('sync.synced', { when: fmtRelative(last.bookmark) }) : t('sync.never')}</div>
         </div>
-        <button type="button" onClick={() => void openDashboard('#/settings/general')} className="grid size-8 place-items-center rounded-[10px] text-muted hover:bg-panel-2 hover:text-fg" aria-label="Settings">
+        <button type="button" onClick={() => void openDashboard('#/settings/general')} className="grid size-8 place-items-center rounded-[10px] text-muted hover:bg-panel-2 hover:text-fg" aria-label={t('nav.settings')}>
           <Settings className="size-4" />
         </button>
       </header>
@@ -84,7 +86,7 @@ export function PopupApp() {
             autoFocus
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search your stash…"
+            placeholder={t('popup.searchPlaceholder')}
             className="glass h-11 w-full rounded-[14px] border border-line pr-3 pl-10 text-[13.5px] shadow-card outline-none placeholder:text-faint focus:border-accent/60 focus:ring-4 focus:ring-accent/15"
           />
         </label>
@@ -92,9 +94,9 @@ export function PopupApp() {
 
       <div className="relative grid grid-cols-3 gap-2 px-4 pt-3">
         {[
-          { label: 'Stashed', value: data?.total, icon: <ArrowUpRight className="size-3.5 text-faint" />, hash: '#/library/all' },
-          { label: 'Unread', value: data?.unread, icon: <Inbox className="size-3.5 text-accent" />, hash: '#/library/unread' },
-          { label: 'Starred', value: data?.starred, icon: <Star className="size-3.5 fill-amber-400 text-amber-400" />, hash: '#/library/starred' },
+          { label: t('popup.stashed'), value: data?.total, icon: <ArrowUpRight className="size-3.5 text-faint" />, hash: '#/library/all' },
+          { label: t('nav.unread'), value: data?.unread, icon: <Inbox className="size-3.5 text-accent" />, hash: '#/library/unread' },
+          { label: t('nav.starred'), value: data?.starred, icon: <Star className="size-3.5 fill-amber-400 text-amber-400" />, hash: '#/library/starred' },
         ].map((s) => (
           <button
             key={s.label}
@@ -102,8 +104,8 @@ export function PopupApp() {
             onClick={() => void openDashboard(s.hash)}
             className="rounded-[14px] border border-line bg-panel px-3 py-2.5 text-left shadow-card transition-all hover:-translate-y-px hover:shadow-hover"
           >
-            <div className="flex items-center justify-between text-[11.5px] text-muted">
-              {s.label}
+            <div className="flex items-center justify-between gap-1 text-[11.5px] text-muted">
+              <span className="min-w-0 truncate">{s.label}</span>
               {s.icon}
             </div>
             <div className="mt-1 text-[21px] leading-none font-semibold tracking-[-0.04em]">{s.value === undefined ? '–' : fmtNumber(s.value)}</div>
@@ -115,39 +117,35 @@ export function PopupApp() {
         {active ? (
           <div className="ring-brand rounded-[14px] bg-panel p-3.5 shadow-card">
             <div className="flex items-center gap-2 text-[13px] font-medium">
-              <RefreshCw className="size-4 animate-spin text-accent" /> Syncing {sync.source === 'like' ? 'likes' : 'bookmarks'}…
+              <RefreshCw className="size-4 animate-spin text-accent" /> {sync.source === 'like' ? t('popup.syncingLikes') : t('popup.syncingBookmarks')}
             </div>
             <div className="mt-2 flex gap-4 text-[12px] text-muted">
-              <span>
-                <b className="tabular text-[15px] font-semibold text-fg">{fmtNumber(sync.found)}</b> found
-              </span>
-              <span>
-                <b className="tabular text-[15px] font-semibold text-fg">{fmtNumber(sync.added)}</b> new
-              </span>
+              <span>{rich(t('popup.found', { count: fmtNumber(sync.found) }), { b: (s) => <b className="tabular text-[15px] font-semibold text-fg">{s}</b> })}</span>
+              <span>{rich(t('popup.new', { count: fmtNumber(sync.added) }), { b: (s) => <b className="tabular text-[15px] font-semibold text-fg">{s}</b> })}</span>
             </div>
             <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-panel-2">
               <div className="bg-brand h-full w-1/3 animate-indeterminate rounded-full" />
             </div>
             <div className="mt-3 flex gap-2">
               <Button size="sm" variant="secondary" className="flex-1" onClick={() => void start(sync.source, sync.mode)}>
-                Show X tab
+                {t('popup.showTab')}
               </Button>
               <Button size="sm" variant="ghost" onClick={() => void send('sync/stop', {})}>
-                <Square className="!size-3 fill-current" /> Stop
+                <Square className="!size-3 fill-current" /> {t('popup.stop')}
               </Button>
             </div>
           </div>
         ) : (
           <div className="space-y-1.5">
             <Button variant="primary" size="lg" className="h-11 w-full rounded-[14px]" onClick={() => void start('bookmark', data?.total ? 'quick' : 'full')}>
-              {data?.total ? <Zap /> : <RefreshCw />} {data?.total ? 'Sync new bookmarks' : 'Sync my bookmarks'}
+              {data?.total ? <Zap /> : <RefreshCw />} {data?.total ? t('popup.syncNew') : t('popup.syncMine')}
             </Button>
             <div className="flex gap-1.5">
               <Button size="sm" variant="ghost" className="flex-1" onClick={() => void start('bookmark', 'full')}>
-                <RefreshCw /> Full sync
+                <RefreshCw /> {t('sync.full')}
               </Button>
               <Button size="sm" variant="ghost" className="flex-1" onClick={() => void start('like', 'full')}>
-                <Heart /> Import likes
+                <Heart /> {t('sync.importLikes')}
               </Button>
             </div>
             {sync.status === 'error' && sync.message ? <p className="rounded-xl bg-bad/10 px-3 py-2 text-[12px] text-bad">{sync.message}</p> : null}
@@ -157,7 +155,7 @@ export function PopupApp() {
 
       {data?.top.length ? (
         <div className="relative px-4 pt-3">
-          <div className="mb-1.5 text-[10.5px] font-semibold tracking-[0.12em] text-faint uppercase">Top categories</div>
+          <div className="mb-1.5 text-[10.5px] font-semibold tracking-[0.12em] text-faint uppercase">{t('popup.topCategories')}</div>
           <div className="space-y-0.5">
             {data.top.map(({ c, n }) => (
               <button
@@ -170,7 +168,7 @@ export function PopupApp() {
                   {c.emoji}
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-[13px] text-fg-2 group-hover:text-fg">{c.name}</span>
+                  <span className="block truncate text-[13px] text-fg-2 group-hover:text-fg">{catName(c)}</span>
                   <span className="mt-1 block h-1 overflow-hidden rounded-full bg-panel-2">
                     <span className="block h-full rounded-full" style={{ width: `${(n / max) * 100}%`, background: c.color }} />
                   </span>
@@ -184,7 +182,7 @@ export function PopupApp() {
 
       <footer className="relative mt-4 border-t border-line px-4 py-3">
         <Button variant="outline" className="h-10 w-full rounded-[12px]" onClick={() => void openDashboard('#/home')}>
-          <LayoutDashboard /> Open dashboard
+          <LayoutDashboard /> <span className="min-w-0 truncate">{t('popup.openDashboard')}</span>
           <span className="ml-auto flex items-center gap-1">
             <Kbd>Alt</Kbd>
             <Kbd>⇧</Kbd>

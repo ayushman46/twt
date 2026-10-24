@@ -1,7 +1,8 @@
 import { Check, ExternalLink, Eye, Heart, MessageCircle, Ellipsis, Repeat2, Sparkles, Star, StickyNote } from 'lucide-react';
 import { memo, useState } from 'react';
+import { catName, useT, type MessageKey } from '@/i18n';
 import { setStarred } from '@/lib/actions';
-import { fmtCompact, fmtShortDate } from '@/lib/format';
+import { fmtCompact, fmtLongDate, fmtShortDate } from '@/lib/format';
 import type { Bookmark, Category } from '@/lib/types';
 import { Avatar, Verified } from './Brand';
 import { BookmarkMenu } from './BookmarkMenu';
@@ -28,6 +29,7 @@ export interface CardProps {
 }
 
 export function CategoryChip({ category, className }: { category?: Category; className?: string }) {
+  useT();
   if (!category) return null;
   return (
     <span
@@ -35,23 +37,24 @@ export function CategoryChip({ category, className }: { category?: Category; cla
       style={{ background: `color-mix(in oklab, ${category.color} 13%, transparent)`, color: `color-mix(in oklab, ${category.color} 70%, var(--fg))` }}
     >
       <span aria-hidden>{category.emoji}</span>
-      <span className="truncate">{category.name}</span>
+      <span className="truncate">{catName(category)}</span>
     </span>
   );
 }
 
 export function Metrics({ b, className }: { b: Bookmark; className?: string }) {
-  const items = [
-    { icon: MessageCircle, v: b.metrics.replies, label: 'replies' },
-    { icon: Repeat2, v: b.metrics.retweets, label: 'reposts' },
-    { icon: Heart, v: b.metrics.likes, label: 'likes' },
-    { icon: Eye, v: b.metrics.views, label: 'views' },
+  const t = useT();
+  const items: Array<{ icon: typeof Heart; v: number; label: MessageKey }> = [
+    { icon: MessageCircle, v: b.metrics.replies, label: 'metric.replies' },
+    { icon: Repeat2, v: b.metrics.retweets, label: 'metric.reposts' },
+    { icon: Heart, v: b.metrics.likes, label: 'metric.likes' },
+    { icon: Eye, v: b.metrics.views, label: 'metric.views' },
   ];
   return (
     <div className={cn('flex items-center gap-3.5 text-[12px] text-faint tabular-nums', className)}>
       {items.map(({ icon: Icon, v, label }) =>
         v ? (
-          <span key={label} className="inline-flex items-center gap-1" title={`${v.toLocaleString()} ${label}`}>
+          <span key={label} className="inline-flex items-center gap-1" title={t(label, { count: v })}>
             <Icon className="size-3.5" />
             {fmtCompact(v)}
           </span>
@@ -62,12 +65,13 @@ export function Metrics({ b, className }: { b: Bookmark; className?: string }) {
 }
 
 export function SelectBox({ checked, onToggle, className }: { checked: boolean; onToggle: () => void; className?: string }) {
+  const t = useT();
   return (
     <button
       type="button"
       role="checkbox"
       aria-checked={checked}
-      aria-label={checked ? 'Deselect' : 'Select'}
+      aria-label={checked ? t('common.deselect') : t('common.select')}
       onClick={(e) => {
         e.stopPropagation();
         onToggle();
@@ -86,6 +90,7 @@ export function SelectBox({ checked, onToggle, className }: { checked: boolean; 
 const CLAMP_AT = 420;
 
 export const TweetCard = memo(function TweetCard({ b, animate = true, category, highlight, selected, focused, selectMode, showSummary = true, showMetrics = true, onOpen, onToggleSelect, onSearch }: CardProps) {
+  const t = useT();
   const [expanded, setExpanded] = useState(false);
   const long = b.text.length > CLAMP_AT;
 
@@ -102,7 +107,7 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
         selected ? 'ring-brand border-transparent shadow-[0_0_0_4px_var(--accent-soft)]' : focused ? 'border-accent/50' : 'border-line hover:border-line-strong',
       )}
     >
-      {!b.read ? <span className="bg-brand absolute top-[26px] -left-[3px] size-1.5 rounded-full shadow-[0_0_8px_rgb(150_80_255/0.8)]" aria-label="Unread" /> : null}
+      {!b.read ? <span className="bg-brand absolute top-[26px] -left-[3px] size-1.5 rounded-full shadow-[0_0_8px_rgb(150_80_255/0.8)]" aria-label={t('card.unread')} /> : null}
 
       <header className="flex items-start gap-3">
         <div className="relative">
@@ -129,12 +134,12 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
             >
               @{b.author.handle}
             </button>{' '}
-            · <time title={new Date(b.createdAt).toLocaleString()}>{fmtShortDate(b.createdAt)}</time>
+            · <time title={fmtLongDate(b.createdAt)}>{fmtShortDate(b.createdAt)}</time>
           </div>
         </div>
         <div className="flex items-center gap-0.5">
           <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
-            <LazyTip label={b.starred ? 'Unstar' : 'Star'} shortcut="S">
+            <LazyTip label={b.starred ? t('common.unstar') : t('common.star')} shortcut="S">
               <button
                 type="button"
                 onClick={(e) => {
@@ -142,19 +147,19 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
                   void setStarred([b.id], !b.starred);
                 }}
                 className="grid size-7 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg"
-                aria-label="Star"
+                aria-label={t('common.star')}
               >
                 <Star key={b.starred} className={cn('size-4', b.starred && 'animate-pop fill-amber-400 text-amber-400')} />
               </button>
             </LazyTip>
-            <LazyTip label="Open on X" shortcut="O">
+            <LazyTip label={t('common.openOnX')} shortcut="O">
               <a
                 href={b.url}
                 target="_blank"
                 rel="noreferrer noopener"
                 onClick={(e) => e.stopPropagation()}
                 className="grid size-7 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg"
-                aria-label="Open on X"
+                aria-label={t('common.openOnX')}
               >
                 <ExternalLink className="size-4" />
               </a>
@@ -162,7 +167,7 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
           </div>
           {b.starred ? <Star className="size-3.5 fill-amber-400 text-amber-400 group-hover:hidden" /> : null}
           <BookmarkMenu b={b}>
-            <button type="button" onClick={(e) => e.stopPropagation()} className="grid size-7 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg" aria-label="More actions">
+            <button type="button" onClick={(e) => e.stopPropagation()} className="grid size-7 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg" aria-label={t('card.moreActions')}>
               <Ellipsis className="size-4" />
             </button>
           </BookmarkMenu>
@@ -194,7 +199,7 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
               }}
               className="mt-1 text-[13px] font-medium text-accent hover:underline"
             >
-              {expanded ? 'Show less' : 'Show more'}
+              {expanded ? t('card.showLess') : t('card.showMore')}
             </button>
           ) : null}
         </div>
@@ -223,17 +228,17 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
 
       <footer className="mt-3.5 flex flex-wrap items-center gap-x-2 gap-y-2">
         <CategoryChip category={category} />
-        {b.tags.slice(0, 3).map((t) => (
+        {b.tags.slice(0, 3).map((tag) => (
           <button
-            key={t}
+            key={tag}
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onSearch?.(`tag:"${t}"`);
+              onSearch?.(`tag:"${tag}"`);
             }}
             className="h-6 max-w-[140px] truncate rounded-full bg-panel-2 px-2 text-[11.5px] text-fg-2 hover:bg-panel-3"
           >
-            #{t}
+            #{tag}
           </button>
         ))}
         {b.tags.length > 3 ? <span className="text-[11.5px] text-faint">+{b.tags.length - 3}</span> : null}

@@ -3,13 +3,14 @@
  * (apps/web). All endpoints accept and return JSON and allow CORS from any
  * origin — authentication is the license key, never cookies.
  */
-import type { AiCategoryInput, AiResult, AiTweetInput } from './ai';
+import type { AiCategoryInput, AiResult, AiTweetInput, AskHistoryTurn, AskPostInput, TranslateLanguageCode } from './ai';
 
 export const API_PATHS = {
   health: '/api/health',
   categorize: '/api/categorize',
   licenseActivate: '/api/license/activate',
   licenseValidate: '/api/license/validate',
+  ask: '/api/ask',
 } as const;
 
 /** GET /api/health */
@@ -38,6 +39,48 @@ export interface CategorizeApiResponse {
   results: AiResult[];
   model: string;
   usage?: { input_tokens: number; output_tokens: number };
+}
+
+/**
+ * POST /api/ask — "Ask your bookmarks" and post translation for Pro.
+ * Same headers as /api/categorize. Limits: see `ASK_LIMITS`.
+ *
+ * `mode: "ask"` (default) with `stream: true` answers with Server-Sent
+ * Events in the OpenAI chat-completions chunk format
+ * (`data: {"choices":[{"delta":{"content":"…"}}]}` … `data: [DONE]`);
+ * a failure after the stream started arrives as `event: error` with an
+ * `ApiErrorBody`. Without `stream` the reply is `AskApiResponse` JSON.
+ * Errors before any output are regular `ApiErrorBody` JSON responses.
+ */
+export interface AskApiRequest {
+  mode?: 'ask';
+  question: string;
+  /** Context posts, cited by the answer as [1]…[n] in this order. */
+  posts: AskPostInput[];
+  history?: AskHistoryTurn[];
+  /** The user's local date (YYYY-MM-DD). */
+  today?: string;
+  stream?: boolean;
+}
+
+export interface AskApiResponse {
+  answer: string;
+  model: string;
+  truncated: boolean;
+  usage?: { input_tokens: number; output_tokens: number };
+}
+
+/** POST /api/ask with `mode: "translate"` */
+export interface TranslateApiRequest {
+  mode: 'translate';
+  text: string;
+  target: TranslateLanguageCode;
+}
+
+export interface TranslateApiResponse {
+  text: string;
+  model: string;
+  truncated: boolean;
 }
 
 /**

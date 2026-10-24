@@ -1,0 +1,102 @@
+{
+  "suite": "e2e",
+  "startedAt": "2026-10-23T21:02:27.086Z",
+  "durationMs": 94760,
+  "build": {
+    "dir": "C:\\Users\\Ayush\\AppData\\Local\\Temp\\claude\\C--Users-Ayush-Downloads-twt\\b4332329-e788-4b49-ad4a-dc77917b01c5\\scratchpad\\qa\\preview-dist",
+    "ms": 0,
+    "skipped": true
+  },
+  "scratch": "C:\\Users\\Ayush\\AppData\\Local\\Temp\\claude\\C--Users-Ayush-Downloads-twt\\b4332329-e788-4b49-ad4a-dc77917b01c5\\scratchpad\\qa",
+  "groups": [
+    "organize"
+  ],
+  "summary": {
+    "total": 13,
+    "pass": 13,
+    "fail": 0,
+    "warn": 0,
+    "skip": 0
+  },
+  "metrics": {},
+  "results": [
+    {
+      "group": "organize",
+      "name": "create a collection from the sidebar → navigates to it",
+      "status": "pass",
+      "ms": 13314
+    },
+    {
+      "group": "organize",
+      "name": "collection dialog: empty name cannot be submitted",
+      "status": "pass",
+      "ms": 1255
+    },
+    {
+      "group": "organize",
+      "name": "add posts to the collection from the card menu",
+      "status": "pass",
+      "ms": 9829
+    },
+    {
+      "group": "organize",
+      "name": "rename the collection (Edit dialog)",
+      "status": "pass",
+      "ms": 1096
+    },
+    {
+      "group": "organize",
+      "name": "delete the collection keeps its posts",
+      "status": "pass",
+      "ms": 1452
+    },
+    {
+      "group": "organize",
+      "name": "visiting a deleted collection URL shows an empty, non-crashing view",
+      "status": "pass",
+      "ms": 916
+    },
+    {
+      "group": "organize",
+      "name": "create a custom category in Settings → Categories",
+      "status": "pass",
+      "ms": 7374
+    },
+    {
+      "group": "organize",
+      "name": "rename + recolor the category (inline editing)",
+      "status": "pass",
+      "ms": 3877
+    },
+    {
+      "group": "organize",
+      "name": "disable / enable the category with its switch",
+      "status": "pass",
+      "ms": 1040
+    },
+    {
+      "group": "organize",
+      "name": "built-in categories cannot be deleted",
+      "status": "pass",
+      "ms": 157
+    },
+    {
+      "group": "organize",
+      "name": "move a post into the category, then deleting it moves posts to Other",
+      "status": "pass",
+      "ms": 7968
+    },
+    {
+      "group": "organize",
+      "name": "dismissing the delete confirmation keeps the category",
+      "status": "pass",
+      "ms": 990
+    },
+    {
+      "group": "organize",
+      "name": "category scope for a deleted category id renders safely",
+      "status": "pass",
+      "ms": 3270
+    }
+  ]
+}

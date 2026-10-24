@@ -10,6 +10,8 @@
  */
 :root {
   color-scheme: light;
+  /* Geist has no Indian scripts: fall back to the OS's Indic UI fonts (Windows: Nirmala UI; macOS/iOS: Kohinoor & Sangam; Android/ChromeOS/Linux: Noto). */
+  --font-indic: 'Nirmala UI', 'Noto Sans Devanagari', 'Noto Sans Bengali', 'Noto Sans Gurmukhi', 'Noto Sans Gujarati', 'Noto Sans Tamil', 'Noto Sans Telugu', 'Noto Sans Kannada', 'Noto Sans Malayalam', 'Kohinoor Devanagari', 'Kohinoor Bangla', 'Kohinoor Gujarati', 'Kohinoor Telugu', 'Tamil Sangam MN', 'Kannada Sangam MN', 'Malayalam Sangam MN', 'Gurmukhi MN', 'Mangal', 'Vrinda', 'Raavi', 'Shruti', 'Latha', 'Gautami', 'Tunga', 'Kartika';
   --bg: #f6f6f9;
   --bg-2: #efeff4;
   --panel: #ffffff;
@@ -89,8 +91,8 @@
   --color-good: var(--good);
   --color-bad: var(--bad);
   --color-glass: var(--glass);
-  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji';
-  --font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, var(--font-indic), sans-serif, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji';
+  --font-serif: 'Instrument Serif', ui-serif, Georgia, var(--font-indic), serif;
   --shadow-card: var(--shadow-card);
   --shadow-hover: var(--shadow-hover);
   --shadow-pop: var(--shadow-pop);
@@ -310,4 +312,27 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/*
+ * Indian-language UI (html[lang] is set by @/i18n). Vowel signs stack above and
+ * below the letters, so text needs more line height, and letter-spacing or
+ * synthetic italics break the joined letterforms (e.g. the Devanagari headline).
+ */
+:is(:lang(hi), :lang(mr), :lang(bn), :lang(pa), :lang(gu), :lang(ta), :lang(te), :lang(kn), :lang(ml)) {
+  letter-spacing: normal;
+}
+:is(:lang(hi), :lang(mr), :lang(bn), :lang(pa), :lang(gu), :lang(ta), :lang(te), :lang(kn), :lang(ml)) body {
+  line-height: 1.6;
+}
+:is(:lang(hi), :lang(mr), :lang(bn), :lang(pa), :lang(gu), :lang(ta), :lang(te), :lang(kn), :lang(ml)) :is(.leading-tight, .leading-snug, [class*='leading-[1.'], [class*='leading-[1\.0']) {
+  line-height: 1.45;
+}
+:is(:lang(hi), :lang(mr), :lang(bn), :lang(pa), :lang(gu), :lang(ta), :lang(te), :lang(kn), :lang(ml)) :is(h1, h2) {
+  line-height: 1.35;
+}
+:is(:lang(hi), :lang(mr), :lang(bn), :lang(pa), :lang(gu), :lang(ta), :lang(te), :lang(kn), :lang(ml)) .serif-accent {
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: 600;
 }

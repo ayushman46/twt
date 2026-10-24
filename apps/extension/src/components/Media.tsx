@@ -1,11 +1,13 @@
 import { ChevronLeft, ChevronRight, Play, X } from 'lucide-react';
 import { Dialog as D } from 'radix-ui';
 import { useEffect, useState } from 'react';
+import { useT } from '@/i18n';
 import { fmtDuration, mediaUrl } from '@/lib/format';
 import type { Media } from '@/lib/types';
 import { cn } from './ui/primitives';
 
 function Tile({ m, onOpen, className, tall }: { m: Media; onOpen: () => void; className?: string; tall?: boolean }) {
+  const t = useT();
   const [playing, setPlaying] = useState(false);
   const isVideo = m.type !== 'photo' && m.videoUrl;
   if (playing && isVideo) {
@@ -32,7 +34,7 @@ function Tile({ m, onOpen, className, tall }: { m: Media; onOpen: () => void; cl
         else onOpen();
       }}
       className={cn('group/tile relative block size-full overflow-hidden bg-panel-2', className)}
-      aria-label={m.alt || (m.type === 'photo' ? 'Open image' : 'Play video')}
+      aria-label={m.alt || (m.type === 'photo' ? t('media.openImage') : t('media.playVideo'))}
     >
       <img
         src={mediaUrl(m.url, tall ? 'large' : 'medium')}
@@ -49,7 +51,7 @@ function Tile({ m, onOpen, className, tall }: { m: Media; onOpen: () => void; cl
             </span>
           </span>
           <span className="absolute bottom-2 left-2 rounded-md bg-black/65 px-1.5 py-0.5 text-[11px] font-semibold text-white">
-            {m.type === 'gif' ? 'GIF' : fmtDuration(m.durationMs) || 'Video'}
+            {m.type === 'gif' ? 'GIF' : fmtDuration(m.durationMs) || t('media.video')}
           </span>
         </>
       ) : null}
@@ -83,6 +85,7 @@ export function MediaGrid({ media, className, compact }: { media: Media[]; class
 }
 
 export function Lightbox({ media, index, onClose }: { media: Media[]; index: number | null; onClose: () => void }) {
+  const t = useT();
   const [i, setI] = useState(index ?? 0);
   useEffect(() => {
     if (index !== null) setI(index);
@@ -103,8 +106,8 @@ export function Lightbox({ media, index, onClose }: { media: Media[]; index: num
             if (e.key === 'ArrowLeft') go(-1);
           }}
         >
-          <D.Title className="sr-only">Image</D.Title>
-          <D.Description className="sr-only">{m?.alt ?? 'Image from post'}</D.Description>
+          <D.Title className="sr-only">{t('media.image')}</D.Title>
+          <D.Description className="sr-only">{m?.alt ?? t('media.imageFromPost')}</D.Description>
           {m ? <img src={mediaUrl(m.url, 'orig')} alt={m.alt ?? ''} className="max-h-[92vh] max-w-[92vw] animate-fade-in rounded-lg object-contain shadow-2xl" onClick={(e) => e.stopPropagation()} /> : null}
           {media.length > 1 ? (
             <>
@@ -112,7 +115,7 @@ export function Lightbox({ media, index, onClose }: { media: Media[]; index: num
                 type="button"
                 onClick={(e) => (e.stopPropagation(), go(-1))}
                 className="absolute top-1/2 left-4 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20"
-                aria-label="Previous"
+                aria-label={t('common.previous')}
               >
                 <ChevronLeft />
               </button>
@@ -120,13 +123,13 @@ export function Lightbox({ media, index, onClose }: { media: Media[]; index: num
                 type="button"
                 onClick={(e) => (e.stopPropagation(), go(1))}
                 className="absolute top-1/2 right-4 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20"
-                aria-label="Next"
+                aria-label={t('common.next')}
               >
                 <ChevronRight />
               </button>
             </>
           ) : null}
-          <D.Close className="absolute top-4 right-4 grid size-10 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20" aria-label="Close">
+          <D.Close className="absolute top-4 right-4 grid size-10 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20" aria-label={t('common.close')}>
             <X className="size-5" />
           </D.Close>
           {m?.alt ? <p className="absolute bottom-6 max-w-2xl rounded-lg bg-black/60 px-3 py-2 text-center text-sm text-white">{m.alt}</p> : null}

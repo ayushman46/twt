@@ -1,4 +1,5 @@
 import { FileText, Link2 } from 'lucide-react';
+import { useT } from '@/i18n';
 import { fmtCompact, fmtShortDate, mediaUrl } from '@/lib/format';
 import type { Article, LinkCard, Poll, QuotedTweet } from '@/lib/types';
 import { Avatar, Verified } from './Brand';
@@ -61,6 +62,7 @@ export function LinkPreview({ card, className }: { card: LinkCard; className?: s
 }
 
 export function PollView({ poll }: { poll: Poll }) {
+  const t = useT();
   const total = poll.options.reduce((s, o) => s + o.votes, 0) || 1;
   const max = Math.max(...poll.options.map((o) => o.votes));
   return (
@@ -77,18 +79,19 @@ export function PollView({ poll }: { poll: Poll }) {
           </div>
         );
       })}
-      <div className="text-[12px] text-muted">{fmtCompact(total)} votes</div>
+      <div className="text-[12px] text-muted">{t('parts.votes', { count: fmtCompact(total) })}</div>
     </div>
   );
 }
 
 export function ArticleCard({ article, url }: { article: Article; url: string }) {
+  const t = useT();
   return (
     <a href={url} target="_blank" rel="noreferrer noopener" onClick={(e) => e.stopPropagation()} className="block overflow-hidden rounded-xl border border-line hover:bg-panel-2/60">
       {article.cover ? <img src={article.cover} alt="" loading="lazy" className="aspect-[2.4/1] w-full border-b border-line object-cover" /> : null}
       <div className="px-3 py-2.5">
         <div className="flex items-center gap-1.5 text-[11.5px] font-medium tracking-wide text-muted uppercase">
-          <FileText className="size-3.5" /> Article
+          <FileText className="size-3.5" /> {t('parts.article')}
         </div>
         <div className="mt-0.5 line-clamp-2 text-[14px] leading-snug font-semibold">{article.title}</div>
         {article.preview ? <div className="mt-1 line-clamp-2 text-[12.5px] text-muted">{article.preview}</div> : null}

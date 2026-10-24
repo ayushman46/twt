@@ -9,6 +9,7 @@ import {
   Library,
   Link2,
   List,
+  Play,
   Lock,
   Repeat2,
   Search,
@@ -17,7 +18,8 @@ import {
   Table2,
 } from "lucide-react";
 import { LogoMark, WordmarkText } from "@/components/site/logo";
-import { getCategory, shortName } from "@/lib/categories";
+import { getCategory, shortName, SITE_CATEGORIES } from "@/lib/categories";
+import type { MockupCopy } from "@/lib/i18n/types";
 import { CategoryChip } from "./category-chip";
 
 /*
@@ -33,6 +35,8 @@ type Post = {
   date: string;
   category: string;
   text: string;
+  /** Language of the post text ("hi-Latn" = Hinglish). */
+  lang?: string;
   tags: string[];
   likes: string;
   reposts: string;
@@ -85,30 +89,33 @@ const POSTS: Post[] = [
     thread: "Thread",
   },
   {
-    name: "Sam Okafor",
-    handle: "samfounds",
-    initials: "SO",
+    name: "Arjun Mehta",
+    handle: "arjunbuilds",
+    initials: "AM",
     avatar: "from-amber-300 to-orange-600",
-    date: "Jul 22",
+    date: "Aug 18",
     category: "startups",
-    text: "We crossed $10k MRR with zero paid ads. The cold email template that booked our first 40 demos is below — steal it.",
-    tags: ["saas", "cold email"],
-    likes: "892",
-    reposts: "104",
-    link: { domain: "samokafor.blog", title: "How we booked our first 40 demos without ads" },
+    lang: "hi-Latn",
+    text: "Bhai ye thread zaroor padho 👇 Ek UPI startup ne 6 mahine mein Indore, Surat aur Nagpur ke merchants kaise onboard kiye — pura playbook, numbers ke saath.",
+    tags: ["upi", "gtm"],
+    likes: "4.1K",
+    reposts: "860",
+    thread: "Thread",
   },
   {
-    name: "Lena Hoffmann",
-    handle: "lenaruns",
-    initials: "LH",
+    name: "Rohan Iyer",
+    handle: "rohanbats",
+    initials: "RI",
     avatar: "from-emerald-300 to-teal-600",
-    date: "Aug 11",
-    category: "health",
-    text: "Five months of zone 2 training: resting heart rate down from 68 to 54. Boring? Yes. Works? Also yes.",
-    tags: ["zone 2", "running"],
-    likes: "640",
-    reposts: "57",
+    date: "Sep 9",
+    category: "sports",
+    lang: "hi-Latn",
+    text: "Kal ka match ekdum paisa vasool tha 🔥 last over mein 18 chahiye the aur do balls pehle hi game khatam 🏏",
+    tags: ["cricket"],
+    likes: "12K",
+    reposts: "1.9K",
     starred: true,
+    media: "video",
   },
   {
     name: "Theo Park",
@@ -131,18 +138,19 @@ const SIDEBAR_CATEGORIES: Array<[string, number]> = [
   ["design", 164],
   ["startups", 131],
   ["learning", 98],
-  ["productivity", 76],
-  ["tools", 64],
-  ["health", 41],
+  ["sports", 76],
+  ["productivity", 64],
+  ["tools", 41],
   ["humor", 37],
 ];
+const MORE_CATEGORIES = SITE_CATEGORIES.length - SIDEBAR_CATEGORIES.length;
 
 const RESULT_CHIPS: Array<[string, number]> = [
   ["ai", 41],
   ["dev", 33],
-  ["design", 18],
-  ["startups", 14],
-  ["learning", 12],
+  ["startups", 18],
+  ["sports", 14],
+  ["design", 12],
 ];
 
 function QueryToken({ k, v, negate }: { k?: string; v: string; negate?: boolean }) {
@@ -157,7 +165,7 @@ function QueryToken({ k, v, negate }: { k?: string; v: string; negate?: boolean 
   );
 }
 
-function PostCard({ post }: { post: Post }) {
+function PostCard({ post, names, threadLabel }: { post: Post; names?: Record<string, string>; threadLabel: string }) {
   const category = getCategory(post.category);
   return (
     <div className="mb-3 break-inside-avoid rounded-xl border border-white/[0.07] bg-[linear-gradient(180deg,rgb(255_255_255/0.035),rgb(255_255_255/0.015))] p-3.5 shadow-[inset_0_1px_0_rgb(255_255_255/0.04)]">
@@ -182,7 +190,20 @@ function PostCard({ post }: { post: Post }) {
         />
       </div>
 
-      <p className="mt-2.5 text-[12.5px] leading-[1.55] text-zinc-300">{post.text}</p>
+      <p lang={post.lang ?? "en"} className="mt-2.5 text-[12.5px] leading-[1.55] text-zinc-300">
+        {post.text}
+      </p>
+
+      {post.media === "video" ? (
+        <div className="relative mt-2.5 flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-[radial-gradient(ellipse_at_30%_20%,rgb(52_211_153/0.55),transparent_60%),linear-gradient(135deg,#065f46,#0f172a)]">
+          <div className="absolute inset-x-6 bottom-5 h-px bg-white/25" />
+          <div className="absolute bottom-[1.1rem] left-1/2 h-3 w-px -translate-x-1/2 bg-white/40" />
+          <span className="flex size-9 items-center justify-center rounded-full bg-black/45 ring-1 ring-white/25">
+            <Play className="ml-0.5 size-4 fill-white text-white" />
+          </span>
+          <span className="absolute bottom-1.5 right-2 rounded bg-black/55 px-1 font-mono text-[9.5px] text-white/85">0:42</span>
+        </div>
+      ) : null}
 
       {post.media === "images" ? (
         <div className="mt-2.5 grid grid-cols-2 gap-1.5">
@@ -219,7 +240,7 @@ function PostCard({ post }: { post: Post }) {
       {post.thread ? (
         <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-md bg-sky-400/10 px-1.5 py-0.5 text-[10.5px] font-medium text-sky-300">
           <List className="size-3" aria-hidden="true" />
-          {post.thread}
+          {threadLabel}
         </div>
       ) : null}
 
@@ -231,7 +252,7 @@ function PostCard({ post }: { post: Post }) {
       ) : null}
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
-        <CategoryChip category={category} label={shortName(category)} size="xs" />
+        <CategoryChip category={category} label={shortName(category, names)} size="xs" />
         {post.tags.map((tag) => (
           <span key={tag} className="rounded-full bg-white/[0.05] px-1.5 py-px text-[10px] text-zinc-400">
             #{tag}
@@ -252,13 +273,18 @@ function PostCard({ post }: { post: Post }) {
   );
 }
 
-export function DashboardMockup({ className }: { className?: string }) {
+export function DashboardMockup({
+  t,
+  categoryNames,
+  className,
+}: {
+  t: MockupCopy;
+  categoryNames?: Record<string, string>;
+  className?: string;
+}) {
   return (
     <figure className={clsx("relative", className)}>
-      <figcaption className="sr-only">
-        Preview of the twtdash dashboard: a sidebar of categories with bookmark counts, a search bar running the query
-        “after:2025-06-01 min_likes:500 lang:en -crypto”, and a masonry grid of saved posts, each tagged with a category.
-      </figcaption>
+      <figcaption className="sr-only">{t.caption}</figcaption>
 
       <div aria-hidden="true" className="pointer-events-none relative isolate select-none">
         <div className="ring-gradient overflow-hidden rounded-2xl bg-[#0b0b11]/95 shadow-[0_50px_140px_-40px_rgb(0_0_0/0.95),0_30px_80px_-40px_rgb(123_97_255/0.45)] sm:rounded-[1.25rem]">
@@ -274,7 +300,7 @@ export function DashboardMockup({ className }: { className?: string }) {
             <div className="mx-auto flex h-6 min-w-0 max-w-xs flex-1 items-center justify-center gap-1.5 rounded-md border border-white/[0.05] bg-white/[0.035] px-3 text-[11px] text-zinc-500">
               <Lock className="size-3 shrink-0" />
               <LogoMark id="mockup-tab" className="size-3.5" />
-              <span className="truncate">twtdash — Library</span>
+              <span className="truncate">{t.tab}</span>
             </div>
             <div className="w-10" />
           </div>
@@ -291,9 +317,9 @@ export function DashboardMockup({ className }: { className?: string }) {
               </div>
               <div className="flex flex-col gap-0.5 text-[12.5px]">
                 {[
-                  { icon: House, label: "Home" },
-                  { icon: Library, label: "Library", count: "1,284", active: true },
-                  { icon: BarChart3, label: "Insights" },
+                  { icon: House, label: t.nav.home },
+                  { icon: Library, label: t.nav.library, count: "1,284", active: true },
+                  { icon: BarChart3, label: t.nav.insights },
                 ].map(({ icon: Icon, label, count, active }) => (
                   <div
                     key={label}
@@ -312,7 +338,7 @@ export function DashboardMockup({ className }: { className?: string }) {
               </div>
 
               <div>
-                <div className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-600">Categories</div>
+                <div className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-500">{t.categories}</div>
                 <div className="flex flex-col gap-px text-[12px]">
                   {SIDEBAR_CATEGORIES.map(([id, count]) => {
                     const c = getCategory(id);
@@ -320,23 +346,23 @@ export function DashboardMockup({ className }: { className?: string }) {
                       <div key={id} className="flex items-center gap-2 rounded-md px-2 py-[5px] text-zinc-400">
                         <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: c.color }} />
                         <span className="w-4 text-center text-[11px]">{c.emoji}</span>
-                        <span className="min-w-0 flex-1 truncate">{c.name}</span>
+                        <span className="min-w-0 flex-1 truncate">{shortName(c, categoryNames)}</span>
                         <span className="text-[10.5px] tabular-nums text-zinc-600">{count}</span>
                       </div>
                     );
                   })}
-                  <div className="px-2 py-[5px] text-[11.5px] text-zinc-600">+ 8 more</div>
+                  <div className="px-2 py-[5px] text-[11.5px] text-zinc-500">
+                    + {MORE_CATEGORIES} {t.more}
+                  </div>
                 </div>
               </div>
 
               <div>
-                <div className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-600">Collections</div>
+                <div className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-500">{t.collections}</div>
                 <div className="flex flex-col gap-px text-[12px] text-zinc-400">
-                  {[
-                    ["Read later", 23],
-                    ["Design refs", 58],
-                    ["Launch ideas", 17],
-                  ].map(([name, count]) => (
+                  {t.collectionNames
+                    .map((name, i) => [name, [23, 58, 17][i]] as const)
+                    .map(([name, count]) => (
                     <div key={name} className="flex items-center gap-2 rounded-md px-2 py-[5px]">
                       <FolderOpen className="size-3.5 text-zinc-500" />
                       <span className="flex-1 truncate">{name}</span>
@@ -352,9 +378,9 @@ export function DashboardMockup({ className }: { className?: string }) {
                     <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
                     <span className="relative inline-flex size-1.5 rounded-full bg-emerald-400" />
                   </span>
-                  Live capture on
+                  {t.liveCapture}
                 </div>
-                <div className="mt-0.5 text-zinc-500">Synced 2 min ago · 12 new</div>
+                <div className="mt-0.5 text-zinc-500">{t.synced}</div>
               </div>
             </div>
 
@@ -389,17 +415,19 @@ export function DashboardMockup({ className }: { className?: string }) {
               </div>
 
               <div className="mt-3 flex items-center gap-1.5 overflow-hidden">
-                <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[11px] font-medium text-ink">All 128</span>
+                <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[11px] font-medium text-ink">
+                  {t.all} 128
+                </span>
                 {RESULT_CHIPS.map(([id, count]) => {
                   const c = getCategory(id);
-                  return <CategoryChip key={id} category={c} label={shortName(c)} count={count} className="shrink-0" />;
+                  return <CategoryChip key={id} category={c} label={shortName(c, categoryNames)} count={count} className="shrink-0" />;
                 })}
               </div>
 
               <div className="mt-3 max-h-[30rem] overflow-hidden sm:max-h-[34rem]">
                 <div className="columns-1 gap-3 sm:columns-2 xl:columns-3">
                   {POSTS.map((post) => (
-                    <PostCard key={post.handle} post={post} />
+                    <PostCard key={post.handle} post={post} names={categoryNames} threadLabel={t.thread} />
                   ))}
                 </div>
               </div>

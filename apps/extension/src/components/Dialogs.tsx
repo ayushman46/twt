@@ -1,6 +1,7 @@
 import { Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { t, tOr, useT, type ExtraKey, type MessageKey } from '@/i18n';
 import { COLLECTION_COLORS, addToCollection, createCollection, deleteCollection, updateCollection } from '@/lib/actions';
 import { OPERATOR_HELP } from '@/lib/query';
 import { useLibrary } from '@/hooks/library';
@@ -12,6 +13,7 @@ import { Button, Input, Kbd, cn } from './ui/primitives';
 const EMOJIS = ['📌', '⭐', '📚', '💡', '🧠', '🛠️', '🚀', '🎨', '💻', '🤖', '📈', '💰', '🔥', '❤️', '🎯', '🧪', '🌱', '✍️', '🎬', '🎧', '🍳', '✈️', '🏋️', '🧘', '📝', '🗂️', '🔖', '👀', '🏆', '🧩'];
 
 export function CollectionDialog() {
+  useT();
   const state = useUi((s) => s.collectionDialog);
   const close = useUi((s) => s.closeCollectionDialog);
   const { collectionMap } = useLibrary();
@@ -33,12 +35,12 @@ export function CollectionDialog() {
     if (!name.trim()) return;
     if (editing) {
       await updateCollection(editing.id, { name: name.trim(), emoji, color, description });
-      toast.success('Collection updated');
+      toast.success(t('collection.updated'));
     } else {
       const col = await createCollection({ name, emoji, color, description });
       if (state.addIds?.length) {
         await addToCollection(state.addIds, col.id);
-        toast.success(`Added to ${col.emoji} ${col.name}`);
+        toast.success(t('menu.addedTo', { name: `${col.emoji} ${col.name}` }));
       } else {
         navigate(scopeHash({ kind: 'collection', value: col.id }));
       }
@@ -47,7 +49,7 @@ export function CollectionDialog() {
   };
 
   return (
-    <Dialog open={state.open} onOpenChange={(o) => !o && close()} title={editing ? 'Edit collection' : 'New collection'} description={editing ? undefined : 'Group posts any way you like — projects, reading lists, inspiration.'}>
+    <Dialog open={state.open} onOpenChange={(o) => !o && close()} title={editing ? t('collection.edit') : t('collection.new')} description={editing ? undefined : t('collection.desc')}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -60,11 +62,11 @@ export function CollectionDialog() {
           <span className="grid size-9 shrink-0 place-items-center rounded-[10px] border border-line text-lg" style={{ background: `color-mix(in oklab, ${color} 16%, transparent)` }}>
             {emoji}
           </span>
-          <Input autoFocus value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Read later, Design inspo, Startup ideas" maxLength={60} />
+          <Input autoFocus value={name} onChange={(e) => setName(e.target.value)} placeholder={t('collection.namePlaceholder')} maxLength={60} />
         </div>
-        <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description (optional)" maxLength={140} />
+        <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t('collection.descPlaceholder')} maxLength={140} />
         <div>
-          <div className="mb-2 text-[12px] font-medium text-muted">Icon</div>
+          <div className="mb-2 text-[12px] font-medium text-muted">{t('collection.icon')}</div>
           <div className="grid grid-cols-10 gap-1">
             {EMOJIS.map((e) => (
               <button key={e} type="button" onClick={() => setEmoji(e)} className={cn('grid aspect-square place-items-center rounded-lg text-[17px] hover:bg-panel-2', emoji === e && 'bg-accent-soft ring-2 ring-accent/40')}>
@@ -74,7 +76,7 @@ export function CollectionDialog() {
           </div>
         </div>
         <div>
-          <div className="mb-2 text-[12px] font-medium text-muted">Color</div>
+          <div className="mb-2 text-[12px] font-medium text-muted">{t('collection.color')}</div>
           <div className="flex flex-wrap gap-2">
             {COLLECTION_COLORS.map((c) => (
               <button
@@ -83,7 +85,7 @@ export function CollectionDialog() {
                 onClick={() => setColor(c)}
                 className={cn('size-6 rounded-full ring-offset-2 ring-offset-panel transition-transform hover:scale-110', color === c && 'ring-2 ring-fg/60')}
                 style={{ background: c }}
-                aria-label={`Color ${c}`}
+                aria-label={t('collection.colorLabel', { color: c })}
               />
             ))}
           </div>
@@ -96,22 +98,22 @@ export function CollectionDialog() {
               size="sm"
               onClick={async () => {
                 await deleteCollection(editing.id);
-                toast(`Deleted ${editing.name}`, { description: 'Posts in it were kept.' });
+                toast(t('collection.deleted', { name: editing.name }), { description: t('collection.deletedDesc') });
                 navigate('#/library/all');
                 close();
               }}
             >
-              <Trash /> Delete
+              <Trash /> {t('common.delete')}
             </Button>
           ) : (
             <span />
           )}
           <div className="flex gap-2">
             <Button type="button" variant="ghost" onClick={close}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" variant="primary" disabled={!name.trim()}>
-              {editing ? 'Save' : 'Create collection'}
+              {editing ? t('common.save') : t('collection.create')}
             </Button>
           </div>
         </div>
@@ -120,36 +122,37 @@ export function CollectionDialog() {
   );
 }
 
-const SHORTCUTS: Array<[string[], string]> = [
-  [['⌘/Ctrl', 'K'], 'Command palette'],
-  [['/'], 'Search'],
-  [['J'], 'Next post'],
-  [['K'], 'Previous post'],
-  [['↵'], 'Open details'],
-  [['O'], 'Open on X'],
-  [['S'], 'Star / unstar'],
-  [['R'], 'Mark read / unread'],
-  [['E'], 'Archive'],
-  [['X'], 'Select'],
-  [['1–4'], 'Grid · List · Table · Gallery'],
-  [['G', 'H'], 'Go home'],
-  [['G', 'A'], 'All bookmarks'],
-  [['G', 'U'], 'Unread'],
-  [['G', 'I'], 'Insights'],
-  [['Esc'], 'Close / clear selection'],
-  [['?'], 'This help'],
+const SHORTCUTS: Array<[string[], MessageKey]> = [
+  [['⌘/Ctrl', 'K'], 'shortcuts.palette'],
+  [['/'], 'shortcuts.search'],
+  [['J'], 'shortcuts.next'],
+  [['K'], 'shortcuts.prev'],
+  [['↵'], 'shortcuts.open'],
+  [['O'], 'shortcuts.openX'],
+  [['S'], 'shortcuts.star'],
+  [['R'], 'shortcuts.read'],
+  [['E'], 'shortcuts.archive'],
+  [['X'], 'shortcuts.select'],
+  [['1–4'], 'shortcuts.layouts'],
+  [['G', 'H'], 'shortcuts.home'],
+  [['G', 'A'], 'shortcuts.all'],
+  [['G', 'U'], 'shortcuts.unread'],
+  [['G', 'I'], 'shortcuts.insights'],
+  [['Esc'], 'shortcuts.esc'],
+  [['?'], 'shortcuts.help'],
 ];
 
 export function ShortcutsDialog() {
+  useT();
   const open = useUi((s) => s.shortcutsOpen);
   const setOpen = useUi((s) => s.setShortcutsOpen);
   return (
-    <Dialog open={open} onOpenChange={setOpen} title="Keyboard shortcuts" className="max-w-2xl">
+    <Dialog open={open} onOpenChange={setOpen} title={t('shortcuts.title')} className="max-w-2xl">
       <div className="grid gap-x-8 gap-y-1 sm:grid-cols-2">
         <div className="space-y-1">
           {SHORTCUTS.map(([keys, label]) => (
-            <div key={label} className="flex h-8 items-center justify-between text-[13px]">
-              <span className="text-fg-2">{label}</span>
+            <div key={label} className="flex min-h-8 items-center justify-between gap-3 text-[13px]">
+              <span className="text-fg-2">{t(label)}</span>
               <span className="flex gap-1">
                 {keys.map((k) => (
                   <Kbd key={k}>{k}</Kbd>
@@ -159,12 +162,12 @@ export function ShortcutsDialog() {
           ))}
         </div>
         <div>
-          <div className="mb-2 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">Search operators</div>
+          <div className="mb-2 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">{t('shortcuts.operators')}</div>
           <div className="space-y-1.5">
             {OPERATOR_HELP.map((o) => (
               <div key={o.op} className="text-[12.5px]">
                 <code className="rounded bg-panel-2 px-1.5 py-0.5 text-[12px] text-accent">{o.example}</code>
-                <span className="ml-2 text-muted">{o.description}</span>
+                <span className="ml-2 text-muted">{tOr(`op.${o.op}` as ExtraKey, o.description)}</span>
               </div>
             ))}
           </div>

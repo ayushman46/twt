@@ -162,6 +162,12 @@ export interface RecallCard {
   lapses: number;
   state: 'new' | 'learning' | 'review' | 'done';
   lastReviewedAt?: number;
+  /** Rating given at the last review. */
+  lastRating?: 'again' | 'good' | 'mastered' | 'notUseful';
+  /** When the post first entered Recall. */
+  firstReviewedAt?: number;
+  /** Lifetime number of ratings (reps reset on a lapse; this never does). */
+  reviews?: number;
 }
 
 export interface SyncRun {

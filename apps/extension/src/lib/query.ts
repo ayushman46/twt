@@ -55,6 +55,61 @@ export interface ParsedQuery {
 
 const TOKEN_RE = /(-?)([a-z_]+):("([^"]*)"|\S+)|(-?)"([^"]*)"|(\S+)/gi;
 
+/*
+ * Unicode folding for matching (search haystacks, query terms, classifier).
+ *
+ * Makes visually identical / interchangeable spellings compare equal:
+ *  - NFKC: precomposed vs combining forms, and "fancy" X text (𝐈𝐏𝐋, ｆｕｌｌｗｉｄｔｈ) → plain
+ *  - curly quotes → straight (we’re = we're)
+ *  - zero-width joiners/non-joiners, soft hyphens, BOM → removed (zero-width space → space)
+ *  - Indic nukta (बाज़ार = बाजार), Devanagari chandrabindu → anusvara (हाँ = हां),
+ *    Gurmukhi tippi → bindi and addak dropped, Malayalam atomic chillus → consonant + virama
+ *  - danda / double danda (। ॥) → space, so they end words
+ *  - Indic digits (२०२६, ২০২৬, ௨௦௨௬ …) → ASCII digits
+ *  - Devanagari nasal + virama + consonant → anusvara (हिन्दी = हिंदी)
+ * Idempotent, and nothing but lower-casing for ASCII text.
+ */
+const FOLD_MAP: Record<string, string> = {
+  '\u2018': "'",
+  '\u2019': "'",
+  '\u201c': '"',
+  '\u201d': '"',
+  '\u00ad': '',
+  '\u200b': ' ',
+  '\u200c': '',
+  '\u200d': '',
+  '\u2060': '',
+  '\ufeff': '',
+  '\u0901': '\u0902',
+  '\u0964': ' ',
+  '\u0965': ' ',
+  '\u0a70': '\u0a02',
+  '\u0a71': '',
+  '\u0d7a': '\u0d23\u0d4d',
+  '\u0d7b': '\u0d28\u0d4d',
+  '\u0d7c': '\u0d30\u0d4d',
+  '\u0d7d': '\u0d32\u0d4d',
+  '\u0d7e': '\u0d33\u0d4d',
+  '\u0d7f': '\u0d15\u0d4d',
+};
+// Brahmic blocks share one layout: nukta at +0x3C (none in Tamil/Malayalam), digits at +0x66…+0x6F.
+for (let block = 0x0900; block <= 0x0d00; block += 0x80) {
+  if (block !== 0x0b80 && block !== 0x0d00) FOLD_MAP[String.fromCharCode(block + 0x3c)] = '';
+  for (let d = 0; d < 10; d++) FOLD_MAP[String.fromCharCode(block + 0x66 + d)] = String(d);
+}
+const FOLD_RE = new RegExp(`[${Object.keys(FOLD_MAP).join('')}]`, 'g');
+const NASAL_RE = /[\u0919\u091e\u0923\u0928\u092e]\u094d(?=[\u0915-\u0939])/g;
+const NON_ASCII_RE = /[^\x00-\x7f]/;
+const GURMUKHI_SHA_RE = /\u0a38\u0a3c/g;
+
+/** Lower-case and Unicode-fold text so equivalent spellings match (see above). */
+export function foldText(s: string): string {
+  if (!NON_ASCII_RE.test(s)) return s.toLowerCase();
+  // NFKC turns Gurmukhi sha into sa + nukta; keep it as sha before nuktas are dropped.
+  const t = s.normalize('NFKC').toLowerCase().replace(GURMUKHI_SHA_RE, '\u0a36').replace(FOLD_RE, (ch) => FOLD_MAP[ch] ?? ch);
+  return t.includes('\u094d') ? t.replace(NASAL_RE, '\u0902') : t;
+}
+
 function parseNumber(v: string): number | undefined {
   const m = v.toLowerCase().match(/^(\d+(?:\.\d+)?)([km])?$/);
   if (!m) return undefined;
@@ -200,12 +255,17 @@ export interface FilterContext {
   collections: Collection[];
 }
 
+function resolveByName(v: string, list: Array<{ id: string; name: string }>): string | undefined {
+  const f = foldText(v);
+  return list.find((c) => c.id === v || foldText(c.name).startsWith(f))?.id;
+}
+
 function resolveCategory(v: string, cats: Category[]): string | undefined {
-  return cats.find((c) => c.id === v || c.name.toLowerCase() === v || c.name.toLowerCase().startsWith(v))?.id;
+  return resolveByName(v, cats);
 }
 
 function resolveCollection(v: string, cols: Collection[]): string | undefined {
-  return cols.find((c) => c.id === v || c.name.toLowerCase() === v || c.name.toLowerCase().startsWith(v))?.id;
+  return resolveByName(v, cols);
 }
 
 const FACET_ALIASES: Record<string, Facet> = {
@@ -306,10 +366,10 @@ export function matchesScope(b: Bookmark, scope: Scope): boolean {
 }
 
 function searchableText(b: Bookmark): string {
-  return [b.text, b.quoted?.text, b.card?.title, b.card?.description, b.article?.title, b.note, b.summary, b.author.name, b.author.handle, b.links.map((l) => l.url).join(' ')]
+  const text = [b.text, b.quoted?.text, b.card?.title, b.card?.description, b.article?.title, b.note, b.summary, b.author.name, b.author.handle, b.links.map((l) => l.url).join(' ')]
     .filter(Boolean)
-    .join('\n')
-    .toLowerCase();
+    .join('\n');
+  return foldText(text);
 }
 
 /** Apply every operator except free text (which is handled by the search index). */
@@ -322,14 +382,19 @@ export function applyOperators(list: Bookmark[], q: ParsedQuery, ctx: FilterCont
   const unknownCategory = q.cats.length > 0 && cats.length === 0;
   if (unknownCollection || unknownCategory) return [];
 
+  const tags = q.tags.map(foldText);
+  const notTags = q.notTags.map(foldText);
+  const phrases = q.phrases.map(foldText);
+  const exclude = q.exclude.map(foldText);
+
   return list.filter((b) => {
     const handle = b.author.handle.toLowerCase();
     if (q.from.length && !q.from.some((f) => handle === f || handle.startsWith(f))) return false;
     if (q.notFrom.length && q.notFrom.some((f) => handle === f)) return false;
     if (cats.length && !cats.includes(b.category)) return false;
     if (notCats.length && notCats.includes(b.category)) return false;
-    if (q.tags.length && !q.tags.every((t) => b.tags.some((bt) => bt === t || bt.startsWith(t)))) return false;
-    if (q.notTags.length && q.notTags.some((t) => b.tags.includes(t))) return false;
+    if (tags.length && !tags.every((t) => b.tags.some((bt) => foldText(bt).startsWith(t)))) return false;
+    if (notTags.length && notTags.some((t) => b.tags.some((bt) => foldText(bt) === t))) return false;
     if (cols.length && !cols.every((c) => b.collections.includes(c))) return false;
     if (q.has.length && !q.has.every((h) => hasCheck(b, h))) return false;
     if (q.notHas.length && q.notHas.some((h) => hasCheck(b, h))) return false;
@@ -344,10 +409,10 @@ export function applyOperators(list: Bookmark[], q: ParsedQuery, ctx: FilterCont
     if (q.before !== undefined && b.createdAt > q.before) return false;
     if (q.minLikes !== undefined && b.metrics.likes < q.minLikes) return false;
     if (q.minViews !== undefined && b.metrics.views < q.minViews) return false;
-    if (q.phrases.length || q.exclude.length) {
+    if (phrases.length || exclude.length) {
       const text = searchableText(b);
-      if (q.phrases.some((p) => !text.includes(p))) return false;
-      if (q.exclude.some((x) => text.includes(x))) return false;
+      if (phrases.some((p) => !text.includes(p))) return false;
+      if (exclude.some((x) => text.includes(x))) return false;
     }
     return true;
   });
@@ -387,5 +452,5 @@ export const OPERATOR_HELP: Array<{ op: string; example: string; description: st
   { op: 'domain:', example: 'domain:github.com', description: 'Links to a site' },
   { op: 'lang:', example: 'lang:en', description: 'Post language' },
   { op: '-word', example: '-crypto', description: 'Exclude a word' },
-  { op: '"…"', example: '"system design"', description: 'Exact phrase' },
+  { op: '"\u2026"', example: '"system design"', description: 'Exact phrase' },
 ];

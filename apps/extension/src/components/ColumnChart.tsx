@@ -4,6 +4,7 @@
  * y ticks, sparse x labels, and a per-column hover/focus tooltip.
  */
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useT } from '@/i18n';
 import { fmtCompact, fmtNumber } from '@/lib/format';
 
 export interface ColumnDatum {
@@ -24,7 +25,10 @@ function niceTicks(max: number, count = 4): number[] {
   return ticks;
 }
 
-export function ColumnChart({ data, height = 240, unit = 'saved' }: { data: ColumnDatum[]; height?: number; unit?: string }) {
+/** `unit` (optional, already translated) replaces the default "{count} saved" wording. */
+export function ColumnChart({ data, height = 240, unit }: { data: ColumnDatum[]; height?: number; unit?: string }) {
+  const t = useT();
+  const amount = (v: number) => (unit ? `${fmtNumber(v)} ${unit}` : t('chart.saved', { count: fmtNumber(v) }));
   const ref = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const [hover, setHover] = useState<number | null>(null);
@@ -56,12 +60,12 @@ export function ColumnChart({ data, height = 240, unit = 'saved' }: { data: Colu
   return (
     <div ref={ref} className="relative" style={{ height }}>
       {width ? (
-        <svg width={width} height={height} role="img" aria-label={`Column chart: posts ${unit} per period`}>
-          {ticks.map((t) => (
-            <g key={t}>
-              <line x1={left} x2={width - 4} y1={y(t)} y2={y(t)} stroke="var(--line)" strokeWidth={1} />
-              <text x={left - 8} y={y(t)} dy="0.32em" textAnchor="end" fontSize={11} fill="var(--faint)">
-                {fmtCompact(t)}
+        <svg width={width} height={height} role="img" aria-label={t('chart.aria')}>
+          {ticks.map((tick) => (
+            <g key={tick}>
+              <line x1={left} x2={width - 4} y1={y(tick)} y2={y(tick)} stroke="var(--line)" strokeWidth={1} />
+              <text x={left - 8} y={y(tick)} dy="0.32em" textAnchor="end" fontSize={11} fill="var(--faint)">
+                {fmtCompact(tick)}
               </text>
             </g>
           ))}
@@ -89,7 +93,7 @@ export function ColumnChart({ data, height = 240, unit = 'saved' }: { data: Colu
                   height={plotH}
                   fill={hover === i ? 'var(--accent-soft)' : 'transparent'}
                   tabIndex={0}
-                  aria-label={`${d.full}: ${fmtNumber(d.value)} ${unit}`}
+                  aria-label={`${d.full}: ${amount(d.value)}`}
                   onPointerEnter={() => setHover(i)}
                   onPointerLeave={() => setHover((h0) => (h0 === i ? null : h0))}
                   onFocus={() => setHover(i)}
@@ -107,7 +111,7 @@ export function ColumnChart({ data, height = 240, unit = 'saved' }: { data: Colu
           style={{ left: Math.min(Math.max(left + band * hover + band / 2 - 70, 0), Math.max(0, width - 150)), top: 0 }}
         >
           <div className="text-[15px] font-semibold text-fg">
-            {fmtNumber(hovered.value)} {unit}
+            {amount(hovered.value)}
           </div>
           <div className="text-[12px] text-muted">{hovered.full}</div>
         </div>
