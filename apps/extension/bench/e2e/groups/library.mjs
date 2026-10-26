@@ -39,17 +39,17 @@ export async function run({ base, suite }) {
           layout,
         );
         assertEq(await currentLayout(page), layout, 'layout');
-        const pressed = await page.$$eval('main button[aria-pressed="true"]', (l) => l.length);
+        const pressed = await page.$$eval('main button[data-layout][aria-pressed="true"]', (l) => l.length);
         assertEq(pressed, 1, 'exactly one layout toggle pressed');
       });
     }
 
     await suite.check('layout toggle buttons switch layouts (click)', async () => {
-      const toggles = await page.$$('main button[aria-pressed]');
+      const toggles = await page.$$('main button[data-layout]');
       assertEq(toggles.length, 4, 'layout toggle count');
       for (const [i, layout] of ['grid', 'list', 'table', 'gallery'].entries()) {
         await toggles[i].click();
-        await page.waitForFunction((n) => document.querySelectorAll('main button[aria-pressed]')[n]?.getAttribute('aria-pressed') === 'true', { timeout: 3000 }, i);
+        await page.waitForFunction((n) => document.querySelectorAll('main button[data-layout]')[n]?.getAttribute('aria-pressed') === 'true', { timeout: 3000 }, i);
         await settle(page, { quiet: 50 });
         assertEq(await currentLayout(page), layout, `toggle ${i + 1}`);
       }
@@ -171,7 +171,7 @@ export async function run({ base, suite }) {
     await suite.check('quick filter chip toggles has:image', async () => {
       await search(page, '');
       await page.evaluate(() => document.activeElement?.blur());
-      const chip = await page.evaluateHandle((sel) => [...document.querySelectorAll('main button:not([aria-pressed])')].find((b) => b.querySelector(sel)), icon('images'));
+      const chip = await page.evaluateHandle(() => document.querySelector('main button[data-op="has:image"]'));
       assert(chip.asElement(), 'image chip not found');
       await chip.asElement().click();
       const n = await stableCount(page);

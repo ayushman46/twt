@@ -1,19 +1,7 @@
-import {
-  Archive,
-  ArchiveRestore,
-  ChevronDown,
-  ChevronUp,
-  Circle,
-  Copy,
-  Ellipsis,
-  ExternalLink,
-  Plus,
-  Sparkles,
-  Star,
-  X,
-} from 'lucide-react';
+import { Archive, ArchiveRestore, ChevronDown, ChevronUp, Circle, Copy, Ellipsis, ExternalLink, Plus, Star, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { useT, type MessageKey } from '@/i18n';
+import { createPortal } from 'react-dom';
+import { catName, useT, type MessageKey } from '@/i18n';
 import { addTags, removeFromCollection, removeTag, setArchived, setNote, setRead, setStarred } from '@/lib/actions';
 import { fmtCompact, fmtLongDate, fmtNumber, fmtShortDate } from '@/lib/format';
 import type { Bookmark } from '@/lib/types';
@@ -21,8 +9,9 @@ import { useLibrary } from '@/hooks/library';
 import { useUi } from '@/store/ui';
 import { Avatar, Verified } from './Brand';
 import { BookmarkMenu, CategoryMenuItems, CollectionMenuItems, copyText } from './BookmarkMenu';
+import { CategoryGlyph } from './CategoryGlyph';
 import { MediaGrid } from './Media';
-import { CategoryChip, Metrics } from './TweetCard';
+import { Metrics } from './TweetCard';
 import { ArticleCard, LinkPreview, PollView, QuotedPost } from './TweetParts';
 import { TranslateButton } from './TranslateButton';
 import { TweetText } from './TweetText';
@@ -35,6 +24,8 @@ const SOURCE_LABEL: Record<Bookmark['categorySource'], MessageKey> = {
   ai: 'detail.source.ai',
   user: 'detail.source.user',
 };
+
+const LABEL = 'mb-2 text-[12.5px] font-medium text-muted';
 
 function TagEditor({ b }: { b: Bookmark }) {
   const t = useT();
@@ -56,46 +47,45 @@ function TagEditor({ b }: { b: Bookmark }) {
   };
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-1.5">
-        {b.tags.map((tag) => (
-          <span key={tag} className="group/tag inline-flex h-7 items-center gap-1 rounded-full bg-panel-2 pr-1 pl-2.5 text-[12.5px] text-fg-2">
-            #{tag}
-            <button type="button" onClick={() => void removeTag([b.id], tag)} className="grid size-5 place-items-center rounded-full text-faint hover:bg-panel-3 hover:text-fg" aria-label={t('detail.removeTag', { tag })}>
-              <X className="size-3" />
-            </button>
-          </span>
-        ))}
-        <div className="relative">
-          <input
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onFocus={() => setOpen(true)}
-            onBlur={() => setTimeout(() => setOpen(false), 150)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ',') {
-                e.preventDefault();
-                commit(value);
-              } else if (e.key === 'Backspace' && !value && b.tags.length) {
-                void removeTag([b.id], b.tags[b.tags.length - 1]!);
-              } else if (e.key === 'Escape') {
-                (e.target as HTMLInputElement).blur();
-              }
-              e.stopPropagation();
-            }}
-            placeholder={b.tags.length ? t('detail.addTag') : t('detail.addTags')}
-            className="h-7 w-28 rounded-full border border-dashed border-line-strong bg-transparent px-2.5 text-[12.5px] outline-none placeholder:text-faint focus:w-40 focus:border-accent/60 transition-[width]"
-          />
-          {open && suggestions.length ? (
-            <div className="absolute top-8 left-0 z-10 w-48 rounded-xl border border-line bg-panel p-1 shadow-pop">
-              {suggestions.map((s) => (
-                <button key={s} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => commit(s)} className="flex h-7 w-full items-center rounded-lg px-2 text-left text-[12.5px] hover:bg-panel-2">
-                  #{s}
-                </button>
-              ))}
-            </div>
-          ) : null}
-        </div>
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      {b.tags.map((tag) => (
+        <span key={tag} className="inline-flex h-7 items-center text-[13px] text-fg-2">
+          #{tag}
+          <button type="button" onClick={() => void removeTag([b.id], tag)} className="ml-0.5 grid size-5 place-items-center rounded-md text-faint hover:bg-panel-2 hover:text-fg" aria-label={t('detail.removeTag', { tag })}>
+            <X className="size-3" />
+          </button>
+        </span>
+      ))}
+      <div className="relative flex h-7 items-center gap-1.5">
+        <Plus className="size-3.5 shrink-0 text-faint" aria-hidden />
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onFocus={() => setOpen(true)}
+          onBlur={() => setTimeout(() => setOpen(false), 150)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ',') {
+              e.preventDefault();
+              commit(value);
+            } else if (e.key === 'Backspace' && !value && b.tags.length) {
+              void removeTag([b.id], b.tags[b.tags.length - 1]!);
+            } else if (e.key === 'Escape') {
+              (e.target as HTMLInputElement).blur();
+            }
+            e.stopPropagation();
+          }}
+          placeholder={b.tags.length ? t('detail.addTag') : t('detail.addTags')}
+          className="h-7 w-32 bg-transparent text-[13px] text-fg outline-none placeholder:text-faint transition-[width] focus:w-48"
+        />
+        {open && suggestions.length ? (
+          <div className="absolute top-8 left-0 z-10 w-48 rounded-xl border border-line bg-panel p-1 shadow-pop">
+            {suggestions.map((s) => (
+              <button key={s} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => commit(s)} className="flex h-7 w-full items-center rounded-lg px-2 text-left text-[12.5px] hover:bg-panel-2">
+                #{s}
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -112,6 +102,7 @@ function NoteEditor({ b }: { b: Bookmark }) {
       value={value}
       rows={3}
       placeholder={t('detail.notePlaceholder')}
+      className="min-h-[88px] text-[13.5px]"
       onChange={(e) => {
         const v = e.target.value;
         setValue(v);
@@ -127,13 +118,13 @@ function NoteEditor({ b }: { b: Bookmark }) {
 function MiniRow({ b, onOpen }: { b: Bookmark; onOpen: (id: string) => void }) {
   const t = useT();
   return (
-    <button type="button" onClick={() => onOpen(b.id)} className="flex w-full items-start gap-2.5 rounded-xl px-2 py-2 text-left hover:bg-panel-2">
-      <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={26} />
+    <button type="button" onClick={() => onOpen(b.id)} className="group flex w-full items-start gap-3 py-3 text-left">
+      <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={28} />
       <div className="min-w-0 flex-1">
-        <div className="truncate text-[12px] text-muted">
-          <span className="font-semibold text-fg">{b.author.name}</span> · {fmtShortDate(b.createdAt)}
+        <div className="truncate text-[12.5px] text-muted">
+          <span className="font-medium text-fg-2">{b.author.name}</span> · {fmtShortDate(b.createdAt)}
         </div>
-        <div className="line-clamp-2 text-[13px] leading-snug text-fg-2">{b.text || b.card?.title || t('common.mediaPost')}</div>
+        <div className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-fg-2 group-hover:text-fg">{b.text || b.card?.title || t('common.mediaPost')}</div>
       </div>
     </button>
   );
@@ -142,7 +133,7 @@ function MiniRow({ b, onOpen }: { b: Bookmark; onOpen: (id: string) => void }) {
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
-      <div className="mb-2 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">{label}</div>
+      <div className={LABEL}>{label}</div>
       {children}
     </div>
   );
@@ -155,6 +146,19 @@ export function DetailPanel({ items, highlight, onSearch }: { items: Bookmark[];
   const lib = useLibrary();
   const b = activeId ? lib.byId.get(activeId) : undefined;
   const index = b ? items.findIndex((x) => x.id === b.id) : -1;
+
+  // Esc closes the panel on every screen. Typing fields and open menus keep their own Esc.
+  useEffect(() => {
+    if (!activeId) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      if ((e.target as HTMLElement).closest?.('input, textarea, select, [contenteditable]')) return;
+      if (document.querySelector('[role="menu"][data-state="open"], [role="listbox"][data-state="open"]')) return;
+      openDetail(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [activeId, openDetail]);
 
   useEffect(() => {
     if (!b || b.read) return;
@@ -180,7 +184,11 @@ export function DetailPanel({ items, highlight, onSearch }: { items: Bookmark[];
     if (next) openDetail(next.id);
   };
 
-  return (
+  const category = b ? lib.categoryMap.get(b.category) : undefined;
+
+  // Portaled to <body>: the page wrapper's fade-in animation makes a stacking context, which would
+  // otherwise let the app's sticky mobile top bar paint over the panel's header (close button).
+  return createPortal(
     <>
       {b ? (
         <>
@@ -197,7 +205,7 @@ export function DetailPanel({ items, highlight, onSearch }: { items: Bookmark[];
                   <ChevronDown />
                 </Button>
               </Tip>
-              {index >= 0 ? <span className="ml-1 text-[12px] text-faint tabular-nums">{fmtNumber(index + 1)} / {fmtNumber(items.length)}</span> : null}
+              {index >= 0 ? <span className="ml-1 hidden text-[12px] text-faint tabular-nums sm:inline">{fmtNumber(index + 1)} / {fmtNumber(items.length)}</span> : null}
               <div className="ml-auto flex items-center gap-0.5">
                 <Tip label={b.starred ? t('common.unstar') : t('common.star')} shortcut="S">
                   <Button size="icon-sm" variant="ghost" onClick={() => void setStarred([b.id], !b.starred)} aria-label={t('common.star')}>
@@ -224,22 +232,22 @@ export function DetailPanel({ items, highlight, onSearch }: { items: Bookmark[];
                     <Ellipsis />
                   </Button>
                 </BookmarkMenu>
-                <Button size="sm" variant="outline" className="ml-1" onClick={() => window.open(b.url, '_blank', 'noopener')}>
-                  <ExternalLink /> {t('common.openOnX')}
+                <Button size="sm" variant="outline" className="ml-2" aria-label={t('common.openOnX')} onClick={() => window.open(b.url, '_blank', 'noopener')}>
+                  <ExternalLink /> <span className="hidden sm:inline">{t('common.openOnX')}</span>
                 </Button>
-                <Button size="icon-sm" variant="ghost" onClick={() => openDetail(null)} aria-label={t('common.close')}>
+                <Button size="icon-sm" variant="ghost" className="ml-1" onClick={() => openDetail(null)} aria-label={t('common.close')}>
                   <X />
                 </Button>
               </div>
             </header>
 
             <div className="scroll-area flex-1">
-              <div className="px-6 pt-5 pb-6">
+              <div className="px-6 pt-6 pb-10">
                 <div className="flex items-center gap-3">
-                  <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={48} />
+                  <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={44} />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1">
-                      <span className="truncate text-[15.5px] font-semibold">{b.author.name}</span>
+                      <span className="truncate text-[15px] font-semibold">{b.author.name}</span>
                       {b.author.verified ? <Verified /> : null}
                     </div>
                     <div className="text-[13px] text-muted">
@@ -251,44 +259,41 @@ export function DetailPanel({ items, highlight, onSearch }: { items: Bookmark[];
                   </div>
                 </div>
 
-                {b.summary ? (
-                  <div className="mt-4 flex gap-2 rounded-xl bg-accent-soft px-3.5 py-2.5 text-[13px] leading-snug text-fg-2">
-                    <Sparkles className="mt-0.5 size-3.5 shrink-0 text-accent" />
-                    <span>{b.summary}</span>
-                  </div>
-                ) : null}
+                {b.summary ? <div className="mt-5 rounded-xl bg-panel-2 px-3.5 py-3 text-[13.5px] leading-relaxed text-fg-2">{b.summary}</div> : null}
 
-                {b.text ? <TweetText text={b.text} highlight={highlight} onHashtag={onSearch} onMention={(h) => onSearch(`from:${h}`)} className="mt-4 text-[16px] leading-[1.6]" /> : null}
+                {b.text ? <TweetText text={b.text} highlight={highlight} onHashtag={onSearch} onMention={(h) => onSearch(`from:${h}`)} className="mt-5 text-[16px] leading-[1.6]" /> : null}
                 {b.text ? <TranslateButton key={b.id} text={b.text} postId={b.id} className="mt-3" /> : null}
                 {b.article ? (
-                  <div className="mt-4">
+                  <div className="mt-5">
                     <ArticleCard article={b.article} url={b.url} />
                   </div>
                 ) : null}
-                {b.media.length ? <MediaGrid media={b.media} className="mt-4" /> : null}
+                {b.media.length ? <MediaGrid media={b.media} className="mt-5" /> : null}
                 {b.poll ? (
-                  <div className="mt-4">
+                  <div className="mt-5">
                     <PollView poll={b.poll} />
                   </div>
                 ) : null}
-                {b.card ? <LinkPreview card={b.card} className="mt-4" /> : null}
-                {b.quoted ? <QuotedPost q={b.quoted} highlight={highlight} className="mt-4" /> : null}
+                {b.card ? <LinkPreview card={b.card} className="mt-5" /> : null}
+                {b.quoted ? <QuotedPost q={b.quoted} highlight={highlight} className="mt-5" /> : null}
 
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-4 text-[12.5px] text-muted">
+                <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-4 text-[12.5px] text-muted">
                   <span>{fmtLongDate(b.createdAt)}</span>
                   <Metrics b={b} />
                 </div>
-                {b.partial ? (
-                  <p className="mt-3 rounded-lg bg-panel-2 px-3 py-2 text-[12px] text-muted">{t('detail.partial')}</p>
-                ) : null}
+                {b.partial ? <p className="mt-3 rounded-lg bg-panel-2 px-3 py-2 text-[12px] text-muted">{t('detail.partial')}</p> : null}
 
-                <div className="mt-5 space-y-5">
+                <div className="mt-6 space-y-6">
                   <Field label={t('common.category')}>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <Menu>
                         <MenuTrigger asChild>
-                          <button type="button" className="inline-flex items-center gap-1 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent">
-                            <CategoryChip category={lib.categoryMap.get(b.category)} className="h-7 text-[12.5px]" />
+                          <button
+                            type="button"
+                            className="inline-flex h-7 items-center gap-1.5 rounded-full bg-panel-2 px-2.5 text-[12.5px] text-fg-2 outline-none transition-colors hover:bg-panel-3 hover:text-fg focus-visible:ring-2 focus-visible:ring-accent"
+                          >
+                            {category ? <CategoryGlyph category={category} className="size-3.5 text-muted" /> : null}
+                            <span className="max-w-[180px] truncate">{category ? catName(category) : b.category}</span>
                             <ChevronDown className="size-3.5 text-muted" />
                           </button>
                         </MenuTrigger>
@@ -301,22 +306,28 @@ export function DetailPanel({ items, highlight, onSearch }: { items: Bookmark[];
                   </Field>
 
                   <Field label={t('common.collections')}>
-                    <div className="flex flex-wrap items-center gap-1.5">
+                    <div className="flex flex-col">
                       {b.collections.map((id) => {
                         const c = lib.collectionMap.get(id);
                         if (!c) return null;
                         return (
-                          <span key={id} className="inline-flex h-7 items-center gap-1.5 rounded-full border border-line pr-1 pl-2.5 text-[12.5px]">
-                            {c.emoji} {c.name}
-                            <button type="button" onClick={() => void removeFromCollection([b.id], id)} className="grid size-5 place-items-center rounded-full text-faint hover:bg-panel-2 hover:text-fg" aria-label={t('detail.removeFrom', { name: c.name })}>
-                              <X className="size-3" />
+                          <div key={id} className="flex h-9 items-center gap-2 border-b border-line text-[13px] text-fg-2">
+                            <span aria-hidden>{c.emoji}</span>
+                            <span className="min-w-0 flex-1 truncate">{c.name}</span>
+                            <button
+                              type="button"
+                              onClick={() => void removeFromCollection([b.id], id)}
+                              className="grid size-6 place-items-center rounded-md text-faint hover:bg-panel-2 hover:text-fg"
+                              aria-label={t('detail.removeFrom', { name: c.name })}
+                            >
+                              <X className="size-3.5" />
                             </button>
-                          </span>
+                          </div>
                         );
                       })}
                       <Menu>
                         <MenuTrigger asChild>
-                          <button type="button" className="inline-flex h-7 items-center gap-1 rounded-full border border-dashed border-line-strong px-2.5 text-[12.5px] text-muted hover:border-accent/50 hover:text-fg">
+                          <button type="button" className="mt-1 inline-flex h-7 w-fit items-center gap-1 text-[13px] font-medium text-accent outline-none hover:underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-accent">
                             <Plus className="size-3.5" /> {t('common.add')}
                           </button>
                         </MenuTrigger>
@@ -335,25 +346,29 @@ export function DetailPanel({ items, highlight, onSearch }: { items: Bookmark[];
                     <NoteEditor b={b} />
                   </Field>
 
-                  <div className="text-[12px] leading-relaxed text-faint">
+                  <p className="text-[12px] leading-relaxed text-faint">
                     {t(b.sources.includes('like') ? (b.sources.includes('bookmark') ? 'detail.savedFromBoth' : 'detail.savedFromLikes') : 'detail.savedFromBookmarks', { date: fmtLongDate(b.savedAt) })}
-                  </div>
+                  </p>
                 </div>
 
                 {related.author.length ? (
-                  <div className="mt-6">
-                    <div className="mb-1 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">{t('detail.moreFrom', { handle: b.author.handle })}</div>
-                    {related.author.map((x) => (
-                      <MiniRow key={x.id} b={x} onOpen={openDetail} />
-                    ))}
+                  <div className="mt-8">
+                    <div className={LABEL}>{t('detail.moreFrom', { handle: b.author.handle })}</div>
+                    <div className="divide-y divide-line border-t border-line">
+                      {related.author.map((x) => (
+                        <MiniRow key={x.id} b={x} onOpen={openDetail} />
+                      ))}
+                    </div>
                   </div>
                 ) : null}
                 {related.similar.length ? (
-                  <div className="mt-5">
-                    <div className="mb-1 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">{t('detail.related')}</div>
-                    {related.similar.map((x) => (
-                      <MiniRow key={x.id} b={x} onOpen={openDetail} />
-                    ))}
+                  <div className="mt-8">
+                    <div className={LABEL}>{t('detail.related')}</div>
+                    <div className="divide-y divide-line border-t border-line">
+                      {related.similar.map((x) => (
+                        <MiniRow key={x.id} b={x} onOpen={openDetail} />
+                      ))}
+                    </div>
                   </div>
                 ) : null}
               </div>
@@ -361,6 +376,7 @@ export function DetailPanel({ items, highlight, onSearch }: { items: Bookmark[];
           </aside>
         </>
       ) : null}
-    </>
+    </>,
+    document.body,
   );
 }

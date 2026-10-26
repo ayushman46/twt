@@ -17,7 +17,6 @@ const mail = <a href={SUPPORT_URL}>{SUPPORT_LABEL}</a>;
 export default function PrivacyPage() {
   return (
     <LegalPage
-      eyebrow="Legal"
       title="Privacy Policy"
       effectiveDate={LEGAL_EFFECTIVE_DATE}
       intro={

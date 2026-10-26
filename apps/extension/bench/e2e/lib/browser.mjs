@@ -111,7 +111,7 @@ export async function newPage(browser, { viewport = 'desktop', theme = 'dark', i
   page.setDefaultTimeout(20_000);
 
   const log = { errors: [], warnings: [], external: new Set(), dialogs: [], label };
-  const push = (msg) => log.errors.push({ t: Date.now(), msg: String(msg).slice(0, 600) });
+  const push = (msg) => log.errors.push({ t: Date.now(), msg: String(msg).slice(0, process.env.QA_DEBUG_BUILD ? 4000 : 600) });
   const isLocal = (u) => {
     try {
       const url = new URL(u);
@@ -121,7 +121,9 @@ export async function newPage(browser, { viewport = 'desktop', theme = 'dark', i
     }
   };
 
-  page.on('pageerror', (e) => push(`pageerror: ${e?.message ?? e}`));
+  // With QA_DEBUG_BUILD=1 (unminified build) the first stack frames are attached, so the culprit is readable.
+  const frames = (e) => (process.env.QA_DEBUG_BUILD && e?.stack ? ' | ' + String(e.stack).split('\n').slice(1, 9).map((l) => l.trim()).join(' | ') : '');
+  page.on('pageerror', (e) => push(`pageerror: ${e?.message ?? e}${frames(e)}`));
   page.on('console', (m) => {
     const type = m.type();
     const text = m.text();

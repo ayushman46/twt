@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { BRAND } from "@twtdash/shared";
-import { Accent } from "@/components/ui/section-heading";
 import { BROWSERS, SUPPORT_URL } from "@/lib/site";
 import type { Dictionary } from "./types";
 
-const link = "text-brand-soft underline decoration-brand-soft/40 underline-offset-2 hover:decoration-current";
+const link = "link-inline";
 const browsersList = `${BROWSERS.slice(0, -1).join(", ")} या ${BROWSERS.at(-1)}`;
 
 export const hi: Dictionary = {
@@ -52,7 +51,6 @@ export const hi: Dictionary = {
   },
   footer: {
     tagline: "आपके X bookmarks, अब पूरे सलीके से।",
-    worksIn: `${BROWSERS.join(", ").replace(/, (?=[^,]*$)/, " और ")} में चलता है। English, हिन्दी और 8 और Indian भाषाओं में।`,
     columns: [
       {
         title: "Product",
@@ -90,77 +88,70 @@ export const hi: Dictionary = {
     titleLine1: "आपके X bookmarks,",
     titleAccent: "अब पूरे सलीके से।",
     description:
-      "twtdash आपके X पर save किए हर post को sync करता है, उन्हें अपने-आप smart categories में बाँटता है, और आपको एक तेज़, सुंदर library देता है — जहाँ आप सब कुछ खोज सकें, tag करें और दोबारा पढ़ें। सब कुछ आपके browser में, पूरी तरह private।",
-    ctaChrome: "Chrome में जोड़ें — बिल्कुल मुफ़्त",
+      "twtdash आपके X पर save किए हर post को sync करता है, उन्हें आपके device पर ही categories में बाँटता है, और सब कुछ पल भर में खोजने लायक बना देता है।",
+    ctaChrome: "Chrome में जोड़ें — मुफ़्त",
     ctaFirefox: "Firefox में जोड़ें",
-    badges: ["हमेशा मुफ़्त", "कोई account नहीं", "डेटा आपके device पर"],
-    worksIn: `${BROWSERS.join(" · ")} में चलता है`,
-    languagesLabel: "अब इन भाषाओं में",
+    badges: ["हमेशा मुफ़्त", "कोई account नहीं", "डेटा आपके browser में"],
     mobile: {
-      text: "Phone पर हैं? twtdash laptop/PC के browser में चलता है — link खुद को भेज लें।",
-      whatsapp: "WhatsApp पर भेजें",
+      text: "Phone पर हैं? twtdash laptop/PC के browser में चलता है। Link ख़ुद को भेज लें।",
+      whatsapp: "WhatsApp",
       copy: "Link copy करें",
       copied: "Link copy हो गया",
-      shareText: "twtdash — अपने सारे X bookmarks sync करें, सलीके से रखें और तुरंत खोजें। Laptop पर install करें:",
+      shareText: "twtdash: अपने सारे X bookmarks sync करें, सलीके से रखें और तुरंत खोजें। Laptop पर install करें:",
     },
     mockup: {
       caption:
-        "twtdash dashboard की झलक: बाईं ओर bookmark गिनती के साथ categories, ऊपर search bar जिसमें “after:2025-06-01 min_likes:500 lang:en -crypto” query चल रही है, और नीचे save किए गए posts का grid — हर post पर उसकी category।",
+        "twtdash library की झलक: बाईं ओर sections और categories वाला sidebar, ऊपर search bar जिसमें “after:2025-06-01 min_likes:500 -crypto” query चल रही है, और नीचे save किए गए posts का grid — हर post पर उसकी category।",
       tab: "twtdash — Library",
-      nav: { home: "होम", library: "Library", insights: "Insights" },
+      search: "Search करें या कहीं भी जाएँ…",
+      nav: {
+        home: "होम",
+        all: "सभी bookmarks",
+        unread: "बिना पढ़े",
+        starred: "Starred",
+        archive: "Archive",
+        insights: "Insights",
+        recall: "Recall",
+        shelf: "Shelf",
+        ask: "Bookmarks से पूछें",
+        wrapped: "Wrapped",
+      },
+      discover: "Discover",
       categories: "Categories",
-      collections: "Collections",
-      collectionNames: ["बाद में पढ़ें", "Design refs", "Launch ideas"],
-      more: "और",
-      liveCapture: "Live capture चालू",
-      synced: "2 मिनट पहले sync · 12 नए",
+      title: "सभी bookmarks",
+      filters: "Filters",
+      sort: "हाल में save किए",
       all: "सभी",
       thread: "Thread",
     },
   },
   how: {
-    eyebrow: "कैसे काम करता है",
-    title: (
-      <>
-        Bookmarks के ढेर से library तक, बस <Accent gradient>तीन steps</Accent> में
-      </>
-    ),
-    description: "न कोई script, न API key, न export का झंझट। मेहनत वाला काम twtdash करता है — आप बस देखते रहिए।",
+    title: "Bookmarks के ढेर से library तक, बस तीन steps में",
+    description: "न कोई script, न API key, न export का झंझट। मेहनत वाला काम twtdash करता है।",
     steps: [
       {
         title: "Extension install करें",
         body: `twtdash को ${browsersList} में जोड़ें। न account बनाना है, न कुछ setup करना है।`,
-        detail: "Account की ज़रूरत नहीं",
       },
       {
         title: "एक click में sync",
-        body: "twtdash आपके X bookmarks खोलता है और आपके लिए scroll करता जाता है — X के अपने page data से, बिना X API key या paid plan के। Quick sync सिर्फ़ नए posts लाता है, full sync सब कुछ दोबारा पढ़ता है। चाहें तो अपने Likes भी ले आएँ।",
-        detail: "Quick या full sync",
+        body: "twtdash आपके X bookmarks में आपके लिए scroll करता है और X का अपना page data पढ़ता है। न X API key, न paid X plan।",
       },
       {
         title: "कुछ भी, तुरंत ढूँढें",
-        body: "हर post आपके device पर ही सही category में पहुँच जाता है। Operators से search करें, सवाल पूछें, tag और star करें — सब एक तेज़, local dashboard में।",
-        detail: "तुरंत full-text search",
+        body: "हर post आपके device पर ही सही category में पहुँच जाता है। Operators से search करें, सवाल पूछें, tag और star करें।",
       },
     ],
   },
   whatsNew: {
-    eyebrow: "twtdash में नया",
-    title: (
-      <>
-        Posts सिर्फ़ save न करें, <Accent gradient>काम में लाएँ।</Accent>
-      </>
-    ),
-    description:
-      "ज़्यादातर bookmarks दोबारा कभी नहीं खुलते। ये नए features आपकी save की हुई सबसे अच्छी चीज़ें वापस आपके सामने लाते हैं — सब कुछ extension के अंदर ही।",
-    newBadge: "नया",
+    title: "Posts सिर्फ़ save न करें, काम में लाएँ।",
+    description: "ज़्यादातर bookmarks दोबारा कभी नहीं खुलते। ये features आपकी save की हुई सबसे अच्छी चीज़ें वापस आपके सामने लाते हैं।",
     recall: {
       title: "Recall",
-      body: "रोज़ 5 मिनट का session, जो आपके save किए posts को सही समय पर दोबारा सामने लाता है — ताकि काम की बातें सच में याद रहें। हर card को rate करें और अपनी streak बनाए रखें।",
+      body: "रोज़ 5 मिनट का review, जो save किए posts को सही समय पर दोबारा सामने लाता है — ताकि काम की बातें याद रहें।",
       today: "आज का Recall",
       progress: "4 / 10",
       streak: "12 दिन की streak",
-      minutes: "≈ 5 मिनट",
       savedAgo: "3 महीने पहले save किया",
       post: "Most React performance problems are just state living too high in the tree. Move it down, memo less, ship faster.",
       ratings: ["दोबारा", "ठीक है", "याद हो गया"],
@@ -168,21 +159,21 @@ export const hi: Dictionary = {
     },
     ask: {
       title: "अपने bookmarks से पूछें",
-      body: "Hindi, English या किसी भी Indian भाषा में सवाल पूछें — जवाब आपके अपने save किए posts से बनेगा, साथ में citations जिन पर click कर सकें।",
+      body: "Hindi, English या किसी भी Indian भाषा में सवाल पूछें — जवाब आपके अपने save किए posts से बनेगा, sources के साथ।",
       question: "बिना ads के पहले customers कैसे लाएँ — इस पर मैंने क्या save किया था?",
       answer: (
         <>
-          दो posts सबसे काम के हैं: एक cold-email template जिससे 40 demos book हुए <sup>[1]</sup>, और एक UPI startup का
-          playbook कि उन्होंने शहर-दर-शहर merchants कैसे जोड़े <sup>[2]</sup>।
+          दो posts सबसे काम के हैं: एक cold-email template जिससे 40 demos book हुए<sup>1</sup>, और एक UPI startup का playbook कि
+          उन्होंने शहर-दर-शहर merchants कैसे जोड़े<sup>2</sup>।
         </>
       ),
       sources: "Sources",
-      languages: "हिन्दी, English और कई भाषाओं में",
-      key: "अपनी NVIDIA key से मुफ़्त · या Pro",
+      languages: "हिन्दी, English और कई भाषाएँ",
+      key: "अपनी NVIDIA key से मुफ़्त, या Pro",
     },
     shelf: {
       title: "Shelf",
-      body: "आपके bookmarks में छिपे हर GitHub repo, paper, video, article, tool, किताब और course — अपने-आप अलग निकालकर, आपके device पर ही।",
+      body: "आपके bookmarks में छिपे हर repo, paper, video, article, tool, किताब और course — अपने-आप अलग, आपके device पर ही।",
       kinds: [
         { id: "repo", label: "Repos", count: 42 },
         { id: "paper", label: "Papers", count: 18 },
@@ -195,40 +186,35 @@ export const hi: Dictionary = {
       items: [
         { kind: "repo", title: "vercel/next.js", meta: "GitHub · @diegoships से" },
         { kind: "paper", title: "Attention Is All You Need", meta: "arXiv · @mayabuilds से" },
-        { kind: "video", title: "Distributed systems — lecture 1", meta: "YouTube · @theoreads से" },
+        { kind: "video", title: "Distributed systems, lecture 1", meta: "YouTube · @theoreads से" },
         { kind: "book", title: "Designing Data-Intensive Applications", meta: "किताब · @priyamakes से" },
       ],
-      onDevice: "Device पर ही निकाला गया",
+      onDevice: "आपके device पर ही निकाला गया",
     },
     wrapped: {
       title: "Wrapped",
-      body: "आपका पूरा साल bookmarks में — top topics, save करने की आदतें और आपकी bookmark persona, एक shareable story में।",
+      body: "आपका पूरा साल bookmarks में, एक shareable story: top topics, save करने की आदतें और आपकी bookmark persona।",
       year: "2026 Wrapped",
       saved: "posts save किए",
       savedCount: "1,284",
       personaLabel: "आपकी persona",
       persona: "The Night Owl Researcher",
       topCategory: "Top: AI और ML",
-      share: "Share करें",
+      share: "Share",
     },
     voice: {
       title: "Voice search और translate",
-      body: "Hindi, Tamil, Bengali या दूसरी भाषाओं में बोलकर search करें। किसी भी post को एक tap में अपनी भाषा में translate करें।",
+      body: "Hindi, Tamil, Bengali या दूसरी भाषाओं में बोलकर search करें। किसी भी post को एक tap में अपनी भाषा में पढ़ें।",
       listening: "सुन रहा है · हिन्दी",
       transcript: "क्रिकेट वाले posts दिखाओ",
       result: "23 posts",
-      translate: "Translate",
-      original: "Yesterday’s match was absolutely worth it 🏏",
-      translated: "कल का मैच एकदम पैसा वसूल था 🏏",
+      translate: "English से translate किया",
+      original: "Yesterday’s match was absolutely worth it",
+      translated: "कल का मैच एकदम पैसा वसूल था",
     },
   },
   india: {
-    eyebrow: "भारत के लिए बना 🇮🇳",
-    title: (
-      <>
-        भारत जैसे bookmark करता है, <Accent gradient>वैसा ही</Accent>
-      </>
-    ),
+    title: "भारत जैसे bookmark करता है, वैसा ही",
     description: "आपकी भाषा, आपका number system, आपका laptop और आपका डेटा — twtdash उसी तरह बना है जैसे भारत X चलाता है।",
     languages: {
       title: "पूरा app, आपकी भाषा में",
@@ -239,7 +225,7 @@ export const hi: Dictionary = {
     hinglish: {
       title: "Hinglish भी समझता है",
       body: "Device पर होने वाली sorting Hindi, Hinglish और Indian भाषाओं के posts पढ़ लेती है — cricket वाला post सीधे Sports में जाता है, “Other” में नहीं।",
-      post: "Kal ka match ekdum paisa vasool tha 🔥 last over mein 18 chahiye the",
+      post: "Kal ka match ekdum paisa vasool tha, last over mein 18 chahiye the",
       sortedInto: "यहाँ पहुँचा",
       author: "@rohanbats",
     },
@@ -260,7 +246,7 @@ export const hi: Dictionary = {
     },
     freeAi: {
       title: "AI, बिल्कुल ₹0 में",
-      body: "Ask, AI sorting और gists आपकी अपनी NVIDIA key से मुफ़्त चलते हैं। न credit card, न subscription।",
+      body: "Ask, AI sorting और gists आपकी अपनी NVIDIA key से मुफ़्त चलते हैं। न card, न subscription।",
     },
     privacy: {
       title: "डेटा आपके पास",
@@ -268,73 +254,46 @@ export const hi: Dictionary = {
     },
   },
   features: {
-    eyebrow: "Features",
-    title: (
-      <>
-        जो भी save किया, <Accent gradient>अब काम का</Accent>
-      </>
-    ),
-    description: "twtdash कभी न ख़त्म होने वाली bookmark list को एक ऐसी library बना देता है जिसमें आप सच में खोज सकें, छाँट सकें और लौटकर आ सकें।",
+    title: "जो भी save किया, अब काम का",
+    description: "twtdash कभी न ख़त्म होने वाली bookmark list को ऐसी library बना देता है जिसमें आप खोज सकें, छाँट सकें और लौटकर आ सकें।",
     sync: {
       title: "एक click में sync",
-      body: "twtdash आपके X bookmarks खोलता है और आपके लिए scroll करता है। यह X का अपना page data पढ़ता है — इसलिए न X API key चाहिए, न paid X plan।",
-      syncing: "Bookmarks sync हो रहे हैं…",
-      modes: [
-        ["Quick sync", "सिर्फ़ नए posts"],
-        ["Full sync", "सब कुछ दोबारा"],
-        ["Likes", "चाहें तो import"],
-      ],
+      body: "आपके लिए bookmarks में scroll करता है और X का अपना page data पढ़ता है। न API key, न paid X plan।",
     },
     capture: {
       title: "Real-time capture",
-      body: "X पर कोई post bookmark करें और वह तुरंत twtdash में दिख जाता है। X Premium के bookmark folders collections बन जाते हैं।",
-      saved: "twtdash में save हुआ",
-      from: "अभी-अभी · आपके X tab से",
+      body: "X पर कोई post bookmark करें और वह तुरंत twtdash में दिखता है। Premium folders collections बन जाते हैं।",
     },
     categories: {
       title: "Smart categories",
       body: (n) => `हर post आपके device पर ही ${n} categories में बँट जाता है। अपने keywords के साथ अपनी categories भी बनाएँ।`,
-      yourOwn: "+ अपनी category",
     },
     ai: {
       title: "AI gists और auto-tags",
-      body: "NVIDIA के API पर open models से AI categorization, tags और एक-लाइन gists — अपनी NVIDIA key से मुफ़्त, या twtdash Pro के साथ बिना किसी key के।",
-      gist: "Gist",
-      gistText: "Prompt से पहले grader लिखने से eval pass rate 89% तक पहुँचा।",
+      body: "AI sorting, tags और एक-लाइन gists, अगर चाहें। अपनी NVIDIA key से मुफ़्त, या Pro के साथ बिना key के।",
     },
     search: {
-      title: "Operators के साथ तुरंत search",
+      title: "Operators के साथ search",
       body: (
         <>
-          जो कुछ भी save किया है, उसका full-text search — <code className="font-mono text-zinc-300">from:</code>,{" "}
-          <code className="font-mono text-zinc-300">has:video</code>, <code className="font-mono text-zinc-300">is:thread</code> और{" "}
-          <code className="font-mono text-zinc-300">min_likes:</code> जैसे operators के साथ। Command palette के लिए{" "}
-          <span className="font-mono text-zinc-300">⌘K</span> दबाएँ।
+          पूरे text में search, <code className="font-mono text-[0.9em] text-fg-2">from:</code>,{" "}
+          <code className="font-mono text-[0.9em] text-fg-2">has:video</code> और{" "}
+          <code className="font-mono text-[0.9em] text-fg-2">is:thread</code> जैसे operators के साथ। Command palette के लिए{" "}
+          <span className="text-fg-2">⌘K</span> दबाएँ।
         </>
       ),
-      results: "14 results",
-      toSearch: "search के लिए",
     },
     library: {
       title: "Library, आपके हिसाब से",
       body: "Masonry, list, table या media gallery में देखें। 10,000+ posts के साथ भी smooth।",
-      views: ["Masonry", "List", "Table", "Media gallery"],
     },
     insights: {
       title: "Insights",
-      body: "समय के साथ आपके bookmarks, categories का mix, top authors, content types और आप कब bookmark करते हैं — उसका heatmap।",
-      overTime: "समय के साथ bookmarks",
-      when: "आप कब bookmark करते हैं",
+      body: "समय के साथ bookmarks, categories का mix, top authors और आप कब save करते हैं — उसका heatmap।",
     },
     export: {
       title: "कहीं भी export करें",
-      body: "Markdown, CSV या JSON में export करें — सीधे Obsidian, Notion या spreadsheet में। JSON backup से कभी भी restore करें। आपकी library कभी lock नहीं होती।",
-      formats: [
-        ["md", "Obsidian और Notion"],
-        ["csv", "spreadsheets"],
-        ["json", "पूरा backup"],
-      ],
-      importLabel: "JSON backup import करें",
+      body: "Obsidian, Notion या spreadsheet के लिए Markdown, CSV या JSON। JSON backup से कभी भी restore करें।",
     },
     extras: [
       "Command palette (Ctrl/⌘ K)",
@@ -343,22 +302,17 @@ export const hi: Dictionary = {
       "Private notes",
       "Star, archive और read",
       "Tags और bulk actions",
-      "X Premium folders → collections",
+      "X Premium folders, collections के रूप में",
       "Dark और light theme",
     ],
   },
   categories: {
-    eyebrow: "Smart categories",
-    title: (n) => (
-      <>
-        {n} categories, <Accent gradient>बिना किसी मेहनत के</Accent>
-      </>
-    ),
+    title: (n) => `${n} categories, बिना किसी मेहनत के`,
     description:
-      "twtdash हर post का text, links और domains पढ़ता है — English, Hindi या Hinglish, सब — और उसे आपके browser में ही सही जगह रख देता है। अपने keywords के साथ अपनी categories जोड़ें, या और भी सटीक sorting के लिए AI चालू करें।",
+      "twtdash हर post का text, links और domains पढ़ता है — English, Hindi या Hinglish — और उसे आपके browser में ही सही जगह रख देता है। और सटीक sorting के लिए AI चालू करें।",
     listLabel: "Built-in categories",
-    yourOwn: "आपकी अपनी, आपके keywords के साथ",
-    note: "Keyword sorting पूरी तरह आपके device पर चलती है — AI optional है",
+    yourOwn: "अपनी categories, अपने keywords के साथ",
+    note: "Keyword sorting आपके device पर चलती है। AI optional है।",
     names: {
       ai: "AI और ML",
       dev: "Programming",
@@ -381,14 +335,9 @@ export const hi: Dictionary = {
     },
   },
   search: {
-    eyebrow: "Search",
-    title: (
-      <>
-        Search, जो <Accent gradient>सच में ढूँढ दे</Accent>
-      </>
-    ),
+    title: "Search, जो सच में ढूँढ दे",
     description:
-      "कुछ शब्द लिखें और twtdash आपकी save की हुई हर चीज़ का पूरा text तुरंत खोज देता है — आपके browser में ही। Operators जोड़कर अपनी library को जैसे चाहें छाँटें, और जितने चाहें उतने operators एक साथ लगाएँ।",
+      "कुछ शब्द लिखें और twtdash आपकी save की हुई हर चीज़ का पूरा text तुरंत खोज देता है — आपके browser में ही। Operators जोड़कर library को जैसे चाहें छाँटें।",
     operators: [
       "किसी एक author के posts",
       "Video वाले posts",
@@ -415,12 +364,7 @@ export const hi: Dictionary = {
     },
   },
   privacy: {
-    eyebrow: "Local-first",
-    title: (
-      <>
-        आपकी library <Accent gradient>आपके browser</Accent> से बाहर नहीं जाती
-      </>
-    ),
+    title: "आपकी library आपके browser से बाहर नहीं जाती",
     description: "twtdash ऐसा बना है कि leak होने के लिए कुछ है ही नहीं: न accounts, न आपका डेटा रखने वाले servers, न बेचने को कुछ।",
     points: [
       {
@@ -433,7 +377,7 @@ export const hi: Dictionary = {
       },
       {
         title: "AI आपकी मर्ज़ी से",
-        body: "अपनी मुफ़्त NVIDIA key लगाएँ तो posts सीधे आपके browser से NVIDIA जाते हैं। Pro में वे हमारे API से होकर NVIDIA जाते हैं और कभी store नहीं होते।",
+        body: "अपनी NVIDIA key लगाएँ तो posts सीधे आपके browser से NVIDIA जाते हैं। Pro में वे हमारे API से होकर जाते हैं और कभी store नहीं होते।",
       },
       {
         title: "जहाँ चाहें ले जाएँ",
@@ -448,18 +392,13 @@ export const hi: Dictionary = {
       bookmarks: "आपके bookmarks",
       onDevice: "इसी device पर",
       nvidia: "NVIDIA API",
-      nvidiaNote: "सिर्फ़ AI चालू करने पर — post का text, author और links",
+      nvidiaNote: "सिर्फ़ AI चालू करने पर: post का text, author और links",
     },
   },
   pricing: {
-    eyebrow: "Pricing",
-    title: (
-      <>
-        हमेशा मुफ़्त। AI बिना झंझट चाहिए तो <Accent gradient>Pro</Accent>।
-      </>
-    ),
+    title: "हमेशा मुफ़्त। AI बिना झंझट चाहिए तो Pro।",
     description:
-      "twtdash में सब कुछ मुफ़्त है — AI भी, आपकी अपनी मुफ़्त NVIDIA key के साथ। Pro में hosted AI मिलता है, ताकि key सँभालने का झंझट ही न रहे।",
+      "twtdash में सब कुछ मुफ़्त है — AI भी, आपकी अपनी मुफ़्त NVIDIA key के साथ। Pro में hosted AI मिलता है, ताकि key सँभालने का झंझट न रहे।",
     periodLabel: "Billing period",
     monthly: "महीने का",
     yearly: "साल का",
@@ -467,13 +406,13 @@ export const hi: Dictionary = {
     perMonth: "/ महीना",
     perYear: "/ साल",
     yearlyNote: (perMonth) => `यानी ${perMonth}/महीना, साल में एक बार billing`,
-    monthlyNote: (perYear, pct) => `या ${perYear}/साल — ${pct}% की बचत`,
+    monthlyNote: (perYear, pct) => `या ${perYear}/साल, ${pct}% की बचत`,
     free: {
       name: "Free",
       tagline: "X पर bookmark करने वाले हर किसी के लिए।",
       forever: "हमेशा",
       cta: "Chrome में जोड़ें — मुफ़्त",
-      aiBanner: "AI भी शामिल — आपकी मुफ़्त NVIDIA key से",
+      aiBanner: "AI भी शामिल, आपकी मुफ़्त NVIDIA key से",
       aiBannerNote: "Ask, AI sorting और gists। Credit card नहीं चाहिए।",
       features: [
         "एक click में sync, real-time capture और likes import",
@@ -494,26 +433,21 @@ export const hi: Dictionary = {
       cta: "twtdash Pro लें",
       features: [
         "Free का सब कुछ",
-        "Hosted AI — key बनाने या सँभालने की ज़रूरत नहीं",
+        "Hosted AI, key बनाने या सँभालने की ज़रूरत नहीं",
         "AI sorting, auto-tags और एक-लाइन gists",
         "बिना key के अपने bookmarks से पूछें",
         "Priority support",
         "नए features सबसे पहले",
       ],
-      fine: "आपकी license key email पर आती है — उसे twtdash में paste करें और Pro चालू। कभी भी cancel करें; 14 दिन के अंदर refund।",
+      fine: "आपकी license key email पर आती है। उसे twtdash में paste करें और Pro चालू। कभी भी cancel करें; 14 दिन के अंदर refund।",
     },
   },
   faq: {
-    eyebrow: "सवाल-जवाब",
-    title: (
-      <>
-        आपके सवाल, <Accent gradient>हमारे जवाब</Accent>
-      </>
-    ),
+    title: "आपके सवाल, हमारे जवाब",
     description: (
       <>
         जो ढूँढ रहे हैं वह नहीं मिला?{" "}
-        <a href={BRAND.supportUrl} className="text-zinc-200 underline decoration-white/30 underline-offset-2 hover:decoration-current">
+        <a href={BRAND.supportUrl} className="link-inline">
           {BRAND.supportLabel}
         </a>{" "}
         पर पूछें — Hindi में भी।
@@ -537,21 +471,21 @@ export const hi: Dictionary = {
           <>
             बस एक मिनट लगता है, credit card की ज़रूरत नहीं:
             <span className="mt-3 block">
-              <strong className="font-medium text-zinc-200">1.</strong>{" "}
+              <strong className="font-medium text-fg-2">1.</strong>{" "}
               <a href="https://build.nvidia.com" className={link} rel="noopener">
                 build.nvidia.com
               </a>{" "}
               पर जाएँ और मुफ़्त NVIDIA account से sign in करें।
             </span>
             <span className="mt-1.5 block">
-              <strong className="font-medium text-zinc-200">2.</strong> कोई भी model खोलें और{" "}
-              <strong className="font-medium text-zinc-200">Get API Key</strong> पर click करें। Key copy करें — यह{" "}
-              <code className="font-mono text-zinc-300">nvapi-</code> से शुरू होती है।
+              <strong className="font-medium text-fg-2">2.</strong> कोई भी model खोलें और{" "}
+              <strong className="font-medium text-fg-2">Get API Key</strong> पर click करें। Key copy करें — यह{" "}
+              <code className="font-mono text-fg-2">nvapi-</code> से शुरू होती है।
             </span>
             <span className="mt-1.5 block">
-              <strong className="font-medium text-zinc-200">3.</strong> twtdash में{" "}
-              <strong className="font-medium text-zinc-200">Settings → AI organization</strong> खोलें,{" "}
-              <strong className="font-medium text-zinc-200">Free NVIDIA key</strong> चुनें और key paste कर दें।
+              <strong className="font-medium text-fg-2">3.</strong> twtdash में{" "}
+              <strong className="font-medium text-fg-2">Settings → AI organization</strong> खोलें,{" "}
+              <strong className="font-medium text-fg-2">Free NVIDIA key</strong> चुनें और key paste कर दें।
             </span>
             <span className="mt-3 block">
               इसके बाद requests सीधे आपके browser से NVIDIA जाती हैं। Key का झंझट नहीं चाहिए तो Pro लें।
@@ -649,11 +583,7 @@ export const hi: Dictionary = {
     ],
   },
   cta: {
-    title: (
-      <>
-        अच्छे posts को <Accent gradient>लंबी list</Accent> में खोने न दें
-      </>
-    ),
+    title: "अच्छे posts को लंबी list में खोने न दें",
     body: "twtdash install करें, एक बार sync करें — और आपका save किया हर bookmark सलीके से, खोजने लायक और हमेशा आपका।",
     chrome: "Chrome में जोड़ें",
     firefox: "Firefox में जोड़ें",

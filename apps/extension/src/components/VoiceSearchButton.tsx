@@ -1,4 +1,4 @@
-import { ChevronDown, Mic, Square } from 'lucide-react';
+import { Languages, Mic } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Menu, MenuContent, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuTrigger, Tip } from './ui/overlays';
@@ -222,7 +222,7 @@ export function VoiceSearchButton({ onResult, lang, onListeningChange, className
   const stop = () => recRef.current?.stop();
 
   return (
-    <div className={cn('inline-flex items-center rounded-full', listening && 'bg-accent-soft', className)}>
+    <div className={cn('inline-flex items-center gap-0.5', className)}>
       <Tip label={listening ? 'Stop listening' : `${purpose} · ${language.native}`}>
         <button
           type="button"
@@ -231,32 +231,23 @@ export function VoiceSearchButton({ onResult, lang, onListeningChange, className
           aria-pressed={listening}
           aria-label={listening ? 'Stop voice input' : `Voice input in ${language.name}`}
           className={cn(
-            'relative grid size-9 shrink-0 place-items-center rounded-full transition-colors disabled:opacity-50 [&_svg]:size-[18px]',
-            listening ? 'bg-accent text-white shadow-[0_6px_18px_-6px_var(--accent)]' : 'text-muted hover:bg-panel-2 hover:text-fg',
+            'grid size-8 shrink-0 place-items-center rounded-lg transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.96] disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4',
+            listening ? 'bg-accent-soft text-accent' : 'text-muted hover:bg-panel-2 hover:text-fg active:bg-panel-3',
           )}
         >
-          {listening ? (
-            <>
-              <span aria-hidden className="absolute inset-0 animate-ping rounded-full bg-accent/40 [animation-duration:1.6s]" />
-              <span aria-hidden className="absolute -inset-1 rounded-full ring-2 ring-accent/30" />
-              <Square className="relative !size-3 fill-current" />
-            </>
-          ) : (
-            <Mic />
-          )}
+          {listening ? <Mic strokeWidth={1.75} className="animate-pulse" /> : <Mic strokeWidth={1.75} />}
         </button>
       </Tip>
       <Menu>
-        <Tip label="Voice language">
+        <Tip label={`Voice language: ${language.name}`}>
           <MenuTrigger asChild>
             <button
               type="button"
               disabled={disabled}
               aria-label={`Voice language: ${language.name}`}
-              className="inline-flex h-9 items-center gap-0.5 rounded-full pr-2 pl-1 text-[11.5px] font-semibold text-muted transition-colors hover:bg-panel-2 hover:text-fg disabled:opacity-50"
+              className="grid size-8 shrink-0 place-items-center rounded-lg text-muted transition-[background-color,color,transform] duration-150 ease-out hover:bg-panel-2 hover:text-fg active:scale-[0.96] active:bg-panel-3 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-panel-2 data-[state=open]:text-fg"
             >
-              <span className="min-w-[1.5em] text-center leading-none">{language.short}</span>
-              <ChevronDown className="size-3 opacity-70" />
+              <Languages className="size-4" strokeWidth={1.75} />
             </button>
           </MenuTrigger>
         </Tip>

@@ -11,21 +11,24 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger' | 'soft'
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'icon' | 'icon-sm';
 
 const variants: Record<Variant, string> = {
+  /* Solid accent. One per view. */
   primary: 'btn-brand',
-  secondary: 'bg-panel-2 text-fg hover:bg-panel-3 shadow-[inset_0_1px_0_rgb(255_255_255/0.04)]',
-  soft: 'bg-accent-soft text-accent hover:bg-accent/20',
+  /* Bordered panel: the default for everything else. */
+  secondary: 'border border-line bg-panel text-fg hover:bg-panel-2',
+  soft: 'bg-accent-soft text-accent hover:bg-accent/15',
   ghost: 'text-fg-2 hover:bg-panel-2 hover:text-fg',
-  outline: 'border border-line-strong bg-panel text-fg hover:bg-panel-2 hover:border-line-strong shadow-card',
-  danger: 'bg-bad/10 text-bad hover:bg-bad/15',
+  outline: 'border border-line-strong bg-panel text-fg hover:bg-panel-2',
+  /* Destructive: neutral until hovered, then red. */
+  danger: 'text-fg-2 hover:bg-panel-2 hover:text-bad',
 };
 
 const sizes: Record<Size, string> = {
-  xs: 'h-7 px-2.5 text-xs gap-1.5 rounded-lg',
-  sm: 'h-8 px-3 text-[13px] gap-1.5 rounded-lg',
-  md: 'h-9 px-3.5 text-sm gap-2 rounded-[10px]',
-  lg: 'h-11 px-5 text-[15px] gap-2 rounded-xl',
-  icon: 'h-9 w-9 rounded-[10px]',
-  'icon-sm': 'h-7 w-7 rounded-lg',
+  xs: 'h-7 gap-1.5 rounded-lg px-2.5 text-xs',
+  sm: 'h-8 gap-1.5 rounded-lg px-3 text-[13px]',
+  md: 'h-9 gap-2 rounded-lg px-3.5 text-sm',
+  lg: 'h-11 gap-2 rounded-xl px-5 text-[15px]',
+  icon: 'h-9 w-9 rounded-lg',
+  'icon-sm': 'h-7 w-7 rounded-md max-sm:h-9 max-sm:w-9',
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -43,7 +46,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       disabled={disabled || loading}
       className={cn(
-        'inline-flex shrink-0 select-none items-center justify-center font-medium whitespace-nowrap transition-[background,color,box-shadow,transform] duration-150 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0',
+        'inline-flex shrink-0 items-center justify-center font-medium whitespace-nowrap select-none transition-colors duration-150 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0',
         variants[variant],
         sizes[size],
         className,
@@ -56,37 +59,22 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   );
 });
 
+const field =
+  'w-full border border-line-strong bg-panel text-fg outline-none transition-[border-color,box-shadow] placeholder:text-faint focus:border-accent focus:shadow-[inset_0_0_0_1px_var(--accent)]';
+
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(function Input({ className, ...props }, ref) {
-  return (
-    <input
-      ref={ref}
-      className={cn(
-        'h-9 w-full rounded-[10px] border border-line-strong bg-panel px-3 text-sm text-fg shadow-card placeholder:text-faint transition-[box-shadow,border-color] outline-none focus:border-accent/60 focus:ring-4 focus:ring-accent/15',
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <input ref={ref} className={cn(field, 'h-9 rounded-lg px-3 text-sm', className)} {...props} />;
 });
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(function Textarea({ className, ...props }, ref) {
-  return (
-    <textarea
-      ref={ref}
-      className={cn(
-        'w-full resize-none rounded-xl border border-line-strong bg-panel px-3 py-2.5 text-sm leading-relaxed text-fg placeholder:text-faint outline-none focus:border-accent/60 focus:ring-4 focus:ring-accent/15',
-        className,
-      )}
-      {...props}
-    />
-  );
+  return <textarea ref={ref} className={cn(field, 'resize-none rounded-lg px-3 py-2.5 text-sm leading-relaxed', className)} {...props} />;
 });
 
 export function Kbd({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <kbd
       className={cn(
-        'inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-line-strong bg-panel-2 px-1 font-sans text-[10.5px] font-medium text-muted shadow-[inset_0_-1px_0_var(--line)]',
+        'inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-line-strong bg-panel-2 px-1 font-sans text-[11px] font-medium text-muted',
         className,
       )}
     >
@@ -98,7 +86,7 @@ export function Kbd({ children, className }: { children: ReactNode; className?: 
 export function Badge({ children, className, color }: { children: ReactNode; className?: string; color?: string }) {
   return (
     <span
-      className={cn('inline-flex h-[22px] max-w-full items-center gap-1 truncate rounded-full px-2 text-[11.5px] font-medium', !color && 'bg-panel-2 text-fg-2', className)}
+      className={cn('inline-flex h-[22px] max-w-full items-center gap-1 truncate rounded-full px-2 text-[12px] font-medium', !color && 'bg-panel-2 text-fg-2', className)}
       style={color ? { background: `color-mix(in oklab, ${color} 14%, transparent)`, color: `color-mix(in oklab, ${color} 75%, var(--fg))` } : undefined}
     >
       {children}
@@ -113,28 +101,30 @@ export function Spinner({ className }: { className?: string }) {
 export function SectionLabel({ children, action, className }: { children: ReactNode; action?: ReactNode; className?: string }) {
   return (
     <div className={cn('flex items-center justify-between px-2.5 pt-4 pb-1.5', className)}>
-      <span className="text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">{children}</span>
+      <span className="text-[12px] font-medium text-muted">{children}</span>
       {action}
     </div>
   );
 }
 
+/** One icon in muted text, a heading, one sentence and one button. No tile. */
 export function EmptyState({ icon, title, children, action }: { icon?: ReactNode; title: string; children?: ReactNode; action?: ReactNode }) {
   return (
     <div className="mx-auto flex max-w-md animate-rise flex-col items-center px-6 py-20 text-center">
-      {icon ? <div className="mb-5 grid size-14 place-items-center rounded-2xl bg-panel-2 text-muted [&_svg]:size-6">{icon}</div> : null}
-      <h3 className="text-[17px] font-semibold tracking-tight text-fg">{title}</h3>
-      {children ? <div className="mt-2 text-sm leading-relaxed text-muted">{children}</div> : null}
-      {action ? <div className="mt-6 flex flex-wrap justify-center gap-2">{action}</div> : null}
+      {icon ? <div className="mb-4 text-muted [&_svg]:size-6">{icon}</div> : null}
+      <h3 className="text-[16px] font-semibold tracking-tight text-fg">{title}</h3>
+      {children ? <div className="mt-1.5 text-sm leading-relaxed text-muted">{children}</div> : null}
+      {action ? <div className="mt-5 flex flex-wrap justify-center gap-2">{action}</div> : null}
     </div>
   );
 }
 
+/** A flat panel: hairline border, no shadow. */
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn('rounded-2xl border border-line bg-panel shadow-card', className)}>{children}</div>;
+  return <div className={cn('rounded-xl border border-line bg-panel', className)}>{children}</div>;
 }
 
-/** Small uppercase eyebrow label used above premium headings. */
+/** Small muted label above a heading. Sentence case, no uppercase eyebrow. */
 export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn('text-[11px] font-semibold tracking-[0.12em] text-faint uppercase', className)}>{children}</div>;
+  return <div className={cn('text-[12px] font-medium text-muted', className)}>{children}</div>;
 }

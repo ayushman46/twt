@@ -1,52 +1,63 @@
 import type { ReactNode } from "react";
-import { Info } from "lucide-react";
+import { Info, type LucideIcon } from "lucide-react";
 
 /** Building blocks shared by the English and Hindi install guides. */
 
+export function Steps({ children }: { children: ReactNode }) {
+  return <ol className="mt-8 rounded-xl border border-line bg-panel p-5 sm:p-7">{children}</ol>;
+}
+
 export function Step({ n, title, children }: { n: number; title: string; children: ReactNode }) {
   return (
-    <li className="group/step relative flex gap-4 pb-9 last:pb-0 sm:gap-5">
-      <div
-        aria-hidden="true"
-        className="absolute bottom-0 left-[1.0625rem] top-10 w-px bg-[linear-gradient(180deg,rgb(139_109_255/0.35),rgb(255_255_255/0.06))] group-last/step:hidden"
-      />
+    <li className="group/step relative flex gap-4 pb-8 last:pb-0">
+      <div aria-hidden="true" className="absolute bottom-0 left-[13.5px] top-9 w-px bg-line group-last/step:hidden" />
       <span
         aria-hidden="true"
-        className="icon-tile-soft relative flex size-[2.125rem] shrink-0 items-center justify-center rounded-full font-mono text-sm font-medium text-white"
+        className="relative flex size-7 shrink-0 items-center justify-center rounded-full border border-line-strong bg-panel text-[12.5px] font-medium tabular-nums text-fg-2"
       >
         {n}
       </span>
-      <div className="min-w-0 flex-1 pt-1">
-        <h3 className="font-semibold text-white">{title}</h3>
-        <div className="mt-2 space-y-3 text-[0.9375rem] leading-relaxed text-zinc-400">{children}</div>
+      <div className="min-w-0 flex-1 pt-[3px]">
+        <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-fg">{title}</h3>
+        <div className="mt-2 space-y-3 text-[15px] leading-relaxed text-muted">{children}</div>
       </div>
     </li>
   );
 }
 
-export function Note({ children }: { children: ReactNode }) {
+export function Note({ children, icon: Icon = Info }: { children: ReactNode; icon?: LucideIcon }) {
   return (
-    <div className="flex gap-3 rounded-xl border border-white/10 bg-white/[0.025] p-4 text-sm leading-relaxed text-zinc-400">
-      <Info className="mt-0.5 size-4 shrink-0 text-brand-soft" aria-hidden="true" />
+    <div className="flex gap-3 rounded-lg border border-line bg-inset p-4 text-[14px] leading-relaxed text-muted">
+      <Icon className="mt-[3px] size-4 shrink-0" aria-hidden="true" />
       <div>{children}</div>
     </div>
   );
 }
 
 export function Kbd({ children }: { children: ReactNode }) {
-  return <strong className="font-medium text-zinc-200">{children}</strong>;
+  return <strong className="font-medium text-fg-2">{children}</strong>;
 }
 
-/** Hero backdrop used at the top of both install guides. */
-export function InstallBackdrop({ children }: { children: ReactNode }) {
+/** Section of the guide: hairline on top, title, one line of context. */
+export function GuideSection({
+  id,
+  title,
+  lead,
+  children,
+}: {
+  id?: string;
+  title: string;
+  lead?: ReactNode;
+  children: ReactNode;
+}) {
+  const titleId = id ? `${id}-title` : undefined;
   return (
-    <div className="relative isolate">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[36rem] overflow-hidden">
-        <div className="bg-grid absolute inset-0" />
-        <div className="absolute left-1/2 top-[-16rem] h-[34rem] w-[min(60rem,140vw)] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(123_97_255/0.32),rgb(177_76_242/0.12)_55%,transparent)]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink to-transparent" />
-      </div>
+    <section id={id} aria-labelledby={titleId} className="mt-14 scroll-mt-20 border-t border-line pt-12">
+      <h2 id={titleId} className="text-[1.5rem] font-semibold leading-tight tracking-[-0.025em] text-fg sm:text-[1.75rem]">
+        {title}
+      </h2>
+      {lead ? <p className="mt-2 text-[15px] leading-relaxed text-muted">{lead}</p> : null}
       {children}
-    </div>
+    </section>
   );
 }

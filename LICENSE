@@ -1,0 +1,59 @@
+twtdash — Proprietary Software License
+
+Copyright (c) 2026 ayushman46 (https://github.com/ayushman46). All rights reserved.
+
+This repository and everything in it — source code, compiled extension builds,
+designs, graphics, logos, screenshots, videos, documentation and the twtdash
+name — (together, the "Software") are the exclusive property of the copyright
+holder and are protected by copyright and other intellectual-property laws.
+
+1. No licence is granted.
+   The Software is made publicly visible for reference only. Except as stated in
+   section 2, no right or licence of any kind is granted to you, whether express,
+   implied, by estoppel or otherwise.
+
+2. What you may do.
+   (a) View the source code on GitHub, as permitted by GitHub's Terms of Service
+       for public repositories (including GitHub's in-platform "fork" feature,
+       which grants no rights beyond viewing).
+   (b) Install and use the official twtdash extension, as distributed by the
+       copyright holder through its official website or browser-extension
+       stores, for your own personal use.
+
+3. What you may not do without prior written permission from the copyright holder:
+   (a) copy, reproduce or download the Software (other than as in section 2);
+   (b) modify, translate, adapt or create derivative works based on the Software
+       or any part of it;
+   (c) distribute, publish, sublicense, sell, rent, lease or otherwise make the
+       Software or any derivative work available to anyone;
+   (d) publish the Software, or an extension, app or website based on it, in any
+       browser-extension store, app store or website;
+   (e) use the Software, or any part of its code, design or content, in another
+       product or service, whether commercial or not;
+   (f) remove or alter any copyright, trademark or proprietary notice;
+   (g) use the twtdash name, logo or branding;
+   (h) use the Software or its contents to train, fine-tune or evaluate machine-
+       learning or AI models.
+
+4. Third-party components.
+   The Software uses open-source libraries that remain under their own licences
+   (see each package's licence in its distribution). Nothing in this licence
+   restricts your rights under those licences for those libraries themselves.
+
+5. No warranty.
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+   COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+6. Termination.
+   Any use of the Software in breach of this licence automatically ends any
+   permission you had under section 2 and may result in legal action.
+
+7. Permissions and contact.
+   To request permission for any use not allowed above, open an issue at
+   https://github.com/ayushman46/twt/issues.
+
+twtdash is an independent project and is not affiliated with, endorsed by or
+sponsored by X Corp. "X" and "Twitter" are trademarks of X Corp.

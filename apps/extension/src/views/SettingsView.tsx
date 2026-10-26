@@ -1,27 +1,7 @@
 import { AI_BATCH_SIZE, AI_MODELS, BRAND, FALLBACK_CATEGORY_ID, NVIDIA_KEY_PREFIX, NVIDIA_KEYS_URL, PRICING } from '@twtdash/shared';
 import { useLiveQuery } from 'dexie-react-hooks';
-import {
-  Bot,
-  Check,
-  Crown,
-  Database,
-  Download,
-  ExternalLink,
-  FileUp,
-  Keyboard,
-  KeyRound,
-  Layers,
-  Monitor,
-  Moon,
-  Plus,
-  RefreshCw,
-  ShieldCheck,
-  SlidersHorizontal,
-  Sparkles,
-  Sun,
-  Trash,
-} from 'lucide-react';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Check, Download, ExternalLink, FileUp, Keyboard, Monitor, Moon, Plus, RefreshCw, Sparkles, Sun, Trash } from 'lucide-react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { browser } from 'wxt/browser';
 import { catName, LANGUAGES, resolveLocale, rich, setLocale, t, useT, type LanguagePref, type MessageKey } from '@/i18n';
@@ -39,61 +19,72 @@ import { navigate, type Route } from '@/hooks/route';
 import { useLibrary } from '@/hooks/library';
 import { useUi } from '@/store/ui';
 import { startSync } from '@/components/SyncControl';
-import { Switch } from '@/components/ui/overlays';
+import { FieldLabelContext, Switch } from '@/components/ui/overlays';
 import { Badge, Button, Input, cn } from '@/components/ui/primitives';
 
 type Update = (patch: Partial<Settings> | ((s: Settings) => Partial<Settings>)) => Promise<Settings>;
 
-const SECTIONS: Array<{ id: string; label: MessageKey; icon: ReactNode }> = [
-  { id: 'general', label: 'settings.general', icon: <SlidersHorizontal /> },
-  { id: 'categories', label: 'settings.categories', icon: <Layers /> },
-  { id: 'ai', label: 'settings.ai', icon: <Sparkles /> },
-  { id: 'sync', label: 'settings.sync', icon: <RefreshCw /> },
-  { id: 'data', label: 'settings.data', icon: <Database /> },
-  { id: 'plan', label: 'settings.plan', icon: <Crown /> },
-  { id: 'about', label: 'settings.about', icon: <Keyboard /> },
+const SECTIONS: Array<{ id: string; label: MessageKey }> = [
+  { id: 'general', label: 'settings.general' },
+  { id: 'categories', label: 'settings.categories' },
+  { id: 'ai', label: 'settings.ai' },
+  { id: 'sync', label: 'settings.sync' },
+  { id: 'data', label: 'settings.data' },
+  { id: 'plan', label: 'settings.plan' },
+  { id: 'about', label: 'settings.about' },
 ];
 
+/** Page header for one settings section. */
 function Section({ title, description, children }: { title: string; description?: ReactNode; children: ReactNode }) {
   return (
     <section className="animate-rise">
-      <h2 className="text-[19px] font-semibold tracking-tight">{title}</h2>
-      {description ? <p className="mt-1 text-[13.5px] text-muted">{description}</p> : null}
-      <div className="mt-5 space-y-4">{children}</div>
+      <h2 className="text-[26px] leading-tight font-semibold tracking-[-0.02em]">{title}</h2>
+      {description ? <p className="mt-1.5 text-[13.5px] text-muted">{description}</p> : null}
+      <div className="mt-8 space-y-8">{children}</div>
     </section>
   );
 }
 
+/** A bordered list of settings rows, separated by hairlines. */
 function Group({ children, title }: { children: ReactNode; title?: string }) {
   return (
     <div>
-      {title ? <div className="mb-2 px-1 text-[11.5px] font-semibold tracking-[0.06em] text-faint uppercase">{title}</div> : null}
-      <div className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-panel shadow-card">{children}</div>
+      {title ? <h3 className="mb-2.5 text-[15px] font-semibold tracking-tight">{title}</h3> : null}
+      <div className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-panel">{children}</div>
     </div>
   );
 }
 
+/** One setting: label and muted description on the left, the control on the right. */
 function Row({ label, description, children, htmlFor }: { label: ReactNode; description?: ReactNode; children?: ReactNode; htmlFor?: string }) {
+  const labelId = useId();
   return (
     <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2.5 px-4 py-3.5">
       <label htmlFor={htmlFor} className="min-w-0 flex-[1_1_260px]">
-        <div className="text-[13.5px] font-medium text-fg">{label}</div>
+        <div id={labelId} className="text-[13.5px] font-medium text-fg">
+          {label}
+        </div>
         {description ? <div className="mt-0.5 text-[12.5px] leading-relaxed text-muted">{description}</div> : null}
       </label>
-      <div className="ml-auto shrink-0">{children}</div>
+      {/* Switches (and other controls that read the context) are named by this row's label. */}
+      <FieldLabelContext.Provider value={labelId}>
+        <div className="ml-auto shrink-0">{children}</div>
+      </FieldLabelContext.Provider>
     </div>
   );
 }
 
 function Segmented<T extends string>({ value, onChange, options }: { value: T; onChange: (v: T) => void; options: Array<{ value: T; label: string; icon?: ReactNode }> }) {
   return (
-    <div className="flex max-w-full flex-wrap justify-end rounded-xl border border-line-strong bg-panel-2 p-0.5">
+    <div role="radiogroup" className="flex max-w-full flex-wrap justify-end rounded-lg border border-line-strong bg-panel p-0.5">
       {options.map((o) => (
         <button
           key={o.value}
           type="button"
+          role="radio"
+          aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
-          className={cn('inline-flex h-8 items-center gap-1.5 rounded-[9px] px-3 text-[12.5px] font-medium whitespace-nowrap transition-colors [&_svg]:size-3.5', value === o.value ? 'bg-panel text-fg shadow-card' : 'text-muted hover:text-fg')}
+          className={cn('inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-[12.5px] font-medium whitespace-nowrap transition-colors [&_svg]:size-3.5', value === o.value ? 'bg-panel-3 text-fg' : 'text-muted hover:text-fg')}
         >
           {o.icon}
           {o.label}
@@ -109,10 +100,6 @@ function LanguagePicker({ settings, update }: { settings: Settings; update: Upda
   const t = useT();
   const browserLocale = resolveLocale('auto');
   const browserLang = LANGUAGES.find((l) => l.code === browserLocale);
-  const options: Array<{ value: LanguagePref; native: string; sub: string; beta: boolean }> = [
-    { value: 'auto', native: t('settings.languageAuto'), sub: `${t('settings.languageAutoDesc')} · ${browserLang?.native ?? 'English'}`, beta: false },
-    ...LANGUAGES.map((l) => ({ value: l.code, native: l.native, sub: l.native === l.name ? '' : l.name, beta: l.beta })),
-  ];
   const choose = (language: LanguagePref) => {
     // Apply right away; the stored setting keeps other open pages in sync.
     void setLocale(language);
@@ -120,38 +107,30 @@ function LanguagePicker({ settings, update }: { settings: Settings; update: Upda
   };
   const current = LANGUAGES.find((l) => l.code === (settings.language === 'auto' ? browserLocale : settings.language));
   return (
-    <div className="px-4 py-3.5">
-      <div className="text-[13.5px] font-medium text-fg">{t('settings.language')}</div>
-      <div className="mt-0.5 text-[12.5px] leading-relaxed text-muted">{t('settings.languageDesc')}</div>
-      <div role="radiogroup" aria-label={t('settings.language')} className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-        {options.map((o) => {
-          const on = settings.language === o.value;
-          return (
-            <button
-              key={o.value}
-              type="button"
-              role="radio"
-              aria-checked={on}
-              onClick={() => choose(o.value)}
-              className={cn(
-                'relative flex min-h-[54px] flex-col justify-center rounded-xl border px-3 py-2 text-left transition-colors',
-                on ? 'border-accent bg-accent-soft ring-2 ring-accent/15' : 'border-line bg-panel hover:border-line-strong hover:bg-panel-2/60',
-              )}
-            >
-              <span className="flex min-w-0 items-center gap-1.5 pr-4">
-                <span lang={o.value === 'auto' ? undefined : o.value} className="truncate text-[14px] font-medium text-fg">
-                  {o.native}
-                </span>
-                {o.beta ? <span className="shrink-0 rounded-full bg-panel-3 px-1.5 text-[10px] leading-[16px] font-semibold text-muted">{t('settings.beta')}</span> : null}
-              </span>
-              {o.sub ? <span className="truncate text-[11.5px] text-muted">{o.sub}</span> : null}
-              {on ? <Check className="absolute top-2 right-2 size-3.5 text-accent" strokeWidth={3} /> : null}
-            </button>
-          );
-        })}
-      </div>
-      {current?.beta ? <p className="mt-2.5 text-[12px] text-muted">{t('settings.languageBetaNote')}</p> : null}
-    </div>
+    <Row
+      htmlFor="settings-language"
+      label={t('settings.language')}
+      description={
+        <>
+          <span className="block">{t('settings.languageDesc')}</span>
+          {current?.beta ? <span className="mt-1 block">{t('settings.languageBetaNote')}</span> : null}
+        </>
+      }
+    >
+      <select
+        id="settings-language"
+        value={settings.language}
+        onChange={(e) => choose(e.target.value as LanguagePref)}
+        className="h-9 min-w-[200px] max-w-full rounded-lg border border-line-strong bg-panel px-2.5 text-[13px] outline-none focus:border-accent/60 focus:ring-4 focus:ring-accent/15"
+      >
+        <option value="auto">{`${t('settings.languageAuto')} · ${browserLang?.native ?? 'English'}`}</option>
+        {LANGUAGES.map((l) => (
+          <option key={l.code} value={l.code} lang={l.code}>
+            {[l.native, l.native === l.name ? null : l.name, l.beta ? t('settings.beta') : null].filter(Boolean).join(' · ')}
+          </option>
+        ))}
+      </select>
+    </Row>
   );
 }
 
@@ -221,7 +200,7 @@ function CategoryRow({ c, count }: { c: Category; count: number }) {
         value={emoji}
         onChange={(e) => setEmoji(e.target.value)}
         onBlur={() => emoji.trim() && emoji !== c.emoji && void updateCategory(c.id, { emoji: emoji.trim() })}
-        className="h-9 w-11 rounded-[10px] border border-line bg-panel-2 text-center text-lg outline-none focus:border-accent/60"
+        className="h-9 w-11 rounded-lg border border-line bg-panel-2 text-center text-lg outline-none focus:border-accent/60"
         aria-label={t('settings.emoji')}
         maxLength={4}
       />
@@ -231,7 +210,7 @@ function CategoryRow({ c, count }: { c: Category; count: number }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             onBlur={() => name.trim() && name !== shownName && void updateCategory(c.id, { name: name.trim() })}
-            className="h-9 min-w-0 flex-1 rounded-[10px] border border-transparent bg-transparent px-2 text-[13.5px] font-medium outline-none hover:border-line focus:border-accent/60"
+            className="h-9 min-w-0 flex-1 rounded-lg border border-transparent bg-transparent px-2 text-[13.5px] font-medium outline-none hover:border-line focus:border-accent/60"
             aria-label={t('settings.categoryName')}
           />
           <span className="text-[12px] text-faint tabular-nums">{fmtNumber(count)}</span>
@@ -261,7 +240,7 @@ function CategoryRow({ c, count }: { c: Category; count: number }) {
         )}
       </div>
       <div className="flex items-center gap-2 pt-1.5">
-        {!isOther ? <Switch checked={c.enabled} onCheckedChange={(v) => void updateCategory(c.id, { enabled: v })} /> : null}
+        {!isOther ? <Switch label={catName(c)} checked={c.enabled} onCheckedChange={(v) => void updateCategory(c.id, { enabled: v })} /> : null}
         {!c.builtin ? (
           <button
             type="button"
@@ -299,23 +278,22 @@ function CategoriesSection() {
 
   return (
     <Section title={t('settings.categories')} description={t('settings.categoriesDesc')}>
-      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-accent/25 bg-accent-soft px-4 py-3">
-        <RefreshCw className="size-4 text-accent" />
-        <div className="min-w-0 flex-1 text-[13px]">
-          <div className="font-medium">{t('settings.resortTitle')}</div>
-          <div className="text-[12.5px] text-muted">{t('settings.resortDesc')}</div>
-        </div>
-        <label className="flex items-center gap-2 text-[12.5px] text-muted">
-          <Switch checked={keepAi} onCheckedChange={setKeepAi} /> {t('settings.keepAi')}
-        </label>
-        <Button variant="primary" size="sm" loading={busy} onClick={() => void resort()}>
-          {t('settings.resortNow')}
-        </Button>
-      </div>
+      <Group>
+        <Row label={t('settings.resortTitle')} description={t('settings.resortDesc')}>
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="flex items-center gap-2 text-[12.5px] text-muted">
+              <Switch label={t('settings.keepAi')} checked={keepAi} onCheckedChange={setKeepAi} /> {t('settings.keepAi')}
+            </label>
+            <Button variant="primary" size="sm" loading={busy} onClick={() => void resort()}>
+              {t('settings.resortNow')}
+            </Button>
+          </div>
+        </Row>
+      </Group>
 
       <Group title={t('settings.addCategory')}>
         <form
-          className="flex flex-wrap items-center gap-2 px-4 py-3"
+          className="flex flex-wrap items-center gap-2 px-4 py-3.5"
           onSubmit={async (e) => {
             e.preventDefault();
             if (!name.trim()) return;
@@ -344,21 +322,23 @@ function CategoriesSection() {
 
 /* --------------------------------------------------------------------- AI */
 
-function ProviderCard({ active, onClick, icon, title, body, badge }: { active: boolean; onClick: () => void; icon: ReactNode; title: string; body: string; badge?: ReactNode }) {
+/** A selectable row in a radio group: a radio circle that turns into a check when chosen. */
+function ProviderRow({ active, onClick, title, body, badge }: { active: boolean; onClick: () => void; title: string; body: string; badge?: ReactNode }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cn('relative rounded-2xl border p-4 text-left transition-all', active ? 'border-accent bg-accent-soft ring-4 ring-accent/10' : 'border-line bg-panel hover:border-line-strong')}
-    >
-      <div className="flex items-center gap-2">
-        <span className={cn('grid size-8 place-items-center rounded-lg [&_svg]:size-4', active ? 'bg-accent text-white' : 'bg-panel-2 text-muted')}>{icon}</span>
-        <span className="text-[13.5px] font-semibold whitespace-nowrap">{title}</span>
-        {badge}
-      </div>
-      <p className="mt-2 text-[12.5px] leading-relaxed text-muted">{body}</p>
-      {active ? <Check className="absolute top-4 right-4 size-4 text-accent" strokeWidth={3} /> : null}
+    <button type="button" role="radio" aria-checked={active} onClick={onClick} className="flex w-full items-start gap-3.5 px-4 py-3.5 text-left transition-colors hover:bg-panel-2">
+      <span
+        aria-hidden
+        className={cn('mt-0.5 grid size-[18px] shrink-0 place-items-center rounded-full border transition-colors', active ? 'border-accent bg-accent text-accent-fg' : 'border-line-strong')}
+      >
+        {active ? <Check className="size-3" strokeWidth={3} /> : null}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex flex-wrap items-center gap-2 text-[13.5px] font-medium text-fg">
+          {title}
+          {badge}
+        </span>
+        <span className="mt-0.5 block text-[12.5px] leading-relaxed text-muted">{body}</span>
+      </span>
     </button>
   );
 }
@@ -410,42 +390,32 @@ function AiSection({ settings, update, onAi }: { settings: Settings; update: Upd
 
   return (
     <Section title={t('settings.ai')} description={t('settings.aiDesc')}>
-      <div className="grid gap-3 md:grid-cols-3">
-        <ProviderCard active={settings.ai.provider === 'off'} onClick={() => setProvider('off')} icon={<ShieldCheck />} title={t('settings.aiOff')} body={t('settings.aiOffBody')} />
-        <ProviderCard
-          active={settings.ai.provider === 'pro'}
-          onClick={() => setProvider('pro')}
-          icon={<Crown />}
-          title="twtdash Pro"
-          badge={<Badge className="ml-auto hidden bg-accent text-white xl:inline-flex">{t('settings.noKeyNeeded')}</Badge>}
-          body={t('settings.aiProBody')}
-        />
-        <ProviderCard active={settings.ai.provider === 'byok'} onClick={() => setProvider('byok')} icon={<KeyRound />} title={t('settings.aiByok')} body={t('settings.aiByokBody')} />
+      <div role="radiogroup" aria-label={t('settings.ai')} className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-panel">
+        <ProviderRow active={settings.ai.provider === 'off'} onClick={() => setProvider('off')} title={t('settings.aiOff')} body={t('settings.aiOffBody')} />
+        <ProviderRow active={settings.ai.provider === 'pro'} onClick={() => setProvider('pro')} title="twtdash Pro" badge={<Badge>{t('settings.noKeyNeeded')}</Badge>} body={t('settings.aiProBody')} />
+        <ProviderRow active={settings.ai.provider === 'byok'} onClick={() => setProvider('byok')} title={t('settings.aiByok')} body={t('settings.aiByokBody')} />
       </div>
 
       {settings.ai.provider === 'pro' && !isPro ? (
-        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-panel p-4">
-          <Crown className="size-5 text-accent" />
-          <div className="min-w-0 flex-1 text-[13px]">
-            <div className="font-medium">{t('settings.activatePro')}</div>
-            <div className="text-muted">{t('settings.activateProBody', { monthly: PRICING.pro.monthly, yearly: PRICING.pro.yearly })}</div>
-          </div>
-          <Button variant="primary" size="sm" onClick={() => navigate('#/settings/plan')}>
-            {t('settings.goToPlan')}
-          </Button>
-        </div>
+        <Group>
+          <Row label={t('settings.activatePro')} description={t('settings.activateProBody', { monthly: PRICING.pro.monthly, yearly: PRICING.pro.yearly })}>
+            <Button variant="primary" size="sm" onClick={() => navigate('#/settings/plan')}>
+              {t('settings.goToPlan')}
+            </Button>
+          </Row>
+        </Group>
       ) : null}
 
       {settings.ai.provider === 'byok' ? (
         <Group title={t('settings.nvidiaGroup')}>
-          <div className="space-y-3 px-4 py-4">
+          <div className="space-y-2.5 px-4 py-3.5">
             <div className="flex gap-2">
               <Input type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder="nvapi-…" autoComplete="off" spellCheck={false} className="font-mono text-[13px]" />
               <Button variant="primary" onClick={() => void saveKey()} disabled={checking || key.trim() === settings.ai.apiKey}>
                 {checking ? t('settings.checking') : t('settings.saveKey')}
               </Button>
             </div>
-            <p className="text-[12px] text-muted">
+            <p className="text-[12.5px] text-muted">
               {rich(t('settings.keyHelp'), {
                 a: (s) => (
                   <a href={NVIDIA_KEYS_URL} target="_blank" rel="noreferrer" className="text-accent hover:underline">
@@ -459,7 +429,7 @@ function AiSection({ settings, update, onAi }: { settings: Settings; update: Upd
             <select
               value={settings.ai.model}
               onChange={(e) => void update((s) => ({ ai: { ...s.ai, model: e.target.value } }))}
-              className="h-9 rounded-[10px] border border-line-strong bg-panel px-2.5 text-[13px] outline-none focus:border-accent/60"
+              className="h-9 rounded-lg border border-line-strong bg-panel px-2.5 text-[13px] outline-none focus:border-accent/60"
             >
               {AI_MODELS.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -481,34 +451,37 @@ function AiSection({ settings, update, onAi }: { settings: Settings; update: Upd
               <Switch checked={settings.ai.autoRun} onCheckedChange={(v) => void update((s) => ({ ai: { ...s.ai, autoRun: v } }))} />
             </Row>
           </Group>
-          <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-panel p-4 shadow-card">
-            <Bot className="size-5 text-accent" />
-            <div className="min-w-0 flex-1">
-              <div className="text-[13.5px] font-medium">{ai.running ? t('settings.organizing', { done: ai.done, total: ai.total }) : pending ? t('settings.waitingForAi', { count: pending }) : t('settings.allOrganized')}</div>
-              {ai.running ? (
-                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-panel-2">
-                  <div className="h-full rounded-full bg-accent transition-[width] duration-500" style={{ width: `${ai.total ? (ai.done / ai.total) * 100 : 0}%` }} />
-                </div>
-              ) : ai.error ? (
-                <div className="mt-0.5 text-[12.5px] text-bad">{ai.error}</div>
-              ) : (
-                <div className="mt-0.5 text-[12.5px] text-muted">{t('settings.handSorted')}</div>
-              )}
+          <Group>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3.5">
+              <div className="min-w-0 flex-1">
+                <div className="text-[13.5px] font-medium">{ai.running ? t('settings.organizing', { done: ai.done, total: ai.total }) : pending ? t('settings.waitingForAi', { count: pending }) : t('settings.allOrganized')}</div>
+                {ai.running ? (
+                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-panel-2">
+                    <div className="h-full rounded-full bg-accent transition-[width] duration-500" style={{ width: `${ai.total ? (ai.done / ai.total) * 100 : 0}%` }} />
+                  </div>
+                ) : ai.error ? (
+                  <div className="mt-0.5 text-[12.5px] text-bad">{ai.error}</div>
+                ) : (
+                  <div className="mt-0.5 text-[12.5px] text-muted">{t('settings.handSorted')}</div>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="primary" size="sm" disabled={!ready || ai.running || !pending} onClick={() => onAi()}>
+                  <Sparkles /> {t('settings.organizeNow')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={!ready || ai.running}
+                  onClick={() => {
+                    if (confirm(t('settings.rerunConfirm'))) onAi(undefined, true);
+                  }}
+                >
+                  {t('settings.rerunAll')}
+                </Button>
+              </div>
             </div>
-            <Button variant="primary" size="sm" disabled={!ready || ai.running || !pending} onClick={() => onAi()}>
-              <Sparkles /> {t('settings.organizeNow')}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              disabled={!ready || ai.running}
-              onClick={() => {
-                if (confirm(t('settings.rerunConfirm'))) onAi(undefined, true);
-              }}
-            >
-              {t('settings.rerunAll')}
-            </Button>
-          </div>
+          </Group>
         </>
       ) : null}
     </Section>
@@ -582,18 +555,18 @@ function DataSection() {
     <Section title={t('settings.data')} description={t('settings.dataDesc')}>
       <Group title={t('settings.export')}>
         <Row label={t('settings.markdown')} description={t('settings.markdownDesc')}>
-          <Button variant="outline" size="sm" onClick={() => void exportMarkdown()}>
-            <Download /> .md
+          <Button variant="outline" size="sm" data-export="md" onClick={() => void exportMarkdown()}>
+            <Download /> <span className="sr-only">{t('settings.markdown')} </span>.md
           </Button>
         </Row>
         <Row label={t('settings.spreadsheet')} description={t('settings.spreadsheetDesc')}>
-          <Button variant="outline" size="sm" onClick={() => void exportCsv()}>
-            <Download /> .csv
+          <Button variant="outline" size="sm" data-export="csv" onClick={() => void exportCsv()}>
+            <Download /> <span className="sr-only">{t('settings.spreadsheet')} </span>.csv
           </Button>
         </Row>
         <Row label={t('settings.backup')} description={t('settings.backupDesc')}>
-          <Button variant="outline" size="sm" onClick={() => void exportJson()}>
-            <Download /> .json
+          <Button variant="outline" size="sm" data-export="json" onClick={() => void exportJson()}>
+            <Download /> <span className="sr-only">{t('settings.backup')} </span>.json
           </Button>
         </Row>
       </Group>
@@ -625,8 +598,9 @@ function DataSection() {
         <Row label={t('settings.storageSummary', { posts: lib.counts.total, collections: lib.collections.length })} description={usage ? t('settings.usage', { size: usage }) : t('settings.storedHere')} />
         <Row label={<span className="text-bad">{t('settings.deleteEverything')}</span>} description={t('settings.deleteEverythingDesc')}>
           <Button
-            variant="danger"
+            variant="outline"
             size="sm"
+            className="hover:border-bad/40 hover:text-bad"
             onClick={async () => {
               if (!confirm(t('settings.deleteConfirm'))) return;
               await wipeLibrary();
@@ -654,13 +628,13 @@ function PlanSection({ settings, update }: { settings: Settings; update: Update 
   return (
     <Section title={t('settings.plan')} description={t('settings.planDesc')}>
       <div className="grid gap-3 md:grid-cols-2">
-        <div className={cn('rounded-2xl border p-5', !isPro ? 'border-line-strong bg-panel' : 'border-line bg-panel')}>
+        <div className={cn('rounded-xl border bg-panel p-5', isPro ? 'border-line' : 'border-line-strong')}>
           <div className="flex items-center justify-between">
             <span className="text-[15px] font-semibold">{t('common.free')}</span>
             {!isPro ? <Badge>{t('settings.currentPlan')}</Badge> : null}
           </div>
-          <div className="mt-1 text-[26px] font-semibold tracking-tight">$0</div>
-          <ul className="mt-3 space-y-1.5 text-[13px] text-fg-2">
+          <div className="mt-2 text-[26px] font-semibold tracking-tight tabular-nums">$0</div>
+          <ul className="mt-3 space-y-2 text-[13px] text-fg-2">
             {(['settings.freeFeature1', 'settings.freeFeature2', 'settings.freeFeature3', 'settings.freeFeature4', 'settings.freeFeature5'] as const).map((f) => (
               <li key={f} className="flex gap-2">
                 <Check className="mt-0.5 size-3.5 shrink-0 text-good" /> {t(f)}
@@ -668,18 +642,16 @@ function PlanSection({ settings, update }: { settings: Settings; update: Update 
             ))}
           </ul>
         </div>
-        <div className="relative overflow-hidden rounded-2xl border border-accent/40 bg-accent-soft p-5">
+        <div className="flex flex-col rounded-xl border border-accent/40 bg-panel p-5">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-[15px] font-semibold">
-              <Crown className="size-4 text-accent" /> Pro
-            </span>
-            {isPro ? <Badge className="bg-accent text-white">{t('settings.active')}</Badge> : null}
+            <span className="text-[15px] font-semibold">Pro</span>
+            {isPro ? <Badge className="bg-accent-soft text-accent">{t('settings.active')}</Badge> : null}
           </div>
-          <div className="mt-1 text-[26px] font-semibold tracking-tight">
+          <div className="mt-2 text-[26px] font-semibold tracking-tight tabular-nums">
             ${PRICING.pro.monthly}
             <span className="text-[14px] font-normal text-muted">{t('settings.perMonth', { yearly: PRICING.pro.yearly })}</span>
           </div>
-          <ul className="mt-3 space-y-1.5 text-[13px] text-fg-2">
+          <ul className="mt-3 space-y-2 text-[13px] text-fg-2">
             {(['settings.proFeature1', 'settings.proFeature2', 'settings.proFeature3', 'settings.proFeature4'] as const).map((f) => (
               <li key={f} className="flex gap-2">
                 <Check className="mt-0.5 size-3.5 shrink-0 text-accent" /> {t(f)}
@@ -687,7 +659,7 @@ function PlanSection({ settings, update }: { settings: Settings; update: Update 
             ))}
           </ul>
           {!isPro ? (
-            <Button variant="primary" className="mt-4 w-full" onClick={() => window.open(`${BRAND.website}/#pricing`, '_blank', 'noopener')}>
+            <Button variant="primary" className="mt-5 w-full" onClick={() => window.open(`${BRAND.website}/#pricing`, '_blank', 'noopener')}>
               {t('settings.upgrade')} <ExternalLink />
             </Button>
           ) : null}
@@ -727,7 +699,7 @@ function PlanSection({ settings, update }: { settings: Settings; update: Update 
           </>
         ) : (
           <form
-            className="flex gap-2 px-4 py-4"
+            className="flex gap-2 px-4 py-3.5"
             onSubmit={async (e) => {
               e.preventDefault();
               if (!key.trim()) return;
@@ -771,17 +743,17 @@ function AboutSection() {
         </Row>
         <Row label={t('settings.openAnywhere')} description={t('settings.openAnywhereDesc')} />
         <Row label={t('settings.website')} description={BRAND.website.replace('https://', '')}>
-          <Button size="sm" variant="ghost" onClick={() => window.open(BRAND.website, '_blank', 'noopener')}>
+          <Button size="sm" variant="ghost" aria-label={t('settings.website')} onClick={() => window.open(BRAND.website, '_blank', 'noopener')}>
             <ExternalLink />
           </Button>
         </Row>
         <Row label={t('settings.privacy')} description={t('settings.privacyDesc')}>
-          <Button size="sm" variant="ghost" onClick={() => window.open(`${BRAND.website}/privacy`, '_blank', 'noopener')}>
+          <Button size="sm" variant="ghost" aria-label={t('settings.privacy')} onClick={() => window.open(`${BRAND.website}/privacy`, '_blank', 'noopener')}>
             <ExternalLink />
           </Button>
         </Row>
         <Row label={t('settings.support')} description={BRAND.supportLabel}>
-          <Button size="sm" variant="ghost" onClick={() => window.open(BRAND.supportUrl, '_blank', 'noopener')}>
+          <Button size="sm" variant="ghost" aria-label={t('settings.support')} onClick={() => window.open(BRAND.supportUrl, '_blank', 'noopener')}>
             <ExternalLink />
           </Button>
         </Row>
@@ -796,28 +768,33 @@ export function SettingsView({ route, settings, update, onAi }: { route: Route; 
   const section = SECTIONS.some((s) => s.id === route.section) ? route.section! : 'general';
   usePaintMark('route:settings:painted', true);
   return (
-    <div className="mx-auto flex w-full max-w-[1100px] gap-8 px-5 pt-8 pb-16 sm:px-8">
-      <nav className="sticky top-8 hidden h-fit w-52 shrink-0 space-y-0.5 md:block" aria-label={t('settings.sections')}>
-        <h1 className="mb-4 px-2.5 text-[22px] font-semibold tracking-tight">{t('nav.settings')}</h1>
+    <div className="mx-auto flex w-full max-w-[1100px] gap-10 px-5 pt-8 pb-16 sm:px-8">
+      {/* The visible title lives in the section nav, which is hidden on small screens. */}
+      <h1 className="sr-only md:hidden">{t('nav.settings')}</h1>
+      <nav className="sticky top-8 hidden h-fit w-48 shrink-0 space-y-0.5 md:block" aria-label={t('settings.sections')}>
+        <h1 className="mb-3 px-2.5 text-[15px] font-semibold tracking-tight">{t('nav.settings')}</h1>
         {SECTIONS.map((s) => (
           <button
             key={s.id}
             type="button"
             onClick={() => navigate(`#/settings/${s.id}`)}
-            className={cn(
-              'flex h-9 w-full items-center gap-2.5 rounded-lg px-2.5 text-[13.5px] transition-colors [&_svg]:size-4',
-              section === s.id ? 'bg-panel font-medium text-fg shadow-card [&_svg]:text-accent' : 'text-fg-2 hover:bg-panel-2/70 [&_svg]:text-muted',
-            )}
+            aria-current={section === s.id ? 'page' : undefined}
+            className={cn('flex h-8 w-full items-center rounded-lg px-2.5 text-[13.5px] transition-colors', section === s.id ? 'bg-accent-soft font-medium text-accent' : 'text-fg-2 hover:bg-panel-2 hover:text-fg')}
           >
-            {s.icon}
             <span className="min-w-0 truncate">{t(s.label)}</span>
           </button>
         ))}
       </nav>
       <div className="min-w-0 flex-1">
-        <div className="mb-6 flex gap-1 overflow-x-auto md:hidden">
+        <div className="mb-6 flex gap-1.5 overflow-x-auto md:hidden">
           {SECTIONS.map((s) => (
-            <button key={s.id} type="button" onClick={() => navigate(`#/settings/${s.id}`)} className={cn('h-8 shrink-0 rounded-full px-3 text-[13px]', section === s.id ? 'bg-accent text-white' : 'bg-panel-2 text-fg-2')}>
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => navigate(`#/settings/${s.id}`)}
+              aria-current={section === s.id ? 'page' : undefined}
+              className={cn('h-8 shrink-0 rounded-lg border px-3 text-[13px] transition-colors', section === s.id ? 'border-transparent bg-accent-soft font-medium text-accent' : 'border-line bg-panel text-fg-2')}
+            >
               {t(s.label)}
             </button>
           ))}

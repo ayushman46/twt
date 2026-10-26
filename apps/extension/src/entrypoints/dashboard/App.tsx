@@ -15,6 +15,7 @@ import { Logo, Wordmark } from '@/components/Brand';
 import { CommandPalette } from '@/components/CommandPalette';
 import { DemoBanner } from '@/components/DemoBanner';
 import { CollectionDialog, ShortcutsDialog } from '@/components/Dialogs';
+import { ScreenErrorBoundary } from '@/components/ScreenErrorBoundary';
 import { Sidebar } from '@/components/Sidebar';
 import { TooltipProvider } from '@/components/ui/overlays';
 import { HomeView } from '@/views/HomeView';
@@ -162,6 +163,9 @@ function Shell() {
 
   useEffect(() => setDrawer(false), [route.page, route.scope.kind, route.scope.value]);
 
+  // A post opened on one screen does not follow you to another.
+  useEffect(() => useUi.getState().openDetail(null), [route.page]);
+
   // Once the library has fully loaded and things are quiet, warm later screens.
   useEffect(() => {
     if (!lib.loading && !lib.partial) warmLaterScreens();
@@ -210,7 +214,7 @@ function Shell() {
 
         <main className="flex min-w-0 flex-1 flex-col">
           {!fullBleedWelcome ? (
-            <div className="sticky top-0 z-30 flex h-12 items-center gap-2 border-b border-line bg-bg/85 px-4 backdrop-blur lg:hidden">
+            <div className="sticky top-0 z-30 flex h-12 items-center gap-2 border-b border-line bg-bg px-4 lg:hidden">
               <button type="button" onClick={() => setDrawer(true)} className="grid size-8 place-items-center rounded-lg hover:bg-panel-2" aria-label={t('nav.openMenu')}>
                 <MenuIcon className="size-5" />
               </button>
@@ -220,7 +224,9 @@ function Shell() {
           ) : null}
           <DemoBanner />
           <div key={route.page} className="flex-1 animate-fade-in">
-            <Suspense fallback={<ScreenFallback />}>{page}</Suspense>
+            <ScreenErrorBoundary resetKey={route.page + route.scope.kind + (route.scope.value ?? '')}>
+              <Suspense fallback={<ScreenFallback />}>{page}</Suspense>
+            </ScreenErrorBoundary>
           </div>
         </main>
       </div>

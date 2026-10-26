@@ -1,22 +1,21 @@
-import { ArrowRight, ArrowUpRight, Inbox, Search, Shuffle, Sparkles, Star } from 'lucide-react';
+import { ArrowRight, Search, Shuffle } from 'lucide-react';
 import { useMemo, useState, type ReactNode } from 'react';
 import { catName, rich, useT } from '@/i18n';
-import { fmtCompact, fmtNumber, fmtRelative, fmtShortDate, fmtWeekdayDate, greeting } from '@/lib/format';
+import { fmtCompact, fmtNumber, fmtRelative, fmtShortDate } from '@/lib/format';
 import { usePaintMark } from '@/lib/perf';
-import { viewerItem, type Settings } from '@/lib/storage';
+import type { Settings } from '@/lib/storage';
 import type { Bookmark } from '@/lib/types';
-import { useStorageItem } from '@/hooks/data';
 import { useLibrary } from '@/hooks/library';
 import { navigate, scopeHash } from '@/hooks/route';
 import { useUi } from '@/store/ui';
 import { Avatar } from '@/components/Brand';
+import { CategoryGlyph } from '@/components/CategoryGlyph';
 import { DetailPanel } from '@/components/DetailPanel';
 import { MediaGrid } from '@/components/Media';
 import { RecallWidget } from '@/components/RecallWidget';
 import { ShelfWidget } from '@/components/ShelfWidget';
 import { LastSynced, SyncButton } from '@/components/SyncControl';
-import { CategoryChip } from '@/components/TweetCard';
-import { Button, Eyebrow, Kbd, cn } from '@/components/ui/primitives';
+import { Button, Kbd } from '@/components/ui/primitives';
 import { WelcomeView } from './WelcomeView';
 
 const DAY = 86_400_000;
@@ -29,76 +28,58 @@ function seeded(seed: number) {
   };
 }
 
-function Sparkline({ values, className }: { values: number[]; className?: string }) {
-  const max = Math.max(1, ...values);
-  const w = 120;
-  const h = 34;
-  const step = w / Math.max(1, values.length - 1);
-  const pts = values.map((v, i) => [i * step, h - 3 - (v / max) * (h - 8)] as const);
-  const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
-  const last = pts[pts.length - 1]!;
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} className={cn('h-[34px] w-[120px] overflow-visible', className)} aria-hidden>
-      <path d={`${line} L${w},${h} L0,${h} Z`} fill="var(--accent)" opacity={0.1} />
-      <path d={line} fill="none" stroke="var(--accent)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx={last[0]} cy={last[1]} r={3.5} fill="var(--accent)" stroke="var(--panel)" strokeWidth={2} />
-    </svg>
-  );
-}
+const SECTION_TITLE = 'text-[15px] font-semibold tracking-[-0.01em]';
 
-function StatTile({ label, value, icon, hint, onClick, children }: { label: string; value: string; icon?: ReactNode; hint?: ReactNode; onClick: () => void; children?: ReactNode }) {
+/** One cell of the stats strip: muted label, tabular value, one note line. */
+function StatCell({ label, value, note, loading, onClick }: { label: string; value: ReactNode; note?: ReactNode; loading?: boolean; onClick: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group relative overflow-hidden rounded-2xl border border-line bg-panel p-4 text-left shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-hover"
-    >
-      <div className="flex items-center justify-between text-[12.5px] text-muted">
-        {label}
-        {icon ?? <ArrowUpRight className="size-3.5 text-faint opacity-0 transition-opacity group-hover:opacity-100" />}
-      </div>
-      <div className="mt-2 flex items-end justify-between gap-2">
-        <div>
-          {value === '…' ? <div className="skeleton h-[30px] w-16 rounded-lg" /> : <div className="text-[30px] leading-none font-semibold tracking-[-0.04em]">{value}</div>}
-          {hint ? <div className="mt-1.5 text-[12px] text-muted">{hint}</div> : null}
-        </div>
-        {children}
-      </div>
+    <button type="button" onClick={onClick} className="flex min-w-0 flex-col bg-panel p-4 text-left transition-colors hover:bg-panel-2">
+      <span className="text-[12px] text-muted">{label}</span>
+      <span className="mt-2 flex min-w-0 items-center gap-2 text-[26px] leading-tight font-semibold tracking-[-0.02em] tabular-nums">
+        {loading ? <span className="skeleton h-[26px] w-14 rounded-md" aria-hidden /> : value}
+      </span>
+      {note ? <span className="mt-1.5 truncate text-[12px] text-muted">{note}</span> : null}
     </button>
   );
 }
 
-function ResurfaceCard({ b, onOpen, index }: { b: Bookmark; onOpen: (id: string) => void; index: number }) {
+function ResurfaceCard({ b, onOpen }: { b: Bookmark; onOpen: (id: string) => void }) {
   const t = useT();
   const lib = useLibrary();
+  const cat = lib.categoryMap.get(b.category);
   return (
-    <button
-      type="button"
-      onClick={() => onOpen(b.id)}
-      style={{ animationDelay: `${index * 70}ms` }}
-      className="group relative flex h-full animate-rise flex-col overflow-hidden rounded-2xl border border-line bg-panel p-5 text-left shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-hover"
-    >
-      <span aria-hidden className="bg-brand absolute inset-x-0 top-0 h-px opacity-60" />
-      <Eyebrow className="text-[10.5px]">{t('home.savedWhen', { when: fmtRelative(b.savedAt) })}</Eyebrow>
-      <div className="mt-3 flex items-center gap-2.5">
-        <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={30} />
+    <div className="group flex h-full flex-col rounded-xl border border-line bg-panel transition-colors hover:bg-panel-2">
+      <button type="button" data-resurface onClick={() => onOpen(b.id)} className="flex flex-1 flex-col rounded-t-xl p-4 text-left">
+      <div className="flex items-center gap-2.5">
+        <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={28} />
         <div className="min-w-0 flex-1">
           <div className="truncate text-[13px] font-semibold">{b.author.name}</div>
           <div className="truncate text-[12px] text-muted">@{b.author.handle}</div>
         </div>
       </div>
-      {b.summary ? (
-        <p className="mt-3 flex gap-1.5 text-[12.5px] font-medium text-accent">
-          <Sparkles className="mt-0.5 size-3.5 shrink-0" /> {b.summary}
-        </p>
+      {b.summary ? <p className="mt-3 text-[13px] font-medium text-fg">{b.summary}</p> : null}
+      <p className={`${b.summary ? 'mt-1.5' : 'mt-3'} line-clamp-4 flex-1 text-[13.5px] leading-[1.6] text-fg-2`}>{b.text || b.card?.title || b.article?.title}</p>
+      </button>
+      {b.media[0] ? (
+        <div className="mt-3 px-4">
+          <MediaGrid media={b.media.slice(0, 1)} compact className="max-h-40" />
+        </div>
       ) : null}
-      <p className="mt-2.5 line-clamp-5 flex-1 text-[14px] leading-[1.6] text-fg-2">{b.text || b.card?.title || b.article?.title}</p>
-      {b.media[0] ? <MediaGrid media={b.media.slice(0, 1)} compact className="mt-3 max-h-40" /> : null}
-      <div className="mt-4 flex items-center justify-between">
-        <CategoryChip category={lib.categoryMap.get(b.category)} />
-        <span className="text-[12px] text-faint opacity-0 transition-opacity group-hover:opacity-100">{t('home.open')}</span>
+      <div className="flex items-center justify-between gap-2 px-4 pt-4 pb-4 text-[12px] text-muted">
+        {cat ? (
+          <span className="inline-flex min-w-0 items-center gap-1.5">
+            <CategoryGlyph category={cat} className="text-muted" />
+            <span className="truncate">{catName(cat)}</span>
+          </span>
+        ) : (
+          <span />
+        )}
+        <span className="flex shrink-0 items-center gap-3">
+          <span>{t('home.savedWhen', { when: fmtRelative(b.savedAt) })}</span>
+          <span className="text-faint opacity-0 transition-opacity group-hover:opacity-100">{t('home.open')}</span>
+        </span>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -107,8 +88,8 @@ export function HomeView({ settings }: { settings: Settings }) {
   const lib = useLibrary();
   const openDetail = useUi((s) => s.openDetail);
   const setPaletteOpen = useUi((s) => s.setPaletteOpen);
-  const viewer = useStorageItem(viewerItem, null);
   const [shuffle, setShuffle] = useState(0);
+  const [allCats, setAllCats] = useState(false);
   const daySeed = Math.floor(Date.now() / DAY);
 
   const resurface = useMemo(() => {
@@ -169,66 +150,77 @@ export function HomeView({ settings }: { settings: Settings }) {
 
   return (
     <div className="relative">
-      <div aria-hidden className="aurora pointer-events-none absolute inset-x-0 top-0 h-[420px]" />
-      <div aria-hidden className="dot-grid pointer-events-none absolute inset-x-0 top-0 h-[360px] [mask-image:linear-gradient(to_bottom,black,transparent)] opacity-40" />
-
-      <div className="relative mx-auto w-full max-w-[1240px] px-5 pt-10 pb-16 sm:px-8">
-        <header className="animate-rise">
-          <Eyebrow>{fmtWeekdayDate(Date.now())}</Eyebrow>
-          <h1 className="mt-3 text-[40px] leading-[1.05] font-semibold tracking-[-0.045em] text-balance sm:text-[46px]">
-            {greeting()},{' '}
-            <span className="serif-accent text-brand pr-1 text-[1.12em]">{viewer ? `@${viewer.handle}` : t('home.welcomeBack')}</span>
-          </h1>
-          <p className="mt-3 text-[15px] text-muted">
-            {lib.partial ? t('home.loadingStash') : t('home.summary', { posts: lib.counts.all, cats: catCards.length })} · <LastSynced className="text-[15px]" />
+      <div className="mx-auto w-full max-w-[1240px] px-5 pt-8 pb-16 sm:px-8">
+        <header>
+          <h1 className="text-[26px] leading-tight font-semibold tracking-[-0.02em]">{t('nav.home')}</h1>
+          <p className="mt-1 text-[13px] text-muted">
+            {lib.partial ? t('home.loadingStash') : t('home.summary', { posts: lib.counts.all, cats: catCards.length })}
+            {' · '}
+            <LastSynced />
           </p>
         </header>
 
-        <div className="mt-7 flex animate-rise flex-wrap items-center gap-3 [animation-delay:60ms]">
+        <div className="mt-6 flex flex-wrap items-center gap-3">
           <button
             type="button"
             onClick={() => setPaletteOpen(true)}
-            className="glass flex h-12 min-w-[280px] flex-1 items-center gap-3 rounded-2xl border border-line px-4 text-left text-[14.5px] text-faint shadow-card transition-all hover:border-line-strong hover:shadow-hover sm:max-w-[560px]"
+            className="flex h-9 min-w-0 flex-1 basis-full items-center gap-2.5 rounded-lg border border-line bg-panel px-3 text-left text-[14px] text-faint transition-colors hover:bg-panel-2 sm:basis-auto sm:max-w-[560px]"
           >
-            <Search className="size-[18px] text-muted" />
-            <span className="flex-1 truncate">{t('home.searchPlaceholder')}</span>
+            <Search className="size-4 shrink-0 text-muted" aria-hidden />
+            <span className="min-w-0 flex-1 truncate">{t('home.searchPlaceholder')}</span>
             <Kbd>{navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}</Kbd>
             <Kbd>K</Kbd>
           </button>
           <SyncButton hasData size="lg" />
         </div>
 
-        <div className="mt-8 grid animate-rise grid-cols-2 gap-3 [animation-delay:120ms] md:grid-cols-4">
-          <StatTile label={t('home.inStash')} value={lib.partial ? '…' : fmtNumber(lib.counts.all)} onClick={() => navigate('#/library/all')} hint={t('home.archivedCount', { count: fmtNumber(lib.counts.archived) })} />
-          <StatTile
+        <div className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line md:grid-cols-4">
+          <StatCell
+            label={t('home.inStash')}
+            value={fmtNumber(lib.counts.all)}
+            loading={lib.partial}
+            onClick={() => navigate('#/library/all')}
+            note={t('home.archivedCount', { count: fmtNumber(lib.counts.archived) })}
+          />
+          <StatCell
             label={t('home.savedThisWeek')}
-            value={lib.partial ? '…' : fmtNumber(thisWeek)}
+            value={fmtNumber(thisWeek)}
+            loading={lib.partial}
             onClick={() => navigate('#/insights')}
-            hint={thisWeek === lastWeek ? t('home.sameAsLastWeek') : t('home.vsLastWeek', { delta: `${thisWeek > lastWeek ? '+' : '−'}${fmtNumber(Math.abs(thisWeek - lastWeek))}` })}
-          >
-            <Sparkline values={weekly} className="hidden lg:block" />
-          </StatTile>
-          <StatTile label={t('nav.unread')} value={lib.partial ? '…' : fmtNumber(lib.counts.unread)} icon={<Inbox className="size-4 text-accent" />} onClick={() => navigate('#/library/unread')} hint={t('home.waiting')} />
-          <StatTile
+            note={thisWeek === lastWeek ? t('home.sameAsLastWeek') : t('home.vsLastWeek', { delta: `${thisWeek > lastWeek ? '+' : '−'}${fmtNumber(Math.abs(thisWeek - lastWeek))}` })}
+          />
+          <StatCell label={t('nav.unread')} value={fmtNumber(lib.counts.unread)} loading={lib.partial} onClick={() => navigate('#/library/unread')} note={t('home.waiting')} />
+          <StatCell
             label={t('home.topCategory')}
-            value={lib.partial ? '…' : topCat ? topCat.c.emoji : '—'}
-            icon={<Star className="size-4 fill-amber-400 text-amber-400" />}
+            loading={lib.partial}
+            value={
+              topCat ? (
+                <>
+                  <CategoryGlyph category={topCat.c} className="size-5 shrink-0 text-muted" />
+                  <span className="min-w-0 truncate tracking-[-0.02em]" title={catName(topCat.c)}>
+                    {catName(topCat.c)}
+                  </span>
+                </>
+              ) : (
+                '—'
+              )
+            }
             onClick={() => topCat && navigate(scopeHash({ kind: 'category', value: topCat.c.id }))}
-            hint={topCat ? `${catName(topCat.c)} · ${fmtNumber(topCat.count)}` : undefined}
+            note={topCat ? t('common.posts', { count: topCat.count }) : undefined}
           />
         </div>
 
-        <div className="mt-8 grid animate-rise gap-4 [animation-delay:150ms]">
+        <div className="mt-8 grid grid-cols-1 gap-8">
           <RecallWidget />
           <ShelfWidget />
         </div>
 
         {resurface.length ? (
           <section className="mt-12">
-            <div className="mb-4 flex items-end justify-between">
-              <div>
-                <h2 className="flex items-center gap-2 text-[20px] font-semibold tracking-[-0.03em]">
-                  {t('home.rediscover')} <span className="serif-accent text-[22px] font-normal text-muted">{t('home.gems')}</span>
+            <div className="mb-4 flex items-end justify-between gap-3">
+              <div className="min-w-0">
+                <h2 className={SECTION_TITLE}>
+                  {t('home.rediscover')}
                 </h2>
                 <p className="mt-0.5 text-[13px] text-muted">{t('home.rediscoverDesc')}</p>
               </div>
@@ -236,117 +228,112 @@ export function HomeView({ settings }: { settings: Settings }) {
                 <Shuffle /> {t('home.shuffle')}
               </Button>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {resurface.map((b, i) => (
-                <ResurfaceCard key={`${b.id}-${shuffle}`} b={b} index={i} onOpen={openDetail} />
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+              {resurface.map((b) => (
+                <ResurfaceCard key={`${b.id}-${shuffle}`} b={b} onOpen={openDetail} />
               ))}
             </div>
           </section>
         ) : null}
 
-        <div className="cv-auto mt-12 grid gap-8 lg:grid-cols-[1.45fr_1fr]">
+        <div className="cv-auto mt-12 grid grid-cols-1 gap-10 lg:grid-cols-[1.45fr_1fr]">
           <section>
-            <div className="mb-4 flex items-end justify-between">
-              <h2 className="text-[20px] font-semibold tracking-[-0.03em]">{t('home.yourCategories')}</h2>
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className={SECTION_TITLE}>{t('home.yourCategories')}</h2>
               <Button size="sm" variant="ghost" onClick={() => navigate('#/settings/categories')}>
                 {t('home.manage')}
               </Button>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {catCards.map(({ c, count, faces }, i) => (
+            <div className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-panel">
+              {(allCats ? catCards : catCards.slice(0, 8)).map(({ c, count }) => (
                 <button
                   key={c.id}
                   type="button"
                   onClick={() => navigate(scopeHash({ kind: 'category', value: c.id }))}
-                  style={{ animationDelay: `${i * 40}ms` }}
-                  className="group relative animate-rise overflow-hidden rounded-2xl border border-line bg-panel p-4 text-left shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-hover"
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-panel-2"
                 >
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute -top-12 -right-12 size-36 rounded-full opacity-25 blur-2xl transition-opacity duration-300 group-hover:opacity-50"
-                    style={{ background: c.color }}
-                  />
-                  <div className="relative flex items-start justify-between gap-2">
-                    <span className="grid size-11 place-items-center rounded-[14px] text-[22px] ring-1 ring-line" style={{ background: `color-mix(in oklab, ${c.color} 16%, var(--panel))` }}>
-                      {c.emoji}
-                    </span>
-                    <div className="flex -space-x-2">
-                      {faces.map((b) => (
-                        <Avatar key={b.author.handle} src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={24} className="ring-2 ring-panel" />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="relative mt-4 text-[15px] font-semibold tracking-[-0.02em]">{catName(c)}</div>
-                  <div className="relative flex items-center justify-between text-[12.5px] text-muted">
-                    {t('common.posts', { count })}
-                    <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
-                  </div>
-                  <div className="relative mt-3 h-1 overflow-hidden rounded-full bg-panel-2">
-                    <div className="h-full rounded-full transition-[width] duration-700" style={{ width: `${(count / maxCat) * 100}%`, background: c.color }} />
-                  </div>
+                  <CategoryGlyph category={c} className="size-4 text-muted" />
+                  <span className="min-w-0 flex-1 truncate text-[13.5px] font-medium text-fg">{catName(c)}</span>
+                  <span className="hidden h-[3px] w-28 overflow-hidden rounded-full bg-panel-2 sm:block" aria-hidden>
+                    <span className="block h-full rounded-full bg-fg/25" style={{ width: `${(count / maxCat) * 100}%` }} />
+                  </span>
+                  <span className="w-10 text-right text-[12.5px] text-muted tabular-nums">{fmtNumber(count)}</span>
                 </button>
               ))}
             </div>
+            {catCards.length > 8 ? (
+              <button type="button" onClick={() => setAllCats((x) => !x)} className="mt-2 rounded-md px-1 text-[12.5px] text-muted transition-colors hover:text-fg">
+                {allCats ? t('card.showLess') : t('sidebar.showMore')}
+              </button>
+            ) : null}
           </section>
 
-          <div className="space-y-8">
+          <div className="space-y-10">
             <section>
-              <div className="mb-4 flex items-end justify-between">
-                <h2 className="text-[20px] font-semibold tracking-[-0.03em]">{t('home.recent')}</h2>
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <h2 className={SECTION_TITLE}>{t('home.recent')}</h2>
                 <Button size="sm" variant="ghost" onClick={() => navigate('#/library/all')}>
                   {t('home.viewAll')} <ArrowRight />
                 </Button>
               </div>
-              <div className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-panel shadow-card">
-                {recent.map((b) => (
-                  <button key={b.id} type="button" onClick={() => openDetail(b.id)} className="flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-panel-2/60">
-                    <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={32} />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 text-[12.5px]">
-                        {!b.read ? <span className="bg-brand size-1.5 shrink-0 rounded-full" /> : null}
-                        <span className="truncate font-semibold">{b.author.name}</span>
-                        <span className="shrink-0 text-muted">· {fmtShortDate(b.savedAt)}</span>
+              <div className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-panel">
+                {recent.map((b) => {
+                  const cat = lib.categoryMap.get(b.category);
+                  return (
+                    <button
+                      key={b.id}
+                      type="button"
+                      onClick={() => openDetail(b.id)}
+                      className="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-panel-2"
+                    >
+                      <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={28} />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 text-[12.5px]">
+                          {!b.read ? <span aria-hidden className="bg-accent size-1.5 shrink-0 rounded-full" /> : null}
+                          <span className="truncate font-semibold">{b.author.name}</span>
+                          <span className="shrink-0 text-muted">· {fmtShortDate(b.savedAt)}</span>
+                        </div>
+                        <p className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-fg-2">{b.text || b.card?.title || t('common.mediaPost')}</p>
                       </div>
-                      <p className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-fg-2">{b.text || b.card?.title || t('common.mediaPost')}</p>
-                    </div>
-                    <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-panel-2 text-[14px]" title={(() => { const c = lib.categoryMap.get(b.category); return c ? catName(c) : undefined; })()}>
-                      {lib.categoryMap.get(b.category)?.emoji}
-                    </span>
-                  </button>
-                ))}
+                      {cat ? (
+                        <span role="img" aria-label={catName(cat)} title={catName(cat)} className="mt-0.5 shrink-0 text-muted">
+                          <CategoryGlyph category={cat} className="size-4" />
+                        </span>
+                      ) : null}
+                    </button>
+                  );
+                })}
               </div>
             </section>
 
             {lib.authors.length ? (
               <section>
-                <h2 className="mb-4 text-[20px] font-semibold tracking-[-0.03em]">{t('home.learnFrom')}</h2>
+                <h2 className={`mb-3 ${SECTION_TITLE}`}>{t('home.learnFrom')}</h2>
                 <div className="flex flex-wrap gap-2">
                   {lib.authors.slice(0, 10).map((a) => (
                     <button
                       key={a.handle}
                       type="button"
                       onClick={() => navigate(scopeHash({ kind: 'author', value: a.handle }))}
-                      className="inline-flex h-9 items-center gap-2 rounded-full border border-line bg-panel pr-3 pl-1 text-[13px] shadow-card transition-all hover:-translate-y-px hover:border-line-strong"
+                      className="inline-flex h-8 items-center gap-2 rounded-full border border-line bg-panel pr-3 pl-1 text-[13px] transition-colors hover:bg-panel-2"
                     >
-                      <Avatar src={a.avatar} name={a.name} handle={a.handle} size={28} />
+                      <Avatar src={a.avatar} name={a.name} handle={a.handle} size={24} />
                       <span className="max-w-[120px] truncate font-medium">{a.name || a.handle}</span>
-                      <span className="tabular text-faint">{fmtCompact(a.count)}</span>
+                      <span className="tabular-nums text-muted">{fmtCompact(a.count)}</span>
                     </button>
                   ))}
                 </div>
               </section>
             ) : null}
 
-            <section className="relative overflow-hidden rounded-2xl border border-line bg-panel p-5 text-[13px] text-muted shadow-card">
-              <span aria-hidden className="aurora absolute inset-0 opacity-60" />
-              <div className="relative">
-                <div className="flex items-center gap-2 font-semibold text-fg">
-                  <Sparkles className="size-4 text-accent" /> {t('home.powerSearch')}
-                </div>
-                <p className="mt-1.5 leading-relaxed">
-                  {rich(t('home.powerSearchBody'), { c: (s) => <code className="text-accent">{s}</code>, k: (s) => <Kbd>{s}</Kbd> })}
-                </p>
-              </div>
+            <section className="rounded-xl border border-line bg-panel p-4">
+              <h2 className={SECTION_TITLE}>{t('home.powerSearch')}</h2>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+                {rich(t('home.powerSearchBody'), {
+                  c: (s) => <code className="rounded bg-panel-2 px-1 py-px text-[12px] text-fg-2">{s}</code>,
+                  k: (s) => <Kbd>{s}</Kbd>,
+                })}
+              </p>
             </section>
           </div>
         </div>

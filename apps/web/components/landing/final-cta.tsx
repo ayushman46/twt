@@ -1,6 +1,4 @@
-import { Globe, Puzzle } from "lucide-react";
 import { LogoMark } from "@/components/site/logo";
-import { Aurora } from "@/components/ui/aurora";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Reveal } from "@/components/ui/reveal";
 import type { Dictionary } from "@/lib/i18n/types";
@@ -8,31 +6,23 @@ import { installHref } from "@/lib/site";
 
 export function FinalCta({ t, locale }: { t: Dictionary["cta"]; locale: Dictionary["locale"] }) {
   return (
-    <section aria-labelledby="cta-title" className="cv-auto relative pb-24 pt-8 sm:pb-32">
-      <div className="container-page">
-        <Reveal className="ring-gradient relative isolate overflow-hidden rounded-[1.75rem] bg-ink-raised px-6 py-16 text-center shadow-[0_40px_120px_-50px_rgb(177_76_242/0.6)] sm:px-12 sm:py-24">
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-            <Aurora className="-inset-x-[15%] -top-[45%] h-[110%] opacity-70" />
-            <div className="bg-grid absolute inset-0 opacity-70 [mask-image:radial-gradient(ellipse_at_center,#000_20%,transparent_70%)]" />
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink-raised to-transparent" />
-            <div className="absolute inset-x-[20%] top-0 h-px bg-[linear-gradient(90deg,transparent,rgb(255_255_255/0.5),transparent)]" />
-          </div>
-          <LogoMark id="cta" className="mx-auto size-16 drop-shadow-[0_14px_36px_rgb(177_76_242/0.7)]" />
-          <h2 id="cta-title" className="mx-auto mt-8 max-w-2xl text-balance text-[2rem] font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-5xl">
+    <section aria-labelledby="cta-title" className="cv-auto">
+      <div className="container-page pb-20 sm:pb-28">
+        <Reveal className="flex flex-col items-center rounded-2xl border border-line bg-panel px-6 py-14 text-center sm:px-12 sm:py-20">
+          <LogoMark className="size-10" />
+          <h2 id="cta-title" className="mt-6 max-w-2xl text-balance text-[1.875rem] font-semibold leading-[1.1] tracking-[-0.03em] text-fg sm:text-[2.5rem] sm:leading-[1.05]">
             {t.title}
           </h2>
-          <p className="mx-auto mt-5 max-w-lg text-pretty text-zinc-300/80 sm:text-lg">{t.body}</p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <p className="mt-4 max-w-lg text-pretty text-base leading-relaxed text-muted sm:text-[17px]">{t.body}</p>
+          <div className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
             <ButtonLink href={installHref("chrome", locale)} size="lg" className="w-full sm:w-auto">
-              <Puzzle className="size-[1.1rem]" aria-hidden="true" />
               {t.chrome}
             </ButtonLink>
             <ButtonLink href={installHref("firefox", locale)} size="lg" variant="secondary" className="w-full sm:w-auto">
-              <Globe className="size-[1.1rem]" aria-hidden="true" />
               {t.firefox}
             </ButtonLink>
           </div>
-          <p className="mt-6 text-sm text-zinc-400">{t.footnote}</p>
+          <p className="mt-5 text-[13px] text-muted">{t.footnote}</p>
         </Reveal>
       </div>
     </section>

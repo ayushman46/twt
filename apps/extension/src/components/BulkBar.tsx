@@ -25,9 +25,9 @@ export function BulkBar({ items, onAi, aiAvailable }: { items: Bookmark[]; onAi:
   return (
     <>
       {n > 0 ? (
-        <div className="fixed bottom-5 left-1/2 z-30 max-w-[calc(100vw-24px)] -translate-x-1/2">
-        <div className="flex animate-rise items-center gap-1 overflow-x-auto rounded-2xl border border-line bg-panel/95 p-1.5 shadow-pop backdrop-blur-xl">
-          <span className="px-2.5 text-[13px] font-semibold whitespace-nowrap tabular-nums">{t('bulk.selected', { count: n })}</span>
+        <div className="pointer-events-none fixed inset-x-3 bottom-5 z-30 flex justify-center">
+        <div className="pointer-events-auto flex max-w-full animate-rise flex-wrap items-center justify-center gap-0.5 rounded-2xl border border-line bg-panel p-1.5 shadow-pop">
+          <span className="px-2 text-[13px] font-medium whitespace-nowrap text-fg tabular-nums">{t('bulk.selected', { count: n })}</span>
           {n < items.length ? (
             <Button size="sm" variant="ghost" onClick={() => setSelection(items.map((b) => b.id))}>
               {t('bulk.selectAll', { count: items.length })}
@@ -60,8 +60,9 @@ export function BulkBar({ items, onAi, aiAvailable }: { items: Bookmark[]; onAi:
           </Tip>
           <Menu>
             <MenuTrigger asChild>
-              <Button size="sm" variant="ghost">
-                <Layers /> {t('common.category')}
+              <Button size="sm" variant="ghost" aria-label={t('common.category')}>
+                <Layers />
+                <span className="hidden sm:inline">{t('common.category')}</span>
               </Button>
             </MenuTrigger>
             <MenuContent side="top" align="center" className="w-56">
@@ -70,8 +71,9 @@ export function BulkBar({ items, onAi, aiAvailable }: { items: Bookmark[]; onAi:
           </Menu>
           <Menu>
             <MenuTrigger asChild>
-              <Button size="sm" variant="ghost">
-                <FolderPlus /> {t('common.collection')}
+              <Button size="sm" variant="ghost" aria-label={t('common.collection')}>
+                <FolderPlus />
+                <span className="hidden sm:inline">{t('common.collection')}</span>
               </Button>
             </MenuTrigger>
             <MenuContent side="top" align="center" className="w-56">
@@ -80,8 +82,9 @@ export function BulkBar({ items, onAi, aiAvailable }: { items: Bookmark[]; onAi:
           </Menu>
           <Popover>
             <PopoverTrigger asChild>
-              <Button size="sm" variant="ghost">
-                <Tag /> {t('common.tag')}
+              <Button size="sm" variant="ghost" aria-label={t('common.tag')}>
+                <Tag />
+                <span className="hidden sm:inline">{t('common.tag')}</span>
               </Button>
             </PopoverTrigger>
             <PopoverContent side="top" align="center" className="w-64">

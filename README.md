@@ -1,419 +1,306 @@
 <div align="center">
 
-<img src="packages/shared/assets/logo.svg" width="96" height="96" alt="twtdash logo" />
+<img src="packages/shared/assets/logo.svg" width="72" height="72" alt="twtdash" />
 
 # twtdash
 
-### Your X bookmarks, *finally organized.*
+**Your X bookmarks, organized.**
 
-twtdash is a browser extension that syncs every post you've bookmarked on X, sorts each one into a smart category on your device, and gives you a fast, good-looking library to search, tag and rediscover them.
+A fast, private library for everything you save on X. Posts are sorted on your device,<br />
+searchable as you type, and easy to come back to. Built for India, in English, Hindi and eight more Indian languages.
 
-<p>
-  <a href="https://twtdash.vercel.app"><img alt="Website" src="https://img.shields.io/badge/website-twtdash.vercel.app-8B6DFF?style=for-the-badge&labelColor=08080C" /></a>
-  <a href="https://twtdash.vercel.app/install"><img alt="Install" src="https://img.shields.io/badge/install-60_seconds-B14CF2?style=for-the-badge&labelColor=08080C" /></a>
-  <a href="PERFORMANCE.md"><img alt="Performance" src="https://img.shields.io/badge/startup-3.3%C3%97_faster-FF5C9D?style=for-the-badge&labelColor=08080C" /></a>
-</p>
+[Website](https://twtdash.vercel.app) · [Install](#install) · [Watch the demo](docs/media/twtdash-demo.mp4) · [How sync works](#how-sync-works) · [Performance](PERFORMANCE.md)
 
-<p>
-  <img alt="Manifest V3" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" />
-  <img alt="Firefox 128+" src="https://img.shields.io/badge/Firefox-128%2B-FF7139?logo=firefoxbrowser&logoColor=white" />
-  <img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white" />
-  <img alt="Tailwind CSS v4" src="https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white" />
-  <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white" />
-  <img alt="NVIDIA NIM" src="https://img.shields.io/badge/AI-NVIDIA_NIM_(free)-76B900?logo=nvidia&logoColor=white" />
-  <img alt="Runs on $0" src="https://img.shields.io/badge/stack_cost-%240-22C55E" />
-  <img alt="Local-first" src="https://img.shields.io/badge/data-local--first-22C55E" />
-</p>
+<img alt="License: proprietary" src="https://img.shields.io/badge/license-proprietary-141414?style=flat-square" />
+<img alt="Manifest V3" src="https://img.shields.io/badge/manifest-v3-141414?style=flat-square" />
+<img alt="Chrome, Edge, Brave, Arc, Firefox" src="https://img.shields.io/badge/chrome%20%C2%B7%20edge%20%C2%B7%20brave%20%C2%B7%20firefox-supported-141414?style=flat-square" />
+<img alt="Local-first" src="https://img.shields.io/badge/data-local--first-141414?style=flat-square" />
 
-<a href="https://twtdash.vercel.app/downloads/twtdash-chrome.zip"><b>Download for Chrome</b></a> ·
-<a href="https://twtdash.vercel.app/downloads/twtdash-firefox.zip"><b>Download for Firefox</b></a> ·
-<a href="#-install-in-60-seconds"><b>Install guide</b></a> ·
-<a href="#-how-sync-works"><b>How it works</b></a> ·
-<a href="PERFORMANCE.md"><b>Performance report</b></a>
+</div>
 
 <br />
+
+<a href="docs/media/twtdash-demo.mp4"><img src="docs/media/demo-poster.webp" alt="Play the twtdash demo video" width="100%" /></a>
+<p align="center"><sub><a href="docs/media/twtdash-demo.mp4">Play the one-minute demo</a></sub></p>
+
 <br />
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/library-dark.webp" />
   <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/library-light.webp" />
-  <img alt="The twtdash library: bookmarks in a masonry grid with categories, tags and engagement stats" src="docs/screenshots/library-dark.webp" width="100%" />
+  <img alt="The twtdash library: saved posts in a grid with categories, tags and engagement" src="docs/screenshots/library-dark.webp" width="100%" />
 </picture>
 
-</div>
-
 <br />
 
-## ✦ Why twtdash
+## Contents
 
-X bookmarks become a junk drawer. They have no search worth using, no categories, no notes, and no way back to the thread you saved eight months ago. twtdash turns that pile into a personal library:
+[Why twtdash](#why-twtdash) · [Features](#features) · [Made for India](#made-for-india) · [Status](#status) · [Screenshots](#screenshots) · [Install](#install) · [How sync works](#how-sync-works) · [Search and shortcuts](#search-and-shortcuts) · [Privacy](#privacy-and-permissions) · [Performance](#performance) · [Pro and the hosted API](#pro-and-the-hosted-api) · [Development](#development) · [Known limitations](#known-limitations) · [License](#license)
+
+## Why twtdash
+
+X bookmarks turn into a pile you never open again: no real search, no folders unless you pay, no notes, and no way back to the thread you saved eight months ago. twtdash turns that pile into a library.
 
 - **One click syncs everything.** No X API key, no paid developer plan, no account.
-- **Every post is sorted automatically** into 17 categories, on your device, the moment it arrives.
-- **Search finds anything as you type**, with operators like `from:` `cat:` `has:video` `after:30d` `min_likes:1k`.
-- **Your library stays private.** It lives in your browser's IndexedDB and never touches a twtdash server.
-- **It stays fast at 10,000+ posts** because the lists are virtualized, data streams in incrementally and the first screen paints in about a second. The [benchmarks](PERFORMANCE.md) have the numbers.
+- **Every post is sorted on your device** into one of 18 categories the moment it arrives, including posts written in Hindi, Hinglish and other Indian languages.
+- **Search as you type** across text, authors, notes, tags and link titles, with operators such as `from:`, `cat:`, `has:video` and `after:30d`.
+- **Private by default.** The library lives in your browser. Nothing leaves it unless you turn on an AI feature.
+- **Fast at 10,000+ posts.** Virtualized lists, streamed loading and a first screen in about a second. The numbers are in [PERFORMANCE.md](PERFORMANCE.md).
 
-<br />
+## Features
 
-## ✦ Features
+**Library.** Grid, list, table and media gallery layouts, all virtualized. Star, mark read, archive, add notes, tags and collections, and act on many posts at once. A detail panel shows the full post, your note, related posts and more from the same author. <kbd>Ctrl</kbd>/<kbd>⌘</kbd> <kbd>K</kbd> jumps to any post, category or screen.
+
+**Sync and capture.** twtdash scrolls your bookmarks page and reads the data X already sends to your browser. Quick sync stops at posts you already have; full sync refreshes everything. Bookmark or like a post anywhere on X and it appears in twtdash immediately. X Premium bookmark folders become collections, and you can import your likes too.
+
+**Categories.** Eighteen built-in categories are scored from the post text, link previews, quoted posts and linked sites. Romanized Hindi and Indian scripts count. Add keywords, create your own categories, or re-sort at any time; posts you sorted by hand are never overridden.
+
+**Recall.** A short daily review that brings back saved posts on a spaced schedule, so the ones you're starting to forget resurface. Rate each post, keep a streak, and pick how many posts a day and from which categories.
+
+**Shelf.** Every resource inside your saved posts, pulled out and grouped: repositories, papers, videos, articles, tools, books, courses, podcasts, docs, datasets and jobs. See who shared each one and export the shelf as Markdown.
+
+**Ask your bookmarks.** Ask a question in English, Hindi or Hinglish. twtdash finds the matching posts on your device and an AI model answers from them, with numbered citations that open the original post. Without AI, Ask shows the matching posts.
+
+**Wrapped.** A story-style recap of what you saved: totals, top categories and authors, when you save, your longest streak and a reading persona, ending in an image you can download or share.
+
+**Insights.** Saves over time, your category mix, the authors you learn from most, content types and when you save, all within one date range.
+
+**Voice and translation.** Speak your search or question in English (India) or ten Indian languages. Translate any post into Hindi, Hinglish or another Indian language.
+
+**Export.** Markdown grouped by category (ready for Obsidian and Notion), Excel-safe CSV, or a full JSON backup you can merge back on any device.
+
+Recall, Shelf, Wrapped, search and categories run entirely on your device. Ask, translation and AI sorting are optional: they use a free NVIDIA API key you paste in Settings, or twtdash Pro.
+
+## Made for India
+
+- **Hindi** across the core app (library, search, settings, insights, popup), in the everyday style of Indian consumer apps. Words people actually say, such as बुकमार्क and टैग, stay as they are. The newest screens (Recall, Shelf, Ask and Wrapped) are in English for now.
+- **Bengali, Marathi, Telugu, Tamil, Gujarati, Kannada, Malayalam and Punjabi** in beta, covering the core interface with English for the rest. These still need review by native speakers.
+- **Indian-language aware sorting.** Categories understand romanized Hindi (*naukri*, *nivesh*, *sarkari*) and keywords in Devanagari and other Indian scripts. A Sports category covers cricket, IPL and kabaddi.
+- **Indian number formatting**: 1,23,456, with lakh and crore for large counts.
+- **Rupee pricing** for Pro, detected from your region, with a ₹/$ switch.
+- **Light on hardware.** Built to stay smooth on everyday laptops with large libraries.
+
+## Status
+
+As of October 27, 2026. Every row says how it was checked.
+
+| Area | State | How it's checked |
+|---|---|---|
+| Library, layouts, search and operators, detail panel, bulk actions, command palette | Working | 358 unit tests and 339 end-to-end browser checks (desktop, tablet and phone; dark and light) |
+| Categories, including Hindi, Hinglish and Indian scripts | Working | Unit tests and a labeled evaluation set |
+| Recall, Shelf, Wrapped | Working | Unit tests and browser checks |
+| Export (Markdown, CSV, JSON) and re-import | Working | Browser tests compare each file with the database |
+| Large libraries | Working | 10,000 and 50,000-post stress tests: first screen in about 1 s and 2 s |
+| Accessibility | Working | axe-core: 0 violations on 10 screens × 2 themes × desktop and phone |
+| Hindi UI and eight beta Indian languages | Working for the core app | Dictionary tests and screenshots; Recall, Shelf, Ask and Wrapped are English for now |
+| Website (English and Hindi) | Working | Production build, lint and route checks |
+| Sync from x.com | Built, not yet verified against a live X account | Parser tests against recorded X responses |
+| Ask, translation and AI sorting | Built; request handling tested with mocks | Needs a real NVIDIA key to verify answers |
+| twtdash Pro (licensing and hosted AI) | Built, not configured | Needs Lemon Squeezy and an NVIDIA key on the server |
+
+Test results are in [`apps/extension/bench/results`](apps/extension/bench/results), and performance before and after every change is in [PERFORMANCE.md](PERFORMANCE.md).
+
+## Screenshots
 
 <table>
   <tr>
-    <td width="50%" valign="top">
-      <h3>⚡ One-click sync</h3>
-      Opens your bookmarks page, auto-scrolls it, and reads the responses X already sends to your browser. <b>Quick sync</b> stops at posts you already have; <b>full sync</b> refreshes everything. It retries through rate limits and spots logged-out sessions. You can also import your <b>Likes</b>.
-    </td>
-    <td width="50%" valign="top">
-      <h3>🔴 Real-time capture</h3>
-      Bookmark or like a post anywhere on X and it lands in twtdash right away, with a toast to confirm. Removing a bookmark can remove it here too. X Premium <b>bookmark folders become collections</b>.
-    </td>
+    <td width="50%"><img src="docs/screenshots/home-dark.webp" alt="Home: stats, today's review, new resources and recent saves" /><p align="center"><sub><b>Home</b></sub></p></td>
+    <td width="50%"><img src="docs/screenshots/detail-dark.webp" alt="Detail panel with category, collections, tags and a private note" /><p align="center"><sub><b>Detail panel</b></sub></p></td>
   </tr>
   <tr>
-    <td valign="top">
-      <h3>🧠 On-device categorization</h3>
-      17 built-in categories, scored from post text, link cards, quoted posts and linked domains. Ambiguous posts lean on what you usually save from that author. You can add keywords, create your own categories and re-sort at any time, and manual choices are never overwritten.
-    </td>
-    <td valign="top">
-      <h3>✨ Optional AI, free</h3>
-      Open models on <b>NVIDIA's free API</b> pick categories, add topical tags and write one-line gists. Paste your own free <code>nvapi-…</code> key from <a href="https://build.nvidia.com">build.nvidia.com</a> (no credit card; your browser talks to NVIDIA directly), or use <b>twtdash Pro</b> (hosted, no key). You can choose Nemotron 3.5 Lightning, DeepSeek V4.1 Flash, Nemotron 3 Super or Kimi K2.6.
-    </td>
+    <td><img src="docs/screenshots/insights-dark.webp" alt="Insights: saves over time, category mix and top authors" /><p align="center"><sub><b>Insights</b></sub></p></td>
+    <td><img src="docs/screenshots/command-palette.webp" alt="Command palette searching across posts and screens" /><p align="center"><sub><b>Command palette</b></sub></p></td>
   </tr>
   <tr>
-    <td valign="top">
-      <h3>🗂️ Four layouts</h3>
-      Masonry <b>grid</b>, dense <b>list</b>, <b>table</b> and a media <b>gallery</b>, all virtualized. A detail panel holds notes, tags, collections and more posts from the same author. Bulk actions, star, read/unread and archive are all here, with dark and light themes.
-    </td>
-    <td valign="top">
-      <h3>🔎 Instant search with operators</h3>
-      Search covers text, authors, notes, tags and link titles, and results update with every keystroke. You can combine operators, exact <code>"phrases"</code> and <code>-exclusions</code>. Press <kbd>Ctrl</kbd>/<kbd>⌘</kbd> <kbd>K</kbd> for a command palette that jumps to any post, category or screen.
-    </td>
+    <td><img src="docs/screenshots/home-light.webp" alt="Home in the light theme" /><p align="center"><sub><b>Light theme</b></sub></p></td>
+    <td><img src="docs/screenshots/settings-ai.webp" alt="AI settings with your own free key or Pro" /><p align="center"><sub><b>AI settings</b></sub></p></td>
   </tr>
   <tr>
-    <td valign="top">
-      <h3>📊 Insights</h3>
-      Saves over time (with a table view), your category mix, the authors you learn from most, content types, when you save and your most popular saves. Every panel follows one date-range filter.
-    </td>
-    <td valign="top">
-      <h3>📤 Export and own your data</h3>
-      Export <b>Markdown</b> grouped by category (works with Obsidian and Notion), Excel-safe UTF-8 <b>CSV</b>, or a full <b>JSON</b> backup you can merge back in on any device.
-    </td>
+    <td><img src="docs/screenshots/welcome.webp" alt="Welcome screen for a new library" /><p align="center"><sub><b>Welcome</b></sub></p></td>
+    <td align="center"><img src="docs/screenshots/popup.webp" alt="Toolbar popup with counts, search and sync" width="60%" /><p align="center"><sub><b>Toolbar popup</b></sub></p></td>
   </tr>
 </table>
 
-<br />
+## Install
 
-## ✦ Screenshots
+> No X account handy? Open the dashboard and choose **Explore with sample data** to try everything on a fictional library.
 
-<table>
-  <tr>
-    <td width="50%"><img src="docs/screenshots/home-dark.webp" alt="Home: stats, rediscover, categories and recent saves" /><p align="center"><sub><b>Home</b>: what's new, what to rediscover, where your saves go</sub></p></td>
-    <td width="50%"><img src="docs/screenshots/detail-dark.webp" alt="Detail panel with category, collections, tags and notes" /><p align="center"><sub><b>Detail panel</b>: notes, tags, collections, more from the author</sub></p></td>
-  </tr>
-  <tr>
-    <td><img src="docs/screenshots/command-palette.webp" alt="Command palette searching for design" /><p align="center"><sub><b>Command palette</b>: <kbd>⌘K</kbd> to any post, category or screen</sub></p></td>
-    <td><img src="docs/screenshots/insights-dark.webp" alt="Insights: saves over time, category mix, top authors" /><p align="center"><sub><b>Insights</b>: your reading habits, at a glance</sub></p></td>
-  </tr>
-  <tr>
-    <td><img src="docs/screenshots/home-light.webp" alt="Home in the light theme" /><p align="center"><sub><b>Light theme</b>: follows your system, or pick one</sub></p></td>
-    <td><img src="docs/screenshots/settings-ai.webp" alt="AI settings: bring your own key or twtdash Pro" /><p align="center"><sub><b>AI settings</b>: your own key, or Pro with no key</sub></p></td>
-  </tr>
-  <tr>
-    <td><img src="docs/screenshots/welcome.webp" alt="Welcome screen for a new library" /><p align="center"><sub><b>Onboarding</b>: sync, or explore with sample data</sub></p></td>
-    <td align="center"><img src="docs/screenshots/popup.webp" alt="Toolbar popup with counts and top categories" width="62%" /><p align="center"><sub><b>Toolbar popup</b>: sync, search and stats in one click</sub></p></td>
-  </tr>
-</table>
+**Chrome, Edge, Brave, Arc, Opera**
 
-<br />
+1. Download [`twtdash-chrome.zip`](https://twtdash.vercel.app/downloads/twtdash-chrome.zip) and unzip it.
+2. Open `chrome://extensions` (or `edge://extensions`, `brave://extensions`) and turn on **Developer mode**.
+3. Choose **Load unpacked** and select the unzipped folder.
+4. Pin twtdash from the extensions menu.
+5. Sign in to x.com, click the twtdash icon and choose **Sync my bookmarks**. Keep the X tab visible while it scrolls; it takes about a minute per 1,000 bookmarks.
 
-## ✦ Install in 60 seconds
+<kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> opens the dashboard from anywhere.
 
-> **No X account handy?** Open the dashboard and click **Explore with sample data** to try everything on a fictional library.
-
-### Chrome · Edge · Brave · Arc · Opera
-
-1. Download [`twtdash-chrome.zip`](https://twtdash.vercel.app/downloads/twtdash-chrome.zip) and unzip it. Alternatively, clone this repo and use [`release/twtdash-extension/`](release/twtdash-extension).
-2. Open `chrome://extensions` (or `edge://extensions` / `brave://extensions`) and turn on **Developer mode**.
-3. Click **Load unpacked** and select the unzipped folder.
-4. Pin **twtdash** from the puzzle-piece menu.
-5. Log in to **x.com**, click the twtdash icon, then **Sync my bookmarks**. Keep the X tab visible while it scrolls; that takes about a minute per 1,000 bookmarks.
-
-Press <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> to open the dashboard from anywhere.
-
-### Firefox 128+
+**Firefox 128+**
 
 1. Download [`twtdash-firefox.zip`](https://twtdash.vercel.app/downloads/twtdash-firefox.zip) and unzip it.
-2. Open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on…**, and pick `manifest.json`.
+2. Open `about:debugging#/runtime/this-firefox`, choose **Load Temporary Add-on…** and pick `manifest.json`.
 
-Firefox removes temporary add-ons on restart. A permanent install needs the add-on published on [addons.mozilla.org](https://addons.mozilla.org); see [Publishing](#-publishing-to-the-stores).
+Firefox removes temporary add-ons on restart until twtdash is published on addons.mozilla.org.
 
-<br />
+## How sync works
 
-## ✦ How sync works
-
-twtdash never calls X on your behalf and never changes a request. It **reads the GraphQL responses that x.com already loads** while you look at your bookmarks, the same data your browser is rendering.
+twtdash never calls X on your behalf and never changes a request. It reads the responses x.com already loads while you look at your bookmarks.
 
 ```mermaid
 flowchart LR
   subgraph tab["x.com tab"]
     direction TB
-    main["x-main.content.ts<br/>MAIN world<br/>observes fetch / XHR responses"]
-    bridge["x-bridge.content<br/>isolated world<br/>auto-scroll · progress overlay · toasts"]
+    main["x-main.content.ts<br/>observes fetch / XHR responses"]
+    bridge["x-bridge.content<br/>auto-scroll · progress · toasts"]
     main -- postMessage --> bridge
   end
-  bridge -- runtime message --> bg["background.ts<br/>service worker<br/>parse → classify → merge → order"]
-  bg --> db[("IndexedDB<br/>Dexie 4")]
-  db -- incremental live deltas --> ui["Dashboard · Popup<br/>React 19"]
-  ui -. optional .-> ai["NVIDIA API (free)<br/>your key or Pro"]
+  bridge -- runtime message --> bg["background.ts<br/>parse → classify → merge"]
+  bg --> db[("IndexedDB")]
+  db -- live updates --> ui["Dashboard · Popup"]
+  ui -. optional .-> ai["NVIDIA API<br/>your key or Pro"]
 ```
 
-| Captured operation | What twtdash does with it |
+| X operation | What twtdash does |
 |---|---|
-| `Bookmarks`, `BookmarkFolderTimeline` | Imports posts, keeps your bookmark order, maps folders to collections |
-| `CreateBookmark` / `DeleteBookmark` | Adds the post instantly, or removes it if mirroring is on |
+| `Bookmarks`, `BookmarkFolderTimeline` | Imports posts in your bookmark order; folders become collections |
+| `CreateBookmark`, `DeleteBookmark` | Adds a post instantly, or removes it if you choose |
 | `Likes`, `FavoriteTweet` | Optional likes import and live capture |
-| `BookmarkFoldersSlice` | Discovers your X Premium bookmark folders |
+| `BookmarkFoldersSlice` | Finds your X Premium bookmark folders |
 
-**It's built to survive X changes.**
+The [parser](apps/extension/src/lib/parse.ts) handles current and older X data shapes, deleted posts, long posts, quotes, polls, cards and articles, and is tested against recorded responses. If X changes its web app, the fix is limited to the parser and the list of operation names; your saved library is never at risk.
 
-- The [defensive parser](apps/extension/src/lib/parse.ts) handles both the current and legacy user schemas, plus visibility wrappers, tombstones, long-form note posts, quotes, retweets, cards, polls and articles. Unit tests cover it against fixtures.
-- Bookmark order comes from decoding X's `sortIndex` snowflake (with plausibility checks), and falls back to the timeline order.
-- When X renames something, only `parse.ts` and the operation names in `x-main.content.ts` need updating. Your saved library is never at risk.
-
-<br />
-
-## ✦ Search operators
+## Search and shortcuts
 
 | Operator | Example | Matches |
 |---|---|---|
-| `from:` | `from:mayabuilds` | Posts by an author (also `by:`) |
-| `cat:` | `cat:ai` | A category (also `category:`) |
+| `from:` | `from:mayabuilds` | Posts by an author |
+| `cat:` | `cat:ai` | A category |
 | `tag:` | `tag:agents` | A tag |
 | `in:` | `in:"Read later"` | A collection |
-| `has:` | `has:video` | `media` `image` `video` `gif` `link` `poll` `note` `summary` `tags` |
-| `is:` | `is:thread` | `thread` `reply` `quote` `long` `article` `starred` `unread` `read` `archived` `liked` `ai` `uncategorized` |
-| `after:` / `before:` | `after:30d` · `before:2026-01-01` | Saved in a date range (relative or absolute) |
-| `min_likes:` / `min_views:` | `min_likes:1k` | Popularity thresholds |
-| `domain:` | `domain:github.com` | Linked site (also `site:` / `url:`) |
-| `lang:` | `lang:en` | Post language |
-| `"…"` / `-` | `"system design" -crypto` | Exact phrase / exclude |
+| `has:` | `has:video` | `media` `image` `video` `link` `poll` `note` `summary` `tags` |
+| `is:` | `is:thread` | `thread` `reply` `quote` `long` `starred` `unread` `archived` `liked` |
+| `after:` `before:` | `after:30d` | A date range, relative or absolute |
+| `min_likes:` `min_views:` | `min_likes:1k` | Popularity thresholds |
+| `domain:` | `domain:github.com` | A linked site |
+| `"…"` `-` | `"system design" -crypto` | Exact phrase, exclusion |
 
 <details>
-<summary><b>⌨️ Keyboard shortcuts</b></summary>
+<summary>Keyboard shortcuts</summary>
 <br />
 
-| Keys | Action | | Keys | Action |
-|---|---|---|---|---|
-| <kbd>⌘/Ctrl</kbd> <kbd>K</kbd> | Command palette | | <kbd>S</kbd> | Star / unstar |
-| <kbd>/</kbd> | Search | | <kbd>R</kbd> | Mark read / unread |
-| <kbd>J</kbd> / <kbd>K</kbd> | Next / previous post | | <kbd>E</kbd> | Archive |
-| <kbd>↵</kbd> | Open details | | <kbd>X</kbd> | Select |
-| <kbd>O</kbd> | Open on X | | <kbd>1</kbd>–<kbd>4</kbd> | Grid · List · Table · Gallery |
-| <kbd>G</kbd> <kbd>H</kbd> / <kbd>A</kbd> / <kbd>U</kbd> / <kbd>I</kbd> | Home / All / Unread / Insights | | <kbd>Esc</kbd> | Close / clear selection |
-| <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>S</kbd> | Open dashboard (global) | | <kbd>?</kbd> | Shortcut help |
-
-</details>
-
-<br />
-
-## ✦ Performance
-
-These benchmarks are production builds with a **10,000-post library** and **4× CPU throttling** (a mid-range laptop), median of 3 runs. Each fix was measured on its own before and after, and the fixes that didn't help were reverted. The method, stage-by-stage tables and trade-offs are in **[PERFORMANCE.md](PERFORMANCE.md)**.
-
-| Metric | Before | After | |
-|---|---:|---:|---|
-| Startup → library on screen | 43.0 s | **12.9 s** | 3.3× faster |
-| Reach the oldest post | never (> 60 s) | **3.3 s** | now possible |
-| Popup open → counts | 30.3 s | **7.3 s** | 4.2× faster |
-| Star a post → UI updated | 3.3 s | **1.1 s** | 3× faster |
-| Switch → Library | 5.2 s | **2.9 s** | 1.8× faster |
-| Search keystroke → results | 2.0 s | **1.3 s** | 1.5× faster |
-| DOM nodes after scrolling | 4,731 | **1,811** | −62 % |
-| JS heap | 55 MB | **26 MB** | −53 % |
-| JS shipped | 1,648 KB | **1,157 KB** | −30 % |
-
-**At full speed on a normal PC:** first content in **1.09 s**, star in **79 ms**, search at **108 ms** per keystroke, scrolling at **59.5 FPS** with zero janky frames, and a jump to the oldest of 10,000 posts in **81 ms**.
-
-The biggest wins came from:
-
-- replacing a full-text index build with lazy scan search;
-- an incremental IndexedDB store (first 150 posts, then streamed pages, then `updatedAt` deltas);
-- virtualized layouts;
-- index-only counts;
-- code-splitting the AI SDK and charts;
-- swapping recharts for a small custom SVG chart.
-
-<br />
-
-## ✦ Architecture
-
-```
-twt/
-├── apps/
-│   ├── extension/            The product: WXT · React 19 · Tailwind v4 · Dexie (MV3, Chrome + Firefox)
-│   │   ├── src/entrypoints/  background worker, x.com content scripts, dashboard, popup
-│   │   ├── src/lib/          parser, classifier, query language, scan search, incremental store, AI, licensing
-│   │   ├── src/components/   virtualized masonry/list/table/gallery, cards, detail panel, ⌘K palette
-│   │   ├── src/views/        Home · Library · Insights · Settings · Welcome
-│   │   ├── preview/          runs the UI in a normal tab with a fake extension API + 10k-post bench data
-│   │   └── bench/            benchmark, CPU-profile/trace analysis, smoke test, README screenshots
-│   └── web/                  Next.js 16: landing, install guide, privacy/terms, and the Pro API
-├── packages/shared/          category taxonomy, AI prompt + transport + parser, API contract, brand
-├── release/                  prebuilt, ready-to-load extension + store zips
-├── docs/screenshots/
-├── PERFORMANCE.md            the performance investigation, with before/after numbers
-└── STORE_LISTING.md          Chrome Web Store / AMO listing copy + permission justifications
-```
-
-| Layer | Stack |
-|---|---|
-| Extension framework | [WXT](https://wxt.dev) 0.21, Manifest V3 for Chrome and Firefox |
-| UI | React 19, Tailwind CSS v4, Radix UI, cmdk, sonner, lucide, Geist + Instrument Serif |
-| State and storage | Dexie 4 (IndexedDB) with compound indexes, zustand, an incremental live-delta store |
-| Search | Custom operator parser + cached lowercase scan, warmed in idle time |
-| AI | NVIDIA's free OpenAI-compatible API (`integrate.api.nvidia.com`) via a 4 KB `fetch` client, with tolerant JSON extraction and batch splitting |
-| Website and API | Next.js 16 on Vercel: `/api/health`, `/api/categorize`, `/api/license/{activate,validate}` |
-| Billing | LemonSqueezy License API |
-| Quality | Vitest (57 tests, plus an opt-in live NVIDIA check), TypeScript strict, a puppeteer smoke test (15 checks), a reproducible benchmark harness |
-
-<br />
-
-## ✦ Development
-
-Requires **Node 20.9+** (22 recommended). Each app keeps its own lockfile, and `@twtdash/shared` is linked with `file:`.
-
-```bash
-npm run install:all      # install apps/extension and apps/web
-npm run ext:dev          # launch Chrome with the extension + hot reload (ext:dev:firefox for Firefox)
-npm run ext:preview      # dashboard in a normal tab with a fake extension API
-                         #   http://localhost:5199/?demo    sample library
-                         #   http://localhost:5199/?popup   toolbar popup
-                         #   http://localhost:5199/?bench=10000   synthetic 10k-post library
-npm run ext:test         # 57 unit tests: parser, categorizer, query language, search, ingest, AI
-NVIDIA_API_KEY=nvapi-… npm run ext:test:live   # optional: real requests through every offered model
-npm run ext:typecheck
-npm run ext:zip          # Chrome + Firefox zips (+ Firefox sources zip) in apps/extension/.output
-npm run web:dev          # website + API on http://localhost:3000
-npm run release          # test → zip → copy zips into apps/web/public/downloads → build site
-```
-
-<details>
-<summary><b>Benchmarks, profiling and screenshots</b></summary>
-<br />
-
-All of these use your installed Chrome through `puppeteer-core`:
-
-```bash
-cd apps/extension
-node bench/run.mjs my-change --runs 3 --cpu 4   # full benchmark → bench/results/<label>.json
-node bench/summary.mjs                          # before/after table across stages
-node bench/smoke.mjs                            # 15 end-to-end interaction checks
-node bench/profile.mjs                          # CPU profile of startup
-node bench/trace.mjs --nav                      # performance trace of screen switches
-node bench/screenshots.mjs                      # regenerate docs/screenshots/*.webp
-```
-
-</details>
-
-<br />
-
-## ✦ twtdash Pro and the hosted API
-
-Free includes everything except hosted AI. **Pro** ($5/mo or $48/yr; prices live in [`packages/shared/src/brand.ts`](packages/shared/src/brand.ts)) adds hosted AI categorization, auto-tags and gists without the user needing a key.
-
-1. Create a product in **LemonSqueezy** with license keys enabled.
-2. Deploy `apps/web` to Vercel with **root directory `apps/web`**, and set these environment variables:
-
-   | Variable | Purpose |
-   |---|---|
-   | `NVIDIA_API_KEY` | Free `nvapi-…` key from [build.nvidia.com](https://build.nvidia.com). Required for `/api/categorize` |
-   | `TWTDASH_AI_MODEL` | Optional. Defaults to `nvidia/nemotron-3.5-lightning-30b-a3b` |
-   | `AI_BASE_URL` | Optional. Any OpenAI-compatible endpoint; defaults to NVIDIA's free API |
-   | `LEMONSQUEEZY_STORE_ID` | Rejects license keys from other stores |
-   | `LEMONSQUEEZY_PRODUCT_IDS` | Optional comma-separated product allow-list |
-   | `NEXT_PUBLIC_CHECKOUT_URL` | Your LemonSqueezy checkout link |
-   | `NEXT_PUBLIC_CHROME_STORE_URL` / `NEXT_PUBLIC_FIREFOX_ADDON_URL` | Store buttons, once you're listed |
-   | `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata and OG images |
-
-3. The extension talks to `https://twtdash.vercel.app` by default. For a different deployment, build with `WXT_API_BASE=https://your-domain` (see [`apps/extension/.env.example`](apps/extension/.env.example)).
-4. Customers paste their license key in **Settings → Plan**. The extension activates it through `/api/license/activate`, then calls `/api/categorize` with the key and its instance id.
-
-`GET /api/health` reports whether AI and licensing are configured. Rate limits are in-memory per server instance, so move them to Upstash or Redis before you scale.
-
-**To test Pro end to end locally:**
-
-1. Set `TWTDASH_DEV_LICENSE=dev-key` and `NVIDIA_API_KEY` in `apps/web/.env.local`.
-2. Run `npm run web:dev`.
-3. Build the extension with `WXT_API_BASE=http://localhost:3000`.
-4. Activate the license key `dev-key`.
-
-More detail is in [`apps/web/README.md`](apps/web/README.md).
-
-<br />
-
-## ✦ Runs on a $0 stack
-
-Every service twtdash depends on has a free tier, and none of them needs a credit card.
-
-| Need | Service | Cost | Notes |
+| Keys | Action | Keys | Action |
 |---|---|---|---|
-| AI (each user's own key) | [NVIDIA API catalog](https://build.nvidia.com) | Free | Rate-limited, roughly 40 requests/min per key; twtdash sends 20 posts per request |
-| AI (hosted Pro) | NVIDIA API catalog | Free | Your own `NVIDIA_API_KEY` on the server. See the caveat below |
-| Website and API | [Vercel](https://vercel.com) Hobby | Free | Serves `twtdash.vercel.app`, so you don't need to buy a domain |
-| Payments and licenses | [Lemon Squeezy](https://lemonsqueezy.com) | Free to set up | No monthly fee or API key; Lemon Squeezy only takes a cut of each sale |
-| Support | [GitHub Issues](https://github.com/ayushman46/twt/issues) | Free | Linked from the extension, the site and the legal pages |
-| Distribution | Direct zip download · [Firefox AMO](https://addons.mozilla.org/developers/) · [Edge Add-ons](https://partner.microsoft.com/dashboard/microsoftedge/) | Free | The Chrome Web Store is the one exception, with a one-time $5 developer fee |
-| Code, CI and releases | GitHub | Free | |
+| <kbd>Ctrl</kbd>/<kbd>⌘</kbd> <kbd>K</kbd> | Command palette | <kbd>S</kbd> | Star |
+| <kbd>/</kbd> | Search | <kbd>R</kbd> | Read / unread |
+| <kbd>J</kbd> <kbd>K</kbd> | Next / previous post | <kbd>E</kbd> | Archive |
+| <kbd>Enter</kbd> | Open post | <kbd>X</kbd> | Select |
+| <kbd>O</kbd> | Open on X | <kbd>1</kbd>–<kbd>4</kbd> | Grid, list, table, gallery |
+| <kbd>G</kbd> then <kbd>H</kbd> <kbd>A</kbd> <kbd>U</kbd> <kbd>I</kbd> <kbd>R</kbd> <kbd>L</kbd> | Home, all, unread, insights, Recall, Shelf | <kbd>Esc</kbd> | Close |
+| <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>S</kbd> | Open the dashboard | <kbd>?</kbd> | All shortcuts |
 
-> [!IMPORTANT]
-> **Free tiers come with usage terms.**
-> - NVIDIA's free API falls under the [NVIDIA API Trial Terms](https://build.nvidia.com), which cover development and evaluation. If users bring their own keys, each person's use is their own. If you serve paying Pro customers from one shared key, that counts as production use. Before you charge for hosted AI, point `AI_BASE_URL` at a production-licensed provider.
-> - Vercel's Hobby plan is for non-commercial use. A free product is fine on it. Once you sell Pro, upgrade, or move to a host whose free tier allows commercial use.
+</details>
 
-<br />
-
-## ✦ Publishing to the stores
-
-- [ ] Replace the placeholder domain and emails in [`packages/shared/src/brand.ts`](packages/shared/src/brand.ts). The stores require the privacy policy the site serves at `/privacy`.
-- [ ] **Chrome Web Store:** upload `twtdash-extension-*-chrome.zip`, and copy the listing text and permission justifications from [`STORE_LISTING.md`](STORE_LISTING.md).
-- [ ] **Firefox AMO:** upload the Firefox zip together with the generated sources zip.
-- [ ] Set `NEXT_PUBLIC_CHROME_STORE_URL` / `NEXT_PUBLIC_FIREFOX_ADDON_URL` so the site's install buttons point to the listings.
-
-<br />
-
-## ✦ Privacy and permissions
+## Privacy and permissions
 
 | Permission | Why |
 |---|---|
 | `storage`, `unlimitedStorage` | Your library is stored locally in IndexedDB; large libraries need more than the default quota |
 | `x.com`, `twitter.com` | Reads the bookmark data X loads in your own tab; never sends requests on your behalf |
-| `integrate.api.nvidia.com` *(optional)* | Requested only when you add your own NVIDIA key |
+| `integrate.api.nvidia.com` (optional) | Requested only when you add your own NVIDIA key |
+| Microphone (browser prompt) | Asked only when you press the voice button; twtdash receives only the recognized text |
 
-There are no analytics, no trackers and no remote code. Nothing leaves your browser unless you turn on AI, and then only the post content needed to categorize it (text, author, link titles) goes to NVIDIA's API or the Pro API.
+There are no analytics, trackers or remote code. With AI turned on, only what a feature needs is sent: post text, author and link titles to sort posts; your question and up to 20 matching posts for Ask; the text of a post you translate.
+
+## Performance
+
+Measured on production builds with a 10,000-post library and 4× CPU throttling (a mid-range laptop), median of three runs. Every change was measured before and after, and changes that didn't help were reverted. The method and full tables are in [PERFORMANCE.md](PERFORMANCE.md).
+
+| Metric | Before | After |
+|---|---:|---:|
+| Startup to library on screen | 43.0 s | **12.9 s** |
+| Reach the oldest post | never (> 60 s) | **3.3 s** |
+| Popup open to counts | 30.3 s | **7.3 s** |
+| Star a post | 3.3 s | **1.1 s** |
+| Search keystroke | 2.0 s | **1.3 s** |
+| JavaScript heap | 55 MB | **26 MB** |
+
+At full speed on a normal PC: first content in 1.09 s, search at 108 ms per keystroke, scrolling at 59.5 FPS with no janky frames, and a jump to the oldest of 10,000 posts in 81 ms.
+
+## Pro and the hosted API
+
+Free includes everything. Pro ($5 a month or $48 a year; ₹99 or ₹799 in India) adds AI sorting, tags, summaries, Ask and translation without needing your own key.
+
+Deploy `apps/web` to Vercel with the root directory set to `apps/web`, then set:
+
+| Variable | Purpose |
+|---|---|
+| `NVIDIA_API_KEY` | Free key from [build.nvidia.com](https://build.nvidia.com); powers `/api/categorize` and `/api/ask` |
+| `LEMONSQUEEZY_STORE_ID` | Accepts license keys from your store only |
+| `NEXT_PUBLIC_CHECKOUT_URL` | Your Lemon Squeezy checkout link |
+| `TWTDASH_AI_MODEL`, `AI_BASE_URL` | Optional: a different model or OpenAI-compatible provider |
+| `LEMONSQUEEZY_PRODUCT_IDS`, `NEXT_PUBLIC_CHECKOUT_URL_INR` | Optional: product allow-list, rupee checkout |
+
+`GET /api/health` reports whether AI and licensing are configured. Free tiers have terms: NVIDIA's free API is meant for development and evaluation, so move hosted Pro AI to a production-licensed provider before charging for it, and Vercel's free plan is for non-commercial use. More detail is in [`apps/web/README.md`](apps/web/README.md).
+
+## Development
+
+Node 20.9 or later (22 recommended).
+
+```bash
+npm run install:all      # install the extension and the website
+npm run ext:dev          # Chrome with the extension and hot reload
+npm run ext:preview      # the dashboard in a normal tab: /?demo, /?popup, /?bench=10000
+npm run ext:test         # unit tests
+npm run ext:typecheck
+npm run ext:zip          # Chrome and Firefox packages
+npm run web:dev          # the website and API on http://localhost:3000
+npm run release          # test, package, copy the downloads and build the site
+```
+
+<details>
+<summary>Tests, benchmarks and screenshots</summary>
+<br />
+
+```bash
+cd apps/extension
+node bench/e2e/run.mjs                 # end-to-end browser tests (routes, library, bulk, data, theme, popup, mobile, stress…)
+node bench/qa/a11y.mjs --build         # accessibility audit with axe-core
+node bench/demo-video.mjs              # re-record the demo video
+PERF_TESTS=1 npx vitest run            # include the timing tests
+NVIDIA_API_KEY=nvapi-… npm run test:live   # real requests through every AI model
+node bench/run.mjs my-change --runs 3  # performance benchmark
+node bench/screenshots.mjs             # regenerate docs/screenshots
+node bench/ui-shots.mjs <dir>          # screenshots for design review
+```
+
+</details>
+
+<details>
+<summary>Architecture</summary>
+<br />
+
+```
+apps/extension     the product — WXT, React 19, Tailwind CSS v4, Dexie (Manifest V3, Chrome and Firefox)
+apps/web           the website, install guide, legal pages and the Pro API — Next.js 16
+packages/shared    categories, AI prompts and transport, API contract, brand
+release/           ready-to-load extension and store packages
+docs/              screenshots and the demo video
+```
+
+</details>
+
+## Known limitations
+
+- Sync depends on X's private web app, which can change without notice. The parser is defensive and the code that would need updating is small.
+- Search matches words and prefixes, not typos. That trade-off keeps large libraries fast.
+- The Firefox build is a temporary add-on until it's published on addons.mozilla.org.
+- Voice search needs Chrome, Edge or Safari and a connection; Firefox has no speech recognition.
+- The eight beta languages still need review by native speakers.
+
+## License
+
+twtdash is proprietary software. **All rights reserved.** You may view the source on GitHub and use the official extension, but you may not copy, modify, redistribute, republish or reuse any part of it, its design or its name without written permission. See [LICENSE](LICENSE). To ask about a use, [open an issue](https://github.com/ayushman46/twt/issues).
 
 <br />
 
-## ✦ Known limitations
-
-- Sync depends on **X's private web API**, which can change without notice. The parser is defensive, and the code that would need updating is isolated to a few files.
-- Search uses substring and prefix matching, not typo-tolerant fuzzy matching. That trade-off is what makes a 10,000-post library start 3.3× faster.
-- The Firefox build loads as a temporary add-on until it's published on AMO.
-- AI quality depends on the open model you pick. Smaller models sometimes return malformed JSON for a batch; twtdash splits that batch and retries instead of failing the run.
-
-<br />
-
-<div align="center">
-
-<img src="docs/screenshots/landing.webp" alt="The twtdash website" width="100%" />
-
-<br />
-<br />
-
-**[twtdash.vercel.app](https://twtdash.vercel.app)**
-
-<sub>twtdash is an independent project and is not affiliated with, endorsed by, or sponsored by X Corp. "X" and "Twitter" are trademarks of X Corp.</sub>
-
-<sub>© 2026 twtdash. All rights reserved.</sub>
-
-</div>
+<p align="center"><sub>twtdash is an independent project and is not affiliated with, endorsed by or sponsored by X Corp. "X" and "Twitter" are trademarks of X Corp.<br />© 2026 ayushman46</sub></p>

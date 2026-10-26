@@ -2,6 +2,7 @@
   "name": "@twtdash/shared",
   "version": "1.0.0",
   "private": true,
+  "license": "UNLICENSED",
   "description": "Shared taxonomy, AI prompt and API contract for twtdash",
   "type": "module",
   "main": "./src/index.ts",

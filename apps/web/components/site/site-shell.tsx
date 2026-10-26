@@ -17,7 +17,7 @@ export function SiteShell({ dict, children }: { dict: Dictionary; children: Reac
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-ink"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[200] focus:rounded-lg focus:bg-fg focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-bg"
       >
         {dict.shell.skipToContent}
       </a>
@@ -26,7 +26,6 @@ export function SiteShell({ dict, children }: { dict: Dictionary; children: Reac
         {children}
       </main>
       <SiteFooter locale={dict.locale} t={dict.footer} homeAria={dict.header.homeAria} />
-      <div aria-hidden="true" className="noise-overlay" />
     </>
   );
 }

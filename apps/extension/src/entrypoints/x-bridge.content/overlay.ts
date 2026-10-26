@@ -8,53 +8,53 @@
  */
 import { OVERLAY_EN, overlayStringsItem, type OverlayKey, type OverlayStrings } from '@/i18n/overlay-en';
 
-const LOGO = `<svg viewBox="0 0 128 128" width="100%" height="100%" aria-hidden="true"><defs><linearGradient id="sxo-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7B61FF"/><stop offset=".55" stop-color="#B14CF2"/><stop offset="1" stop-color="#FF5C9D"/></linearGradient><linearGradient id="sxo-gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><linearGradient id="sxo-mk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6D4BFF"/><stop offset="1" stop-color="#E0479A"/></linearGradient></defs><rect width="128" height="128" rx="30" fill="url(#sxo-bg)"/><rect width="128" height="64" rx="30" fill="url(#sxo-gl)"/><rect x="31" y="27" width="56" height="74" rx="10" fill="#fff" fill-opacity=".28" transform="rotate(-10 59 64)"/><path d="M44 24h44a7 7 0 0 1 7 7v71.2a3.2 3.2 0 0 1-5 2.6L66 88 42 104.8a3.2 3.2 0 0 1-5-2.6V31a7 7 0 0 1 7-7z" fill="#fff"/><path d="M53 41.5Q66 51.5 79 41.5Q69 54.5 79 67.5Q66 57.5 53 67.5Q63 54.5 53 41.5Z" fill="url(#sxo-mk)"/></svg>`;
+const LOGO = `<svg viewBox="0 0 128 128" width="100%" height="100%" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#3D5BD9"/><path transform="translate(-2 0)" d="M44 24h44a7 7 0 0 1 7 7v71.2a3.2 3.2 0 0 1-5 2.6L66 88 42 104.8a3.2 3.2 0 0 1-5-2.6V31a7 7 0 0 1 7-7z" fill="#fff"/><rect x="52" y="49" width="24" height="9" rx="4.5" fill="#3D5BD9"/></svg>`;
 
 const CSS = `
 :host { all: initial; }
 * { box-sizing: border-box; }
 .layer { position: fixed; inset: auto 0 0 auto; z-index: 2147483646; font: 14px/1.4 'Geist Variable', Geist, Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Nirmala UI", "Noto Sans", "Noto Sans Devanagari", "Noto Sans Bengali", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Kohinoor Devanagari", "Kohinoor Bangla", "Tamil Sangam MN", "Telugu Sangam MN", "Kannada Sangam MN", "Malayalam Sangam MN", "Gujarati Sangam MN", "Gurmukhi MN", Mangal, sans-serif; color: #F4F4F6; -webkit-font-smoothing: antialiased; }
-.layer:not(:lang(en)) .title, .layer:not(:lang(en)) .stat b { letter-spacing: normal; }
+.layer:not(:lang(en)) .title, .layer:not(:lang(en)) .stat b { display: block; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
 .layer:not(:lang(en)) { line-height: 1.5; }
-.card { position: fixed; right: 20px; bottom: 20px; width: 336px; padding: 16px; border-radius: 20px; background: rgba(14,14,20,.9); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); border: 1px solid rgba(255,255,255,.09); box-shadow: 0 24px 60px -16px rgba(0,0,0,.6), 0 0 0 1px rgba(150,110,255,.12), 0 0 50px -20px rgba(150,80,255,.45); transform: translateY(12px) scale(.98); opacity: 0; transition: transform .28s cubic-bezier(.2,.9,.3,1.2), opacity .2s ease; }
+.card { position: fixed; right: 20px; bottom: 20px; width: 336px; padding: 16px; border-radius: 14px; background: #141416; border: 1px solid rgba(255,255,255,.08); box-shadow: 0 24px 64px -16px rgba(0,0,0,.7); transform: translateY(8px); opacity: 0; transition: transform .22s cubic-bezier(.16,1,.3,1), opacity .18s ease-out; }
 .card.show { transform: none; opacity: 1; }
 .row { display: flex; align-items: center; gap: 12px; }
-.logo { width: 36px; height: 36px; flex: none; border-radius: 10px; filter: drop-shadow(0 6px 14px rgba(150,80,255,.55)); }
-.title { font-weight: 650; font-size: 14.5px; letter-spacing: -.01em; }
-.sub { color: #A1A1AA; font-size: 12.5px; margin-top: 1px; }
+.logo { width: 32px; height: 32px; flex: none; border-radius: 8px; overflow: hidden; }
+.title { font-weight: 600; font-size: 14px; letter-spacing: -.01em; }
+.sub { color: #8F8F8A; font-size: 12.5px; margin-top: 1px; }
 .count { font-variant-numeric: tabular-nums; }
-.bar { position: relative; height: 6px; margin: 14px 0 12px; border-radius: 99px; background: rgba(255,255,255,.07); overflow: hidden; }
-.bar > i { position: absolute; inset: 0 auto 0 0; width: 38%; border-radius: inherit; background: linear-gradient(90deg,#7B61FF,#B14CF2,#FF5C9D); animation: slide 1.25s ease-in-out infinite; }
+.bar { position: relative; height: 3px; margin: 14px 0 12px; border-radius: 99px; background: rgba(255,255,255,.08); overflow: hidden; }
+.bar > i { position: absolute; inset: 0 auto 0 0; width: 38%; border-radius: inherit; background: #7F8FFF; animation: slide 1.4s ease-in-out infinite; }
 .bar.full > i { width: 100%; animation: none; }
-.bar.error > i { width: 100%; animation: none; background: #F87171; }
+.bar.error > i { width: 100%; animation: none; background: #FF7A70; }
 .bar.paused > i { animation-play-state: paused; opacity: .5; }
 @keyframes slide { 0% { left: -38%; } 100% { left: 100%; } }
 .stats { display: flex; gap: 8px; margin-bottom: 12px; }
-.stat { flex: 1; padding: 8px 10px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06); }
+.stat { flex: 1; padding: 8px 10px; border-radius: 10px; background: #1A1A1D; border: 1px solid rgba(255,255,255,.06); }
 .stat b { display: block; font-size: 17px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
-.stat span { color: #A1A1AA; font-size: 11.5px; }
-.hint { color: #8B8B95; font-size: 12px; margin: -2px 0 12px; }
+.stat span { color: #8F8F8A; font-size: 11.5px; }
+.hint { color: #8F8F8A; font-size: 12px; margin: -2px 0 12px; }
 .actions { display: flex; gap: 8px; }
-button { all: unset; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: 10px; font: 600 13px/1.2 Inter, ui-sans-serif, system-ui, "Nirmala UI", "Noto Sans", "Noto Sans Devanagari", "Kohinoor Devanagari", Mangal, sans-serif; white-space: nowrap; transition: background .15s, transform .1s; }
-button:active { transform: scale(.97); }
-button:focus-visible { outline: 2px solid #A996FF; outline-offset: 2px; }
-.primary { flex: 1; background: linear-gradient(135deg,#7B61FF 0%,#B14CF2 60%,#FF5C9D 130%); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 8px 20px -8px rgba(150,80,255,.85); }
-.primary:hover { filter: brightness(1.08); }
-.ghost { background: rgba(255,255,255,.06); color: #E4E4E7; }
+button { all: unset; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: 8px; font: 500 13px/1.2 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Nirmala UI", "Noto Sans", "Noto Sans Devanagari", "Kohinoor Devanagari", Mangal, sans-serif; white-space: nowrap; transition: background-color .15s ease-out, transform .1s ease-out; }
+button:active { transform: scale(.98); }
+button:focus-visible { outline: 2px solid rgba(127,143,255,.6); outline-offset: 2px; }
+.primary { flex: 1; background: #7F8FFF; color: #0C0C0D; }
+.primary:hover { background: #95A2FF; }
+.ghost { background: rgba(255,255,255,.06); color: #E4E4E0; }
 .ghost:hover { background: rgba(255,255,255,.11); }
-.x { position: absolute; top: 10px; right: 10px; width: 26px; height: 26px; padding: 0; border-radius: 8px; color: #8B8B95; font-size: 16px; }
+.x { position: absolute; top: 10px; right: 10px; width: 26px; height: 26px; padding: 0; border-radius: 6px; color: #8F8F8A; font-size: 16px; }
 .x:hover { background: rgba(255,255,255,.08); color: #fff; }
-.toast { position: fixed; left: 20px; bottom: 20px; display: flex; align-items: center; gap: 10px; max-width: 360px; padding: 10px 14px 10px 10px; border-radius: 14px; background: rgba(17,17,22,.94); border: 1px solid rgba(255,255,255,.09); box-shadow: 0 16px 40px -12px rgba(0,0,0,.5); transform: translateY(16px); opacity: 0; transition: transform .3s cubic-bezier(.2,.9,.3,1.2), opacity .2s; }
+.toast { position: fixed; left: 20px; bottom: 20px; display: flex; align-items: center; gap: 10px; max-width: 360px; padding: 10px 14px 10px 10px; border-radius: 12px; background: #141416; border: 1px solid rgba(255,255,255,.08); box-shadow: 0 18px 44px -14px rgba(0,0,0,.6); transform: translateY(8px); opacity: 0; transition: transform .22s cubic-bezier(.16,1,.3,1), opacity .18s ease-out; }
 .toast.show { transform: none; opacity: 1; }
-.toast .logo { width: 26px; height: 26px; border-radius: 8px; }
-.toast .t1 { font-weight: 600; font-size: 13px; }
-.toast .t2 { color: #A1A1AA; font-size: 12px; }
-.pill { position: fixed; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 8px; border-radius: 999px; background: rgba(17,17,22,.92); border: 1px solid rgba(255,255,255,.09); box-shadow: 0 14px 34px -12px rgba(0,0,0,.5); backdrop-filter: blur(14px); transform: translateY(12px); opacity: 0; transition: transform .28s, opacity .2s; }
+.toast .logo { width: 24px; height: 24px; border-radius: 6px; }
+.toast .t1 { font-weight: 500; font-size: 13px; }
+.toast .t2 { color: #8F8F8A; font-size: 12px; }
+.pill { position: fixed; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 8px; border-radius: 999px; background: #141416; border: 1px solid rgba(255,255,255,.08); box-shadow: 0 14px 34px -12px rgba(0,0,0,.55); transform: translateY(8px); opacity: 0; transition: transform .22s cubic-bezier(.16,1,.3,1), opacity .18s ease-out; }
 .pill.show { transform: none; opacity: 1; }
-.pill .logo { width: 26px; height: 26px; border-radius: 8px; }
-.pill .label { font-size: 12.5px; color: #D4D4D8; padding-right: 2px; white-space: nowrap; }
+.pill .logo { width: 24px; height: 24px; border-radius: 6px; }
+.pill .label { font-size: 12.5px; color: #CFCFCB; padding-right: 2px; white-space: nowrap; }
 .pill button { height: 30px; padding: 0 12px; border-radius: 999px; font-size: 12.5px; }
-.pill .close { width: 26px; height: 26px; padding: 0; color: #8B8B95; font-size: 14px; }
+.pill .close { width: 26px; height: 26px; padding: 0; color: #8F8F8A; font-size: 14px; }
 @media (prefers-reduced-motion: reduce) { .card, .toast, .pill { transition: none; } .bar > i { animation: none; width: 100%; opacity: .6; } }
 `;
 

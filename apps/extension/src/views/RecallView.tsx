@@ -1,24 +1,6 @@
 import { format, formatDistanceStrict } from 'date-fns';
 import { useLiveQuery } from 'dexie-react-hooks';
-import {
-  Archive,
-  ArrowRight,
-  Brain,
-  Check,
-  ExternalLink,
-  FlaskConical,
-  Flame,
-  GraduationCap,
-  Pencil,
-  RotateCcw,
-  SkipForward,
-  SlidersHorizontal,
-  Sparkles,
-  Star,
-  StickyNote,
-  Undo2,
-  type LucideIcon,
-} from 'lucide-react';
+import { Brain, Check, CircleCheck, ExternalLink, FlaskConical, Pencil, RotateCcw, SkipForward, SlidersHorizontal, Star, StickyNote, Undo2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { setNote, setStarred } from '@/lib/actions';
@@ -62,47 +44,44 @@ import {
   type StreakInfo,
 } from '@/lib/recall';
 import type { Bookmark, Category, RecallCard } from '@/lib/types';
+import { catName } from '@/i18n';
 import { useLibrary } from '@/hooks/library';
 import { navigate } from '@/hooks/route';
 import { useUi } from '@/store/ui';
 import { Avatar, Verified } from '@/components/Brand';
+import { CategoryGlyph } from '@/components/CategoryGlyph';
 import { MediaGrid } from '@/components/Media';
 import { startSync, SyncButton } from '@/components/SyncControl';
 import { CategoryChip, Metrics } from '@/components/TweetCard';
 import { ArticleCard, LinkPreview, PollView, QuotedPost } from '@/components/TweetParts';
 import { TweetText } from '@/components/TweetText';
 import { Dialog, Popover, PopoverContent, PopoverTrigger, Tip } from '@/components/ui/overlays';
-import { Button, Eyebrow, Kbd, Textarea, cn } from '@/components/ui/primitives';
+import { Button, Kbd, Textarea, cn } from '@/components/ui/primitives';
 
 /* ───────────────────────── Motion ───────────────────────── */
 
-const EXIT_MS = 260;
+const EXIT_MS = 220;
 const SWIPE_AT = 96;
 
 type ExitDir = 'left' | 'right' | 'up' | 'down' | 'skip';
 const EXIT_FOR: Record<RecallRating, ExitDir> = { again: 'left', good: 'right', mastered: 'up', notUseful: 'down' };
 
-/** Scoped keyframes (globals.css belongs to the app shell). The global reduced-motion rule still applies. */
+/** Scoped keyframes (globals.css belongs to the app shell). Short, ease-out, no bounce. The global reduced-motion rule still applies. */
 const RECALL_CSS = `
-@keyframes recall-in { from { opacity: 0; transform: translateY(14px) scale(0.965); } to { opacity: 1; transform: none; } }
-@keyframes recall-out-right { from { transform: translateX(var(--dx, 0px)) rotate(var(--rot, 0deg)); } to { opacity: 0; transform: translateX(calc(var(--dx, 0px) + 115%)) rotate(9deg); } }
-@keyframes recall-out-left { from { transform: translateX(var(--dx, 0px)) rotate(var(--rot, 0deg)); } to { opacity: 0; transform: translateX(calc(var(--dx, 0px) - 115%)) rotate(-9deg); } }
-@keyframes recall-out-up { 40% { opacity: 1; transform: translateY(-12px) scale(1.015); } to { opacity: 0; transform: translateY(-60%) scale(1.04); } }
-@keyframes recall-out-down { to { opacity: 0; transform: translateY(26%) scale(0.94); filter: grayscale(1); } }
-@keyframes recall-out-skip { to { opacity: 0; transform: translateY(22px) scale(0.93); } }
-@keyframes recall-confetti { 0% { opacity: 0; transform: translate3d(0, -30px, 0) rotate(0deg); } 8% { opacity: 1; } 100% { opacity: 0; transform: translate3d(var(--drift), var(--fall), 0) rotate(var(--spin)); } }
-@keyframes recall-flicker { 0%, 100% { transform: scale(1) rotate(-2deg); } 25% { transform: scale(1.06, 0.97) rotate(2deg); } 50% { transform: scale(0.97, 1.05) rotate(-1deg); } 75% { transform: scale(1.04) rotate(1.5deg); } }
-@keyframes recall-glow { 0%, 100% { opacity: 0.55; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.12); } }
-@keyframes recall-pop { 0% { transform: scale(0.6); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
-.recall-in { animation: recall-in 0.42s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes recall-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes recall-out-right { from { transform: translateX(var(--dx, 0px)); } to { opacity: 0; transform: translateX(calc(var(--dx, 0px) + 48px)); } }
+@keyframes recall-out-left { from { transform: translateX(var(--dx, 0px)); } to { opacity: 0; transform: translateX(calc(var(--dx, 0px) - 48px)); } }
+@keyframes recall-out-up { to { opacity: 0; transform: translateY(-24px); } }
+@keyframes recall-out-down { to { opacity: 0; transform: translateY(16px); } }
+@keyframes recall-out-skip { to { opacity: 0; transform: translateY(10px); } }
+@keyframes recall-fade { from { opacity: 0; } to { opacity: 1; } }
+.recall-in { animation: recall-in 220ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 .recall-out-right { animation: recall-out-right ${EXIT_MS}ms cubic-bezier(0.4, 0, 1, 1) forwards; }
 .recall-out-left { animation: recall-out-left ${EXIT_MS}ms cubic-bezier(0.4, 0, 1, 1) forwards; }
-.recall-out-up { animation: recall-out-up ${EXIT_MS + 60}ms cubic-bezier(0.3, 0, 0.6, 1) forwards; }
-.recall-out-down { animation: recall-out-down ${EXIT_MS}ms ease-in forwards; }
-.recall-out-skip { animation: recall-out-skip ${EXIT_MS}ms ease-in forwards; }
-.recall-flicker { animation: recall-flicker 1.8s ease-in-out infinite; transform-origin: 50% 85%; }
-.recall-glow { animation: recall-glow 2.4s ease-in-out infinite; }
-.recall-pop { animation: recall-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.recall-out-up { animation: recall-out-up ${EXIT_MS}ms cubic-bezier(0.4, 0, 1, 1) forwards; }
+.recall-out-down { animation: recall-out-down ${EXIT_MS}ms cubic-bezier(0.4, 0, 1, 1) forwards; }
+.recall-out-skip { animation: recall-out-skip ${EXIT_MS}ms cubic-bezier(0.4, 0, 1, 1) forwards; }
+.recall-fade { animation: recall-fade 300ms ease-out both; }
 `;
 
 function useReducedMotion(): boolean {
@@ -151,94 +130,20 @@ interface RatingDef {
   /** Label for narrow (phone) rating bars. */
   short: string;
   key: string;
-  icon: LucideIcon;
-  className: string;
-  kbdClass: string;
 }
 
 const RATINGS: RatingDef[] = [
-  {
-    id: 'again',
-    label: 'Again soon',
-    short: 'Again',
-    key: '1',
-    icon: RotateCcw,
-    className: 'border-amber-500/25 bg-amber-500/[0.07] text-amber-700 hover:border-amber-500/40 hover:bg-amber-500/[0.12] dark:text-amber-300',
-    kbdClass: 'border-amber-500/25 bg-amber-500/10 text-amber-700 dark:text-amber-300',
-  },
-  {
-    id: 'good',
-    label: 'Good',
-    short: 'Good',
-    key: '2',
-    icon: Check,
-    className: 'btn-brand border-transparent text-white',
-    kbdClass: 'border-white/25 bg-white/15 text-white shadow-none',
-  },
-  {
-    id: 'mastered',
-    label: 'Mastered',
-    short: 'Mastered',
-    key: '3',
-    icon: GraduationCap,
-    className: 'border-emerald-500/25 bg-emerald-500/[0.07] text-emerald-700 hover:border-emerald-500/40 hover:bg-emerald-500/[0.12] dark:text-emerald-300',
-    kbdClass: 'border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
-  },
-  {
-    id: 'notUseful',
-    label: 'Not useful',
-    short: 'Not useful',
-    key: '4',
-    icon: Archive,
-    className: 'border-line-strong bg-panel text-fg-2 hover:bg-panel-2 hover:text-fg',
-    kbdClass: '',
-  },
+  { id: 'again', label: 'Again soon', short: 'Again', key: '1' },
+  { id: 'good', label: 'Good', short: 'Good', key: '2' },
+  { id: 'mastered', label: 'Mastered', short: 'Mastered', key: '3' },
+  { id: 'notUseful', label: 'Not useful', short: 'Not useful', key: '4' },
 ];
 
 const RATING_LABEL: Record<RecallRating, string> = { again: 'Again soon', good: 'Good', mastered: 'Mastered', notUseful: 'Not useful' };
 
 /* ───────────────────────── Header pieces ───────────────────────── */
 
-function ProgressRing({ done, total, size = 30 }: { done: number; total: number; size?: number }) {
-  const r = (size - 5) / 2;
-  const c = 2 * Math.PI * r;
-  const pct = total ? Math.min(1, done / total) : 0;
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90" aria-hidden>
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--panel-3)" strokeWidth={4} />
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={r}
-        fill="none"
-        stroke="url(#recall-brand)"
-        strokeWidth={4}
-        strokeLinecap="round"
-        strokeDasharray={c}
-        strokeDashoffset={c * (1 - pct)}
-        className="transition-[stroke-dashoffset] duration-700 ease-out"
-        opacity={pct ? 1 : 0}
-      />
-    </svg>
-  );
-}
-
-function TodayPill({ done, total }: { done: number; total: number }) {
-  return (
-    <div className="flex h-11 items-center gap-2.5 rounded-2xl border border-line bg-panel pr-3.5 pl-2 shadow-card" title={`${done} of ${total} reviewed today`}>
-      <ProgressRing done={done} total={total} />
-      <div className="leading-none">
-        <div className="text-[14px] font-semibold tabular-nums">
-          {done}
-          <span className="text-faint">/{total}</span>
-        </div>
-        <div className="mt-1 text-[11px] text-muted">today</div>
-      </div>
-    </div>
-  );
-}
-
-function StreakPill({ streak }: { streak: StreakInfo }) {
+function StreakLabel({ streak }: { streak: StreakInfo }) {
   const lit = streak.todayCounts;
   const label = streak.current
     ? lit
@@ -247,28 +152,12 @@ function StreakPill({ streak }: { streak: StreakInfo }) {
     : 'Finish a session to start a streak.';
   return (
     <Tip label={label}>
-      <div
-        tabIndex={0}
-        aria-label={label}
-        className={cn(
-          'relative flex h-11 items-center gap-2 rounded-2xl border pr-3.5 pl-2.5 shadow-card outline-none',
-          lit ? 'border-orange-500/30 bg-orange-500/[0.08]' : streak.atRisk ? 'border-amber-500/30 bg-panel' : 'border-line bg-panel',
-        )}
-      >
-        <span className="relative grid size-7 place-items-center">
-          {lit ? <span aria-hidden className="recall-glow absolute inset-0 rounded-full bg-orange-500/30 blur-md" /> : null}
-          <Flame
-            className={cn('relative size-[22px]', lit ? 'recall-flicker text-orange-500' : streak.atRisk ? 'text-amber-500' : 'text-faint')}
-            fill={lit ? 'url(#recall-flame)' : 'none'}
-            strokeWidth={lit ? 1.6 : 2}
-          />
+      <span tabIndex={0} aria-label={label} className="inline-flex h-8 items-center gap-2 rounded-lg px-2 text-[13px] text-muted outline-none">
+        {streak.atRisk ? <span aria-hidden className="size-1.5 rounded-full bg-accent" /> : null}
+        <span>
+          <span className="font-medium text-fg tabular-nums">{fmtNumber(streak.current)}</span> {streak.current === 1 ? 'day streak' : 'day streak'}
         </span>
-        <div className="leading-none">
-          <div className="text-[14px] font-semibold tabular-nums">{streak.current}</div>
-          <div className="mt-1 text-[11px] text-muted">{streak.current ? 'day streak' : 'start today'}</div>
-        </div>
-        {streak.atRisk ? <span aria-hidden className="absolute -top-1 -right-1 size-2.5 rounded-full bg-amber-500 ring-2 ring-bg" /> : null}
-      </div>
+      </span>
     </Tip>
   );
 }
@@ -289,16 +178,16 @@ function SettingsPopover({ prefs, categories, counts, onReset }: { prefs: Return
     <Popover open={open} onOpenChange={setOpen}>
       <Tip label="Recall settings">
         <PopoverTrigger asChild>
-          <Button variant="outline" size="icon" className="size-11 rounded-2xl" aria-label="Recall settings">
-            <SlidersHorizontal />
+          <Button variant="ghost" size="icon" className="size-8 rounded-lg text-muted hover:text-fg" aria-label="Recall settings">
+            <SlidersHorizontal strokeWidth={1.75} />
           </Button>
         </PopoverTrigger>
       </Tip>
       <PopoverContent align="end" className="w-[min(320px,calc(100vw-24px))] p-0">
         <div className="p-4 pb-3">
-          <div className="text-[13.5px] font-semibold">Cards per day</div>
+          <div className="text-[13.5px] font-semibold text-fg">Cards per day</div>
           <p className="mt-0.5 text-[12px] text-muted">Reviews that are due come first, then fresh picks.</p>
-          <div role="radiogroup" aria-label="Cards per day" className="mt-3 grid grid-cols-4 gap-1 rounded-xl bg-panel-2 p-1">
+          <div role="radiogroup" aria-label="Cards per day" className="mt-3 grid grid-cols-4 gap-0.5 rounded-lg border border-line bg-panel p-[3px]">
             {CARDS_PER_DAY_OPTIONS.map((n) => (
               <button
                 key={n}
@@ -307,8 +196,8 @@ function SettingsPopover({ prefs, categories, counts, onReset }: { prefs: Return
                 aria-checked={prefs.cardsPerDay === n}
                 onClick={() => void updateRecallPrefs({ cardsPerDay: n })}
                 className={cn(
-                  'h-8 rounded-lg text-[13px] font-medium tabular-nums transition-all',
-                  prefs.cardsPerDay === n ? 'bg-panel text-fg shadow-card ring-1 ring-line' : 'text-muted hover:text-fg',
+                  'h-7 rounded-md text-[13px] font-medium tabular-nums transition-colors duration-150',
+                  prefs.cardsPerDay === n ? 'bg-accent-soft text-accent' : 'text-fg-2 hover:bg-panel-2 hover:text-fg',
                 )}
               >
                 {n}
@@ -318,8 +207,8 @@ function SettingsPopover({ prefs, categories, counts, onReset }: { prefs: Return
         </div>
         <div className="border-t border-line px-4 pt-3 pb-2">
           <div className="flex items-center justify-between">
-            <div className="text-[13.5px] font-semibold">Categories</div>
-            <button type="button" disabled={all} onClick={() => void updateRecallPrefs({ categories: [] })} className="text-[12px] font-medium text-accent hover:underline disabled:text-faint disabled:no-underline">
+            <div className="text-[13.5px] font-semibold text-fg">Categories</div>
+            <button type="button" disabled={all} onClick={() => void updateRecallPrefs({ categories: [] })} className="text-[12px] font-medium text-accent hover:underline disabled:text-muted disabled:no-underline">
               {all ? 'All included' : 'Include all'}
             </button>
           </div>
@@ -333,14 +222,14 @@ function SettingsPopover({ prefs, categories, counts, onReset }: { prefs: Return
                   role="checkbox"
                   aria-checked={on}
                   onClick={() => toggle(c.id)}
-                  className="flex h-8 w-full items-center gap-2.5 rounded-lg px-2 text-left text-[13px] hover:bg-panel-2"
+                  className="flex min-h-8 w-full items-center gap-2.5 rounded-lg px-2 text-left text-[13px] transition-colors duration-150 hover:bg-panel-2"
                 >
-                  <span className={cn('grid size-[18px] shrink-0 place-items-center rounded-md border transition-colors', on ? 'border-accent bg-accent text-white' : 'border-line-strong bg-panel')}>
-                    {on ? <Check className="size-3" strokeWidth={3} /> : null}
+                  <span className={cn('grid size-4 shrink-0 place-items-center rounded-[4px] border transition-colors', on ? 'border-accent bg-accent text-accent-fg' : 'border-line-strong bg-panel')}>
+                    {on ? <Check className="size-3" strokeWidth={2.5} /> : null}
                   </span>
-                  <span aria-hidden>{c.emoji}</span>
-                  <span className={cn('min-w-0 flex-1 truncate', !on && 'text-muted')}>{c.name}</span>
-                  <span className="text-[11.5px] text-faint tabular-nums">{fmtNumber(counts.get(c.id) ?? 0)}</span>
+                  <CategoryGlyph category={c} className="text-[14px] text-muted" />
+                  <span className={cn('min-w-0 flex-1 truncate', on ? 'text-fg' : 'text-muted')}>{catName(c)}</span>
+                  <span className="text-[12px] text-muted tabular-nums">{fmtNumber(counts.get(c.id) ?? 0)}</span>
                 </button>
               );
             })}
@@ -353,9 +242,9 @@ function SettingsPopover({ prefs, categories, counts, onReset }: { prefs: Return
               setOpen(false);
               onReset();
             }}
-            className="flex h-8 w-full items-center gap-2 rounded-lg px-2 text-[13px] text-bad hover:bg-bad/10"
+            className="flex h-8 w-full items-center gap-2 rounded-lg px-2 text-[13px] text-fg-2 transition-colors duration-150 hover:bg-panel-2 hover:text-bad"
           >
-            <RotateCcw className="size-3.5" /> Reset Recall data…
+            <RotateCcw className="size-3.5" strokeWidth={1.75} /> Reset Recall data…
           </button>
         </div>
       </PopoverContent>
@@ -381,7 +270,7 @@ function NoteInline({ b, editing, setEditing }: { b: Bookmark; editing: boolean;
 
   if (editing) {
     return (
-      <div className="mt-4">
+      <div className="mt-5">
         <Textarea
           autoFocus
           rows={3}
@@ -402,32 +291,33 @@ function NoteInline({ b, editing, setEditing }: { b: Bookmark; editing: boolean;
               close();
             }
           }}
-          className="border-amber-400/40 bg-amber-400/[0.06] focus:border-amber-500/60 focus:ring-amber-400/20"
+          className="rounded-lg border-line-strong text-[14px] focus:border-accent focus:ring-0 focus:shadow-[inset_0_0_0_1px_var(--accent)]"
         />
-        <div className="mt-1.5 text-right text-[11.5px] text-faint">Saves as you type · Esc to close</div>
+        <div className="mt-1.5 text-right text-[12px] text-muted">Saves as you type · Esc to close</div>
       </div>
     );
   }
   if (b.note.trim()) {
     return (
-      <div className="group/note mt-4 flex gap-2.5 rounded-xl border border-amber-400/25 bg-amber-400/[0.08] px-3.5 py-2.5 text-[13.5px] text-fg-2">
-        <StickyNote className="mt-0.5 size-4 shrink-0 text-amber-500" />
+      <div className="group/note mt-5 flex gap-2.5 rounded-lg bg-panel-2 px-3.5 py-2.5 text-[14px] leading-relaxed text-fg-2">
+        <StickyNote className="mt-[3px] size-4 shrink-0 text-muted" strokeWidth={1.75} />
         <span className="min-w-0 flex-1 whitespace-pre-wrap">{b.note}</span>
-        <button type="button" onClick={() => setEditing(true)} className="grid size-6 shrink-0 place-items-center rounded-md text-muted opacity-60 hover:bg-amber-400/15 hover:text-fg group-hover/note:opacity-100" aria-label="Edit note">
-          <Pencil className="size-3.5" />
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          className="-my-0.5 grid size-7 shrink-0 place-items-center rounded-md text-muted transition-colors duration-150 hover:bg-panel-3 hover:text-fg [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/note:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100"
+          aria-label="Edit note"
+        >
+          <Pencil className="size-3.5" strokeWidth={1.75} />
         </button>
       </div>
     );
   }
   return (
-    <button
-      type="button"
-      onClick={() => setEditing(true)}
-      className="mt-4 inline-flex h-8 items-center gap-2 rounded-full border border-dashed border-line-strong px-3 text-[12.5px] text-muted transition-colors hover:border-amber-500/50 hover:text-fg"
-    >
-      <StickyNote className="size-3.5 text-amber-500" /> Add a note
-      <Kbd className="ml-0.5 hidden h-[18px] min-w-[18px] text-[10px] sm:inline-flex">N</Kbd>
-    </button>
+    <Button size="sm" variant="ghost" onClick={() => setEditing(true)} className="mt-4 -ml-3 text-muted hover:text-fg [&_svg]:stroke-[1.75]">
+      <StickyNote /> Add a note
+      <Kbd className="ml-0.5 hidden sm:inline-flex">N</Kbd>
+    </Button>
   );
 }
 
@@ -454,58 +344,40 @@ function PostCard({
   const reasons = useMemo(() => recallReasons(b, card, now), [b, card, now]);
   const long = b.text.length > CLAMP_AT;
   const fallbackText = !b.text && !b.media.length && !b.card && !b.article && !b.quoted && !b.poll;
+  const iconBtn = 'grid size-8 place-items-center rounded-lg text-muted transition-colors duration-150 hover:bg-panel-2 hover:text-fg active:bg-panel-3';
 
   return (
-    <div className="relative p-5 sm:p-7">
-      <div className="flex flex-wrap items-center gap-1.5 pr-16">
-        {reasons.map((r, i) => (
-          <span
-            key={r}
-            className={cn('inline-flex h-6 items-center gap-1 rounded-full px-2 text-[11.5px] font-medium', i === 0 ? 'bg-accent-soft text-accent' : 'bg-panel-2 text-fg-2')}
-          >
-            {i === 0 ? <Sparkles className="size-3" /> : null}
-            {r}
-          </span>
-        ))}
-        <CategoryChip category={category} />
-      </div>
-
-      <div className="absolute top-4 right-4 flex items-center gap-0.5 sm:top-6 sm:right-6">
-        <Tip label={b.starred ? 'Unstar' : 'Star'}>
-          <button type="button" onClick={() => void setStarred([b.id], !b.starred)} className="grid size-8 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg" aria-label={b.starred ? 'Unstar' : 'Star'} aria-pressed={!!b.starred}>
-            <Star key={b.starred} className={cn('size-4', b.starred && 'animate-pop fill-amber-400 text-amber-400')} />
-          </button>
-        </Tip>
-        <Tip label="Open on X" shortcut="O">
-          <button type="button" onClick={onOpen} className="grid size-8 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg" aria-label="Open on X">
-            <ExternalLink className="size-4" />
-          </button>
-        </Tip>
-      </div>
-
-      <header className="mt-5 flex items-center gap-3">
-        <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={46} />
-        <div className="min-w-0 flex-1">
+    <div className="p-5 sm:px-8 sm:pt-6 sm:pb-6">
+      <header className="flex items-start gap-3">
+        <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={40} />
+        <div className="min-w-0 flex-1 pt-0.5">
           <div className="flex min-w-0 items-center gap-1">
-            <span className="truncate text-[15.5px] font-semibold tracking-[-0.01em]">{b.author.name || b.author.handle}</span>
+            <span className="truncate text-[14.5px] font-semibold text-fg">{b.author.name || b.author.handle}</span>
             {b.author.verified ? <Verified /> : null}
           </div>
           <div className="truncate text-[13px] text-muted">
             @{b.author.handle} · <time title={fmtLongDate(b.createdAt)}>{fmtShortDate(b.createdAt)}</time>
           </div>
         </div>
+        <div className="-mt-1 -mr-2 flex shrink-0 items-center gap-0.5">
+          <Tip label={b.starred ? 'Unstar' : 'Star'}>
+            <button type="button" onClick={() => void setStarred([b.id], !b.starred)} className={iconBtn} aria-label={b.starred ? 'Unstar' : 'Star'} aria-pressed={!!b.starred}>
+              <Star key={b.starred} strokeWidth={1.75} className={cn('size-4', b.starred && 'fill-amber-400 text-amber-400')} />
+            </button>
+          </Tip>
+          <Tip label="Open on X" shortcut="O">
+            <button type="button" onClick={onOpen} className={iconBtn} aria-label="Open on X">
+              <ExternalLink className="size-4" strokeWidth={1.75} />
+            </button>
+          </Tip>
+        </div>
       </header>
 
-      {b.summary ? (
-        <div className="mt-4 flex gap-2 rounded-xl bg-accent-soft px-3.5 py-2.5 text-[13.5px] leading-snug text-fg-2 ring-1 ring-accent/15">
-          <Sparkles className="mt-0.5 size-3.5 shrink-0 text-accent" />
-          <span>{b.summary}</span>
-        </div>
-      ) : null}
+      {b.summary ? <p className="mt-4 rounded-lg bg-panel-2 px-3.5 py-2.5 text-[13.5px] leading-relaxed text-fg-2">{b.summary}</p> : null}
 
       {b.text ? (
         <div className="mt-4">
-          <TweetText text={b.text} className={cn('text-[16.5px] leading-[1.65] text-fg sm:text-[17.5px]', long && !expanded && 'line-clamp-[12]')} />
+          <TweetText text={b.text} className={cn('text-[16px] leading-[1.65] text-fg', long && !expanded && 'line-clamp-[12]')} />
           {long ? (
             <button type="button" onClick={() => setExpanded((x) => !x)} className="mt-1.5 text-[13.5px] font-medium text-accent hover:underline">
               {expanded ? 'Show less' : 'Read more'}
@@ -513,7 +385,7 @@ function PostCard({
           ) : null}
         </div>
       ) : fallbackText ? (
-        <p className="mt-4 text-[15px] text-muted italic">This post has no text we could capture — open it on X to see it.</p>
+        <p className="mt-4 text-[15px] text-muted">This post has no text we could capture. Open it on X to see it.</p>
       ) : null}
 
       {b.article ? (
@@ -532,10 +404,27 @@ function PostCard({
 
       <NoteInline b={b} editing={noteOpen} setEditing={setNoteOpen} />
 
-      <footer className="mt-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-line pt-4 text-[12.5px]">
-        <span className="font-medium text-fg-2" title={`Saved ${fmtLongDate(b.savedAt)}`}>
-          {savedAgo(b.savedAt, now)}
-          {card?.reviews ? <span className="font-normal text-faint"> · seen {plural(card.reviews, 'time')} in Recall</span> : null}
+      <footer className="mt-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-line pt-4 text-[12.5px] text-muted">
+        <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+          <span title={`Saved ${fmtLongDate(b.savedAt)}`}>{savedAgo(b.savedAt, now)}</span>
+          {reasons.map((r) => (
+            <span key={r} className="inline-flex items-center gap-2">
+              <span aria-hidden className="text-faint">·</span>
+              {r}
+            </span>
+          ))}
+          {card?.reviews ? (
+            <span className="inline-flex items-center gap-2">
+              <span aria-hidden className="text-faint">·</span>
+              seen {plural(card.reviews, 'time')}
+            </span>
+          ) : null}
+          {category ? (
+            <span className="inline-flex items-center gap-2">
+              <span aria-hidden className="text-faint">·</span>
+              <CategoryChip category={category} className="h-auto" />
+            </span>
+          ) : null}
         </span>
         <Metrics b={b} />
       </footer>
@@ -551,11 +440,11 @@ interface Row {
 
 function RatingBar({ card, onRate, disabled }: { card?: RecallCard; onRate: (r: RecallRating) => void; disabled: boolean }) {
   return (
-    // Sized by its own width: stacked labels when narrow, a roomy row with key hints when wide.
+    // Sized by its own width: compact centred labels when narrow, label + interval + key hint when wide.
     <div className="@container">
-      <div role="group" aria-label="Rate this post" className="grid grid-cols-4 gap-2 @2xl:gap-2.5">
+      <div role="group" aria-label="Rate this post" className="grid grid-cols-4 gap-2">
         {RATINGS.map((r) => {
-          const Icon = r.icon;
+          const primary = r.id === 'good';
           return (
             <button
               key={r.id}
@@ -564,19 +453,18 @@ function RatingBar({ card, onRate, disabled }: { card?: RecallCard; onRate: (r: 
               onClick={() => onRate(r.id)}
               aria-keyshortcuts={r.key}
               className={cn(
-                'group relative flex h-[70px] min-w-0 flex-col items-center justify-center gap-1 rounded-2xl border px-1.5 text-center shadow-card transition-[transform,background,border-color,box-shadow] duration-150 select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-60 @2xl:h-[74px] @2xl:flex-row @2xl:justify-start @2xl:gap-2.5 @2xl:px-3.5 @2xl:text-left',
-                r.className,
+                'group relative flex min-h-[52px] min-w-0 items-center justify-center gap-2 rounded-lg border px-2 py-2 text-center transition-[background-color,border-color,transform] duration-150 ease-out select-none active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 @lg:justify-between @lg:px-3.5 @lg:text-left',
+                primary ? 'btn-brand border-transparent' : 'border-line bg-panel text-fg hover:border-line-strong hover:bg-panel-2 active:bg-panel-3',
               )}
             >
-              <Icon className="size-[18px] shrink-0 @2xl:size-5" strokeWidth={2.2} />
-              <span className="min-w-0 max-w-full @2xl:flex-1">
-                <span className="block truncate text-[12.5px] leading-tight font-semibold @lg:text-[13.5px] @2xl:text-[14px]">
+              <span className="min-w-0">
+                <span className="block truncate text-[13px] leading-tight font-medium @lg:text-[13.5px]">
                   <span className="@md:hidden">{r.short}</span>
                   <span className="hidden @md:inline">{r.label}</span>
                 </span>
-                <span className="mt-0.5 block truncate text-[11px] leading-tight opacity-75 @2xl:text-[12px]">{ratingHint(card, r.id)}</span>
+                <span className={cn('mt-0.5 block truncate text-[11.5px] leading-tight tabular-nums', primary ? 'text-accent-fg' : 'text-muted')}>{ratingHint(card, r.id)}</span>
               </span>
-              <Kbd className={cn('absolute top-1.5 right-1.5 hidden h-[18px] min-w-[18px] text-[10px] @lg:inline-flex @2xl:static', r.kbdClass)}>{r.key}</Kbd>
+              <Kbd className={cn('hidden shrink-0 @lg:inline-flex', primary && 'border-accent-fg/25 bg-accent-fg/15 text-accent-fg shadow-none')}>{r.key}</Kbd>
             </button>
           );
         })}
@@ -585,72 +473,7 @@ function RatingBar({ card, onRate, disabled }: { card?: RecallCard; onRate: (r: 
   );
 }
 
-/* ───────────────────────── Celebration ───────────────────────── */
-
-const CONFETTI_COLORS = ['#7B61FF', '#B14CF2', '#FF5C9D', '#F59E0B', '#22D3EE', '#10B981', '#F97316'];
-
-function Confetti() {
-  const pieces = useMemo(
-    () =>
-      Array.from({ length: 56 }, (_, i) => {
-        const rnd = (n: number) => {
-          const x = Math.sin((i + 1) * 9301 + n * 49297) * 233280;
-          return x - Math.floor(x);
-        };
-        return {
-          left: `${rnd(1) * 100}%`,
-          delay: `${rnd(2) * 0.5}s`,
-          duration: `${1.8 + rnd(3) * 1.6}s`,
-          color: CONFETTI_COLORS[i % CONFETTI_COLORS.length]!,
-          w: 5 + Math.round(rnd(4) * 5),
-          h: rnd(5) > 0.5 ? 10 + Math.round(rnd(6) * 6) : 6,
-          round: rnd(7) > 0.7,
-          style: { '--drift': `${(rnd(8) - 0.5) * 240}px`, '--fall': `${380 + rnd(9) * 320}px`, '--spin': `${(rnd(10) - 0.5) * 1080}deg` } as CSSProperties,
-        };
-      }),
-    [],
-  );
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      {pieces.map((p, i) => (
-        <span
-          key={i}
-          className={cn('absolute -top-3 block', p.round ? 'rounded-full' : 'rounded-[2px]')}
-          style={{
-            ...p.style,
-            left: p.left,
-            width: p.w,
-            height: p.round ? p.w : p.h,
-            background: p.color,
-            animation: `recall-confetti ${p.duration} cubic-bezier(0.2, 0.6, 0.4, 1) ${p.delay} both`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function FlameHero({ streak, animate }: { streak: number; animate: boolean }) {
-  return (
-    <div className={cn('relative mx-auto grid size-28 place-items-center', animate && 'recall-pop')}>
-      <span aria-hidden className="recall-glow absolute inset-1 rounded-full bg-orange-500/35 blur-2xl" />
-      <div className="relative grid size-[84px] place-items-center rounded-[28px] bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 shadow-[0_20px_44px_-14px_rgb(249_115_22/0.7),inset_0_1px_0_rgb(255_255_255/0.35)]">
-        <Flame className="recall-flicker size-11 fill-white/95 text-white" strokeWidth={1.5} />
-      </div>
-      <span className="absolute right-0 bottom-0 grid h-9 min-w-9 place-items-center rounded-full bg-panel px-2 text-[16px] font-bold tracking-tight shadow-pop ring-1 ring-line tabular-nums">{streak}</span>
-    </div>
-  );
-}
-
-function StatBlock({ label, value, hint }: { label: string; value: ReactNode; hint?: ReactNode }) {
-  return (
-    <div className="rounded-2xl border border-line bg-panel/80 px-3 py-3.5 text-center shadow-card backdrop-blur sm:px-4">
-      <div className="text-[26px] leading-none font-semibold tracking-[-0.04em] tabular-nums sm:text-[30px]">{value}</div>
-      <div className="mt-1.5 text-[12px] text-muted">{label}</div>
-      {hint ? <div className="mt-0.5 text-[11px] text-faint">{hint}</div> : null}
-    </div>
-  );
-}
+/* ───────────────────────── Session complete ───────────────────────── */
 
 function SessionComplete({
   celebrate,
@@ -678,37 +501,40 @@ function SessionComplete({
     if (celebrate) ctaRef.current?.focus({ preventScroll: true });
   }, [celebrate]);
   const best = streak.current > 1 && streak.current >= streak.longest;
+  const stats: Array<{ label: string; value: string; hint?: string }> = [
+    { label: 'Reviewed today', value: fmtNumber(reviewed) },
+    { label: 'Day streak', value: fmtNumber(streak.current), hint: `Best ${fmtNumber(streak.longest)}` },
+    { label: 'Due tomorrow', value: dueTomorrow === undefined ? '—' : fmtNumber(dueTomorrow), hint: 'plus fresh picks' },
+  ];
   return (
-    <section aria-labelledby="recall-done-title" className="relative overflow-hidden rounded-[28px] border border-line bg-panel px-5 py-12 text-center shadow-card animate-rise sm:px-12 sm:py-14">
-      <div aria-hidden className="aurora absolute inset-0 opacity-80" />
-      <div aria-hidden className="dot-grid absolute inset-0 opacity-30 [mask-image:radial-gradient(60%_60%_at_50%_30%,black,transparent)]" />
-      {celebrate && !reduced ? <Confetti /> : null}
-      <div className="relative">
-        <FlameHero streak={streak.current} animate={celebrate && !reduced} />
-        <h2 id="recall-done-title" className="mt-7 text-[28px] leading-tight font-semibold tracking-[-0.04em] text-balance sm:text-[34px]">
-          {celebrate ? 'Session complete' : 'Today’s Recall is done'}
-          <span className="serif-accent text-brand block pr-1 text-[1.12em] sm:inline"> {celebrate ? '— nicely done.' : '— see you tomorrow.'}</span>
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-[14.5px] leading-relaxed text-muted">
-          You revisited {plural(reviewed, 'post')} today.{' '}
-          {best ? 'That’s your longest streak yet.' : streak.current === 1 ? 'Day one of a new streak.' : streak.current > 1 ? `${streak.current} days in a row.` : ''}
-        </p>
+    <section aria-labelledby="recall-done-title" className={cn('mx-auto w-full max-w-[680px] rounded-xl border border-line bg-panel px-5 py-10 sm:px-10 sm:py-12', celebrate && !reduced && 'recall-fade')}>
+      <CircleCheck className="size-6 text-muted" strokeWidth={1.75} aria-hidden />
+      <h2 id="recall-done-title" className="mt-4 text-[22px] leading-tight font-semibold tracking-[-0.02em] text-fg">
+        {celebrate ? 'Session complete' : 'Today’s Recall is done'}
+      </h2>
+      <p className="mt-2 max-w-md text-[14px] leading-relaxed text-muted">
+        You revisited {plural(reviewed, 'post')} today.{' '}
+        {best ? 'That’s your longest streak yet.' : streak.current === 1 ? 'Day one of a new streak.' : streak.current > 1 ? `${streak.current} days in a row.` : ''}
+      </p>
 
-        <dl className="mx-auto mt-8 grid max-w-xl grid-cols-3 gap-2.5 sm:gap-3">
-          <StatBlock label="Reviewed today" value={fmtNumber(reviewed)} />
-          <StatBlock label="Day streak" value={streak.current} hint={`Best ${streak.longest}`} />
-          <StatBlock label="Due tomorrow" value={dueTomorrow === undefined ? '—' : fmtNumber(dueTomorrow)} hint="+ fresh picks" />
-        </dl>
+      <dl className="mt-8 grid grid-cols-3 divide-x divide-line border-y border-line">
+        {stats.map((s) => (
+          <div key={s.label} className="min-w-0 px-3 py-4 first:pl-0 sm:px-5">
+            <dt className="text-[12px] leading-snug text-muted">{s.label}</dt>
+            <dd className="mt-1.5 text-[24px] leading-none font-semibold tracking-[-0.02em] text-fg tabular-nums">{s.value}</dd>
+            {s.hint ? <dd className="mt-1.5 text-[12px] leading-snug text-muted">{s.hint}</dd> : null}
+          </div>
+        ))}
+      </dl>
 
-        <div className="mt-8 flex flex-wrap justify-center gap-2">
-          <Button ref={ctaRef} variant="primary" size="lg" onClick={() => navigate('#/library/all')}>
-            Back to library <ArrowRight />
-          </Button>
-          <Button variant="outline" size="lg" disabled={!canExtend} loading={extending} onClick={onExtend}>
-            Keep going · 5 more
-          </Button>
-        </div>
-        <p className="mt-6 text-[12.5px] text-faint">Next session in {fmtCountdown(nextDayStart(now) - now)}</p>
+      <div className="mt-8 flex flex-wrap items-center gap-2 [&_svg]:stroke-[1.75]">
+        <Button ref={ctaRef} variant="primary" onClick={() => navigate('#/library/all')}>
+          Back to library
+        </Button>
+        <Button variant="ghost" disabled={!canExtend} loading={extending} onClick={onExtend}>
+          Review 5 more
+        </Button>
+        <span className="ml-auto text-[12.5px] text-muted tabular-nums">Next session in {fmtCountdown(nextDayStart(now) - now)}</span>
       </div>
     </section>
   );
@@ -718,14 +544,11 @@ function SessionComplete({
 
 function Hero({ icon, title, children, actions }: { icon: ReactNode; title: ReactNode; children: ReactNode; actions?: ReactNode }) {
   return (
-    <section className="relative overflow-hidden rounded-[28px] border border-line bg-panel px-6 py-14 text-center shadow-card animate-rise sm:px-12">
-      <div aria-hidden className="aurora absolute inset-0 opacity-70" />
-      <div className="relative mx-auto max-w-md">
-        <div className="bg-brand mx-auto grid size-16 place-items-center rounded-[22px] text-white shadow-[0_18px_40px_-14px_rgb(150_80_255/0.7)] [&_svg]:size-7">{icon}</div>
-        <h2 className="mt-6 text-[24px] font-semibold tracking-[-0.035em] text-balance sm:text-[28px]">{title}</h2>
-        <div className="mt-2.5 text-[14.5px] leading-relaxed text-muted">{children}</div>
-        {actions ? <div className="mt-7 flex flex-wrap justify-center gap-2">{actions}</div> : null}
-      </div>
+    <section className="mx-auto flex w-full max-w-[680px] animate-fade-in flex-col items-center rounded-xl border border-line bg-panel px-6 py-14 text-center sm:px-12">
+      <div className="text-muted [&_svg]:size-6 [&_svg]:stroke-[1.75]">{icon}</div>
+      <h2 className="mt-4 text-[17px] font-semibold tracking-[-0.01em] text-balance text-fg">{title}</h2>
+      <div className="mt-1.5 max-w-sm text-[14px] leading-relaxed text-muted">{children}</div>
+      {actions ? <div className="mt-6 flex flex-wrap justify-center gap-2 [&_svg]:stroke-[1.75]">{actions}</div> : null}
     </section>
   );
 }
@@ -735,17 +558,12 @@ function NoLibrary() {
   return (
     <Hero
       icon={<Brain />}
-      title={
-        <>
-          Recall starts with <span className="serif-accent text-brand pr-1 text-[1.1em]">your bookmarks</span>
-        </>
-      }
+      title="Recall starts with your bookmarks"
       actions={
         <>
-          <SyncButton hasData={false} size="lg" />
+          <SyncButton hasData={false} />
           <Button
-            size="lg"
-            variant="outline"
+            variant="ghost"
             loading={loading}
             onClick={async () => {
               setLoading(true);
@@ -762,7 +580,7 @@ function NoLibrary() {
         </>
       }
     >
-      Sync your X bookmarks and twtdash will bring back a few of them every day — right before you’d forget them.
+      Sync your X bookmarks and twtdash will bring back a few of them every day, right before you’d forget them.
     </Hero>
   );
 }
@@ -770,7 +588,7 @@ function NoLibrary() {
 function CaughtUp({ now, filtered, onIncludeAll }: { now: number; filtered: boolean; onIncludeAll: () => void }) {
   return (
     <Hero
-      icon={<Check strokeWidth={2.6} />}
+      icon={<Check />}
       title="All caught up"
       actions={
         filtered ? (
@@ -785,9 +603,9 @@ function CaughtUp({ now, filtered, onIncludeAll }: { now: number; filtered: bool
       }
     >
       <p>
-        Nothing to review right now. Next session in <b className="font-semibold text-fg tabular-nums">{fmtCountdown(nextDayStart(now) - now)}</b>.
+        Nothing to review right now. Next session in <span className="font-medium text-fg tabular-nums">{fmtCountdown(nextDayStart(now) - now)}</span>.
       </p>
-      {filtered ? <p className="mt-1.5">You’re only drawing from some categories — widen the filter for more.</p> : <p className="mt-1.5">Your streak is safe today.</p>}
+      {filtered ? <p className="mt-1">You’re only drawing from some categories. Widen the filter for more.</p> : <p className="mt-1">Your streak is safe today.</p>}
     </Hero>
   );
 }
@@ -799,22 +617,22 @@ function WeekStrip({ stats, today }: { stats: RecallStats; today: string }) {
   const rest = new Set(stats.restDays);
   const days = Array.from({ length: 7 }, (_, i) => addDays(today, i - 6));
   return (
-    <ol className="grid grid-cols-7 gap-1.5" aria-label="Last 7 days">
+    <ol className="grid grid-cols-7 gap-1" aria-label="Last 7 days">
       {days.map((d) => {
         const isToday = d === today;
         const on = active.has(d);
         const label = format(dayStart(d), 'EEE');
         return (
           <li key={d} className="flex flex-col items-center gap-1.5" aria-label={`${format(dayStart(d), 'EEEE')}: ${on ? 'done' : rest.has(d) ? 'nothing due' : isToday ? 'not yet' : 'missed'}`}>
-            <span className={cn('text-[10.5px] font-medium uppercase', isToday ? 'text-fg' : 'text-faint')}>{label.slice(0, 2)}</span>
+            <span className={cn('text-[11px]', isToday ? 'font-medium text-fg' : 'text-muted')}>{label.slice(0, 2)}</span>
             <span
               className={cn(
-                'grid size-7 place-items-center rounded-full text-[11px]',
-                on ? 'bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 text-white shadow-[0_6px_14px_-6px_rgb(249_115_22/0.8)]' : 'bg-panel-2 text-faint',
-                isToday && !on && 'ring-2 ring-accent/50 ring-offset-2 ring-offset-panel',
+                'grid size-6 place-items-center rounded-full text-[11px]',
+                on ? 'bg-accent-soft text-accent' : 'bg-panel-2 text-faint',
+                isToday && !on && 'ring-1 ring-line-strong',
               )}
             >
-              {on ? <Flame className="size-3.5 fill-white/90" strokeWidth={1.6} /> : rest.has(d) ? '–' : ''}
+              {on ? <Check className="size-3" strokeWidth={2.25} /> : rest.has(d) ? '–' : ''}
             </span>
           </li>
         );
@@ -823,10 +641,10 @@ function WeekStrip({ stats, today }: { stats: RecallStats; today: string }) {
   );
 }
 
-function RailPanel({ title, children }: { title: string; children: ReactNode }) {
+function RailSection({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="rounded-2xl border border-line bg-panel p-4 shadow-card">
-      <h2 className="mb-3 text-[11px] font-semibold tracking-[0.08em] text-faint uppercase">{title}</h2>
+    <section className="px-4 py-4 [&+&]:border-t [&+&]:border-line">
+      <h2 className="mb-3 text-[13px] font-semibold text-fg">{title}</h2>
       {children}
     </section>
   );
@@ -845,40 +663,33 @@ const SHORTCUTS: Array<[string[], string]> = [
 ];
 
 function Rail({ stats, streak, today, outlook }: { stats: RecallStats; streak: StreakInfo; today: string; outlook?: Outlook }) {
+  const rows: Array<[string, number | undefined]> = [
+    ['Due tomorrow', outlook?.tomorrow],
+    ['Due this week', outlook?.week],
+    ['In rotation', outlook?.inRotation],
+    ['Mastered', outlook?.mastered],
+    ['Longest streak', streak.longest],
+    ['Reviews, all time', stats.totalReviews],
+  ];
   return (
-    <aside className="hidden space-y-3 xl:block" aria-label="Recall overview">
-      <RailPanel title="This week">
+    <aside className="hidden self-start rounded-xl border border-line bg-panel xl:block" aria-label="Recall overview">
+      <RailSection title="This week">
         <WeekStrip stats={stats} today={today} />
-        <div className="mt-4 grid grid-cols-2 gap-2 text-[12px]">
-          <div className="rounded-xl bg-panel-2 px-3 py-2">
-            <div className="text-[17px] font-semibold tabular-nums">{streak.longest}</div>
-            <div className="text-muted">Longest streak</div>
-          </div>
-          <div className="rounded-xl bg-panel-2 px-3 py-2">
-            <div className="text-[17px] font-semibold tabular-nums">{fmtNumber(stats.totalReviews)}</div>
-            <div className="text-muted">Reviews, all time</div>
-          </div>
-        </div>
-      </RailPanel>
-      <RailPanel title="Coming up">
+      </RailSection>
+      <RailSection title="Coming up">
         <dl className="space-y-2 text-[13px]">
-          {[
-            ['Due tomorrow', outlook?.tomorrow],
-            ['Due this week', outlook?.week],
-            ['In rotation', outlook?.inRotation],
-            ['Mastered', outlook?.mastered],
-          ].map(([label, v]) => (
-            <div key={label as string} className="flex items-center justify-between">
+          {rows.map(([label, v]) => (
+            <div key={label} className="flex items-center justify-between gap-3">
               <dt className="text-muted">{label}</dt>
-              <dd className="font-medium tabular-nums">{v === undefined ? '—' : fmtNumber(v as number)}</dd>
+              <dd className="font-medium text-fg tabular-nums">{v === undefined ? '—' : fmtNumber(v)}</dd>
             </div>
           ))}
         </dl>
-      </RailPanel>
-      <RailPanel title="Keyboard">
-        <ul className="space-y-1">
+      </RailSection>
+      <RailSection title="Keyboard">
+        <ul className="space-y-0.5">
           {SHORTCUTS.map(([keys, label]) => (
-            <li key={label} className="flex h-7 items-center justify-between text-[12.5px]">
+            <li key={label} className="flex min-h-7 items-center justify-between gap-3 text-[12.5px]">
               <span className="text-fg-2">{label}</span>
               <span className="flex gap-1">
                 {keys.map((k) => (
@@ -888,7 +699,7 @@ function Rail({ stats, streak, today, outlook }: { stats: RecallStats; streak: S
             </li>
           ))}
         </ul>
-      </RailPanel>
+      </RailSection>
     </aside>
   );
 }
@@ -1219,9 +1030,9 @@ export function RecallView() {
   } else {
     const shown = current ?? null;
     const position = Math.min(reviewedCount + 1, total);
-    const swipeStyle: CSSProperties | undefined = dx ? { transform: `translateX(${dx}px) rotate(${dx / 26}deg)`, transition: 'none' } : undefined;
+    const swipeStyle: CSSProperties | undefined = dx ? { transform: `translateX(${dx}px)`, transition: 'none' } : undefined;
     body = (
-      <div className="mx-auto w-full max-w-[700px]">
+      <div className="mx-auto w-full max-w-[680px]">
         <div className="flex items-center gap-3">
           <div
             role="progressbar"
@@ -1229,19 +1040,16 @@ export function RecallView() {
             aria-valuemin={0}
             aria-valuemax={total}
             aria-valuenow={reviewedCount}
-            className="h-1.5 flex-1 overflow-hidden rounded-full bg-panel-3 dark:bg-panel-2"
+            className="h-[3px] flex-1 overflow-hidden rounded-full bg-panel-3"
           >
-            <div className="bg-brand h-full rounded-full transition-[width] duration-500 ease-out" style={{ width: `${total ? (reviewedCount / total) * 100 : 0}%` }} />
+            <div className="h-full rounded-full bg-accent transition-[width] duration-300 ease-out" style={{ width: `${total ? (reviewedCount / total) * 100 : 0}%` }} />
           </div>
-          <span className="shrink-0 text-[12.5px] font-medium text-muted tabular-nums">
+          <span className="shrink-0 text-[12.5px] text-muted tabular-nums">
             {position} of {total}
           </span>
         </div>
 
-        <div className="relative mt-4 pb-3 sm:mt-5">
-          {queue.length > 2 ? <div aria-hidden className="absolute inset-x-6 top-3 bottom-0 rounded-[24px] border border-line bg-panel/60 shadow-card" /> : null}
-          {queue.length > 1 ? <div aria-hidden className="absolute inset-x-3 top-1.5 bottom-1.5 rounded-[24px] border border-line bg-panel/80 shadow-card" /> : null}
-
+        <div className="relative mt-4">
           {shown ? (
             <article
               key={shown.id}
@@ -1252,48 +1060,43 @@ export function RecallView() {
               onPointerUp={onPointerEnd}
               onPointerCancel={onPointerEnd}
               style={swipeStyle}
-              className={cn(
-                'relative mb-3 overflow-hidden rounded-[24px] border border-line bg-panel shadow-hover [touch-action:pan-y] transition-transform duration-300 ease-out',
-                !reduced && 'recall-in',
-              )}
+              className={cn('relative overflow-hidden rounded-xl border border-line bg-panel [touch-action:pan-y] transition-transform duration-200 ease-out', !reduced && 'recall-in')}
             >
-              <span aria-hidden className="bg-brand absolute inset-x-0 top-0 h-[2px] opacity-70" />
               {dx ? <SwipeLabels dx={dx} /> : null}
               <PostCard b={shown.b} card={shown.card} category={lib.categoryMap.get(shown.b.category)} now={now} noteOpen={noteOpen} setNoteOpen={setNoteOpen} onOpen={openOnX} />
             </article>
           ) : (
-            <div className="mb-3 h-[360px]" />
+            <div className="h-[360px]" />
           )}
 
           {exiting ? (
             <article
               aria-hidden
-              className={cn('pointer-events-none absolute inset-x-0 top-0 z-20 overflow-hidden rounded-[24px] border border-line bg-panel shadow-pop', `recall-out-${exiting.dir}`)}
-              style={{ '--dx': `${exiting.dx}px`, '--rot': `${exiting.dx / 26}deg` } as CSSProperties}
+              className={cn('pointer-events-none absolute inset-x-0 top-0 z-20 overflow-hidden rounded-xl border border-line bg-panel', `recall-out-${exiting.dir}`)}
+              style={{ '--dx': `${exiting.dx}px` } as CSSProperties}
             >
-              <span aria-hidden className="bg-brand absolute inset-x-0 top-0 h-[2px] opacity-70" />
               <PostCard b={exiting.row.b} card={exiting.row.card} category={lib.categoryMap.get(exiting.row.b.category)} now={now} noteOpen={false} setNoteOpen={() => undefined} onOpen={() => undefined} />
             </article>
           ) : null}
         </div>
 
-        <div className="sticky bottom-0 z-30 -mx-5 bg-[linear-gradient(to_top,var(--bg)_calc(100%-22px),transparent)] px-5 pt-6 pb-[max(10px,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8 sm:pt-7 lg:mx-0 lg:px-0 lg:pb-6">
+        <div className="sticky bottom-0 z-30 -mx-4 mt-3 bg-bg px-4 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0 lg:pb-6 [&_svg]:stroke-[1.75]">
           <RatingBar card={shown?.card} onRate={(r) => rate(r)} disabled={!shown || !!exiting} />
-          <div className="mt-2 flex items-center justify-between gap-2 sm:mt-3">
-            <div className="flex items-center gap-1">
-              <Button size="sm" variant="ghost" onClick={skip} disabled={!shown || queue.length < 2 || !!exiting} title={queue.length < 2 ? 'This is the last card' : undefined}>
+          <div className="mt-2 flex min-h-8 items-center justify-between gap-2">
+            <div className="-ml-3 flex items-center gap-0.5">
+              <Button size="sm" variant="ghost" className="text-muted hover:text-fg" onClick={skip} disabled={!shown || queue.length < 2 || !!exiting} title={queue.length < 2 ? 'This is the last card' : undefined}>
                 <SkipForward /> Skip <Kbd className="ml-0.5 hidden sm:inline-flex">S</Kbd>
               </Button>
-              <Button size="sm" variant="ghost" onClick={openOnX} disabled={!shown} className="hidden sm:inline-flex">
+              <Button size="sm" variant="ghost" onClick={openOnX} disabled={!shown} className="hidden text-muted hover:text-fg sm:inline-flex">
                 <ExternalLink /> Open on X <Kbd className="ml-0.5">O</Kbd>
               </Button>
             </div>
             {lastReview ? (
-              <Button size="sm" variant="ghost" className="animate-fade-in" onClick={() => void undo()}>
+              <Button size="sm" variant="ghost" className="-mr-3 animate-fade-in text-muted hover:text-fg" onClick={() => void undo()}>
                 <Undo2 /> Undo “{RATING_LABEL[lastReview.rating]}” <Kbd className="ml-0.5 hidden sm:inline-flex">Z</Kbd>
               </Button>
             ) : (
-              <span className="truncate px-1 text-[12px] text-faint sm:hidden">Swipe → Good · ← Again</span>
+              <span className="truncate text-[12px] text-muted sm:hidden">Swipe right for Good, left for Again</span>
             )}
           </div>
         </div>
@@ -1302,47 +1105,33 @@ export function RecallView() {
   }
 
   const showRail = !loading && !!lib.counts.total;
+  // Reserve the rail column while loading so nothing shifts when it arrives.
+  const wide = showRail || (loading && lib.counts.total !== 0);
 
   return (
     <div className="relative">
       <style>{RECALL_CSS}</style>
-      <svg aria-hidden width="0" height="0" className="absolute">
-        <defs>
-          <linearGradient id="recall-brand" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#7B61FF" />
-            <stop offset="0.55" stopColor="#B14CF2" />
-            <stop offset="1" stopColor="#FF5C9D" />
-          </linearGradient>
-          <linearGradient id="recall-flame" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#FBBF24" />
-            <stop offset="0.6" stopColor="#F97316" />
-            <stop offset="1" stopColor="#F43F5E" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <div aria-hidden className="aurora pointer-events-none absolute inset-x-0 top-0 h-[360px] opacity-70" />
 
-      <div className="relative mx-auto w-full max-w-[1240px] px-5 pt-6 pb-16 sm:px-8 sm:pt-8">
-        <header className="flex animate-rise flex-wrap items-end justify-between gap-x-6 gap-y-4 sm:gap-y-5">
+      <div className={cn('mx-auto w-full max-w-[744px] px-4 pt-8 pb-16 sm:px-8', wide && 'xl:max-w-[1032px]')}>
+        <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
           <div className="min-w-0">
-            <Eyebrow>Daily review · {format(now, 'EEEE, MMMM d')}</Eyebrow>
-            <h1 className="mt-2.5 text-[32px] leading-[1.05] font-semibold tracking-[-0.045em] text-balance sm:text-[42px]">
-              Recall <span className="serif-accent text-brand pr-1 text-[1.1em]">what you saved</span>
-            </h1>
-            <p className="mt-2 hidden max-w-xl text-[14.5px] text-muted sm:block">A few posts a day, resurfaced right before you’d forget them.</p>
+            <h1 className="text-[26px] leading-tight font-semibold tracking-[-0.02em] text-fg">Recall</h1>
+            <p className="mt-1.5 text-[14px] text-muted">
+              <span className="text-fg-2">{format(now, 'EEEE, MMMM d')}</span>
+              <span className="hidden sm:inline"> · A few saved posts a day, brought back before you forget them.</span>
+            </p>
           </div>
           {showRail && prefs ? (
-            <div className="flex items-center gap-2">
-              <TodayPill done={reviewedCount} total={fresh ? total : prefs.cardsPerDay} />
-              <StreakPill streak={streak} />
+            <div className="-mr-2 flex items-center gap-1">
+              <StreakLabel streak={streak} />
               <SettingsPopover prefs={prefs} categories={lib.categories} counts={lib.counts.categories} onReset={() => setResetOpen(true)} />
             </div>
           ) : null}
         </header>
 
-        <div className={cn('mt-6 grid gap-8 sm:mt-8', showRail && 'xl:grid-cols-[minmax(0,1fr)_272px] xl:gap-7')}>
+        <div className={cn('mt-8 grid gap-8', wide && 'xl:grid-cols-[minmax(0,680px)_256px] xl:gap-8')}>
           <div className="min-w-0">{body}</div>
-          {showRail ? <Rail stats={stats} streak={streak} today={today} outlook={outlook} /> : null}
+          {showRail ? <Rail stats={stats} streak={streak} today={today} outlook={outlook} /> : wide ? <RailSkeleton /> : null}
         </div>
       </div>
 
@@ -1372,10 +1161,10 @@ export function RecallView() {
               credited.current = '';
               acceptSession(null);
               setStats(EMPTY_STATS);
-              toast('Recall reset', { description: 'A fresh start — today’s cards are being picked.' });
+              toast('Recall reset', { description: 'A fresh start. Today’s cards are being picked.' });
             }}
           >
-            <RotateCcw /> Reset Recall
+            <RotateCcw strokeWidth={1.75} /> Reset Recall
           </Button>
         </div>
       </Dialog>
@@ -1385,37 +1174,47 @@ export function RecallView() {
 
 function SwipeLabels({ dx }: { dx: number }) {
   const o = Math.min(1, Math.abs(dx) / SWIPE_AT);
+  const pill = 'absolute top-4 z-10 rounded-md border border-line bg-panel px-2 py-1 text-[12px] font-medium';
   return (
     <>
-      <span
-        aria-hidden
-        className="absolute top-5 right-5 z-10 rotate-6 rounded-xl border-2 border-current px-2.5 py-1 text-[13px] font-bold tracking-wide text-accent uppercase"
-        style={{ opacity: dx > 0 ? o : 0 }}
-      >
+      <span aria-hidden className={cn(pill, 'right-4 text-accent')} style={{ opacity: dx > 0 ? o : 0 }}>
         Good
       </span>
-      <span
-        aria-hidden
-        className="absolute top-5 left-5 z-10 -rotate-6 rounded-xl border-2 border-current px-2.5 py-1 text-[13px] font-bold tracking-wide text-amber-500 uppercase"
-        style={{ opacity: dx < 0 ? o : 0 }}
-      >
+      <span aria-hidden className={cn(pill, 'left-4 text-fg-2')} style={{ opacity: dx < 0 ? o : 0 }}>
         Again soon
       </span>
     </>
   );
 }
 
+function RailSkeleton() {
+  return (
+    <div aria-hidden className="hidden self-start rounded-xl border border-line bg-panel p-4 xl:block">
+      <div className="skeleton h-3.5 w-20 rounded" />
+      <div className="mt-4 grid grid-cols-7 gap-1">
+        {Array.from({ length: 7 }, (_, i) => (
+          <div key={i} className="skeleton mx-auto size-6 rounded-full" />
+        ))}
+      </div>
+      <div className="mt-6 space-y-3">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="skeleton h-3 rounded" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function CardSkeleton({ label = 'Loading…' }: { label?: string }) {
   return (
-    <div className="mx-auto w-full max-w-[700px]" aria-busy="true">
-      <div className="skeleton h-1.5 rounded-full" />
-      <div className="mt-5 rounded-[24px] border border-line bg-panel p-5 shadow-card sm:p-7">
-        <div className="flex gap-1.5">
-          <div className="skeleton h-6 w-28 rounded-full" />
-          <div className="skeleton h-6 w-20 rounded-full" />
-        </div>
-        <div className="mt-5 flex items-center gap-3">
-          <div className="skeleton size-[46px] rounded-full" />
+    <div className="mx-auto w-full max-w-[680px]" aria-busy="true">
+      <div className="flex items-center gap-3">
+        <div className="skeleton h-[3px] flex-1 rounded-full" />
+        <div className="skeleton h-3 w-12 rounded" />
+      </div>
+      <div className="mt-4 rounded-xl border border-line bg-panel p-5 sm:px-8 sm:py-6">
+        <div className="flex items-center gap-3">
+          <div className="skeleton size-10 rounded-full" />
           <div className="space-y-2">
             <div className="skeleton h-3.5 w-36 rounded" />
             <div className="skeleton h-3 w-24 rounded" />
@@ -1426,14 +1225,18 @@ function CardSkeleton({ label = 'Loading…' }: { label?: string }) {
           <div className="skeleton h-4 w-[92%] rounded" />
           <div className="skeleton h-4 w-[70%] rounded" />
         </div>
-        <div className="skeleton mt-5 h-48 rounded-[14px]" />
+        <div className="skeleton mt-5 h-48 rounded-lg" />
+        <div className="mt-5 flex justify-between border-t border-line pt-4">
+          <div className="skeleton h-3 w-40 rounded" />
+          <div className="skeleton h-3 w-24 rounded" />
+        </div>
       </div>
-      <div className="mt-5 grid grid-cols-4 gap-2.5">
+      <div className="mt-6 grid grid-cols-4 gap-2">
         {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="skeleton h-[74px] rounded-2xl" />
+          <div key={i} className="skeleton h-[52px] rounded-lg" />
         ))}
       </div>
-      <p className="mt-4 text-center text-[12.5px] text-faint">{label}</p>
+      <p className="mt-4 text-center text-[12.5px] text-muted">{label}</p>
     </div>
   );
 }

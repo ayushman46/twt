@@ -19,8 +19,8 @@ export function QuotedPost({ q, highlight, className }: { q: QuotedTweet; highli
       <div className="flex min-w-0 items-center gap-1.5 text-[13px]">
         <Avatar src={q.author.avatar} name={q.author.name} handle={q.author.handle} size={18} />
         <span className="truncate font-semibold text-fg">{q.author.name}</span>
-        {q.author.verified ? <Verified className="size-3.5" /> : null}
-        <span className="truncate text-muted">
+        {q.author.verified ? <Verified className="size-3.5 fill-accent text-accent-fg" /> : null}
+        <span className="truncate text-[12px] text-muted">
           @{q.author.handle} · {fmtShortDate(q.createdAt)}
         </span>
       </div>
@@ -87,14 +87,14 @@ export function PollView({ poll }: { poll: Poll }) {
 export function ArticleCard({ article, url }: { article: Article; url: string }) {
   const t = useT();
   return (
-    <a href={url} target="_blank" rel="noreferrer noopener" onClick={(e) => e.stopPropagation()} className="block overflow-hidden rounded-xl border border-line hover:bg-panel-2/60">
+    <a href={url} target="_blank" rel="noreferrer noopener" onClick={(e) => e.stopPropagation()} className="block overflow-hidden rounded-xl border border-line transition-colors hover:bg-panel-2/60">
       {article.cover ? <img src={article.cover} alt="" loading="lazy" className="aspect-[2.4/1] w-full border-b border-line object-cover" /> : null}
       <div className="px-3 py-2.5">
-        <div className="flex items-center gap-1.5 text-[11.5px] font-medium tracking-wide text-muted uppercase">
+        <div className="flex items-center gap-1.5 text-[12px] text-muted">
           <FileText className="size-3.5" /> {t('parts.article')}
         </div>
-        <div className="mt-0.5 line-clamp-2 text-[14px] leading-snug font-semibold">{article.title}</div>
-        {article.preview ? <div className="mt-1 line-clamp-2 text-[12.5px] text-muted">{article.preview}</div> : null}
+        <div className="mt-0.5 line-clamp-2 text-[14px] leading-snug font-semibold text-fg">{article.title}</div>
+        {article.preview ? <div className="mt-1 line-clamp-2 text-[12.5px] leading-[1.5] text-muted">{article.preview}</div> : null}
       </div>
     </a>
   );

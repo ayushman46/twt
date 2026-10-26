@@ -1,5 +1,6 @@
 import {
   ArrowUpDown,
+  Bookmark,
   CheckCheck,
   Ellipsis,
   ExternalLink,
@@ -35,6 +36,7 @@ import { navigate, type Route } from '@/hooks/route';
 import { useUi } from '@/store/ui';
 import { Avatar } from '@/components/Brand';
 import { BulkBar } from '@/components/BulkBar';
+import { CategoryGlyph } from '@/components/CategoryGlyph';
 import { DetailPanel } from '@/components/DetailPanel';
 import { GalleryLayout, ListLayout, MasonryGrid, TableLayout, virtualRegistry, type LayoutProps } from '@/components/Layouts';
 import { SyncButton } from '@/components/SyncControl';
@@ -57,10 +59,22 @@ const QUICK_FILTERS: Array<{ op: string; label: MessageKey; icon: ReactNode }> =
   { op: 'is:long', label: 'facet.long', icon: <FileText /> },
 ];
 
+/** Neutral filter chip. The selected one takes the accent, nothing else is coloured. */
+const chipCls = (on: boolean) =>
+  cn(
+    'inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[12px] font-medium transition-colors [&_svg]:size-3.5',
+    on ? 'border-transparent bg-accent-soft text-accent' : 'border-line bg-panel-2 text-fg-2 hover:bg-panel-3 hover:text-fg',
+  );
+
 function toggleOperator(query: string, op: string): string {
   const re = new RegExp(`(^|\\s)${op.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?=\\s|$)`, 'i');
   if (re.test(query)) return query.replace(re, ' ').replace(/\s+/g, ' ').trim();
   return `${query.trim()} ${op}`.trim();
+}
+
+/** Square tile for a scope's icon: a hairline box with a muted glyph or emoji. */
+function IconTile({ children }: { children: ReactNode }) {
+  return <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-line bg-panel text-[20px] leading-none text-fg-2">{children}</span>;
 }
 
 function ScopeHeader({ route, count }: { route: Route; count: number }) {
@@ -92,22 +106,14 @@ function ScopeHeader({ route, count }: { route: Route; count: number }) {
       break;
     case 'category': {
       const c = lib.categoryMap.get(scope.value ?? '');
-      icon = c ? (
-        <span className="grid size-10 place-items-center rounded-xl text-xl" style={{ background: `color-mix(in oklab, ${c.color} 15%, transparent)` }}>
-          {c.emoji}
-        </span>
-      ) : null;
+      icon = c ? <IconTile><CategoryGlyph category={c} /></IconTile> : null;
       title = c ? catName(c) : t('common.category');
       description = c ? catDescription(c) : null;
       break;
     }
     case 'collection': {
       const c = lib.collectionMap.get(scope.value ?? '');
-      icon = c ? (
-        <span className="grid size-10 place-items-center rounded-xl text-xl" style={{ background: `color-mix(in oklab, ${c.color} 16%, transparent)` }}>
-          {c.emoji}
-        </span>
-      ) : null;
+      icon = c ? <IconTile>{c.emoji}</IconTile> : null;
       title = c?.name ?? t('common.collection');
       description = c?.description || (c?.xFolderId ? t('library.xFolder') : null);
       actions = c ? (
@@ -175,8 +181,8 @@ function ScopeHeader({ route, count }: { route: Route; count: number }) {
       {icon}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <h1 className="truncate text-[30px] leading-tight font-semibold tracking-[-0.045em]">{title}</h1>
-          <span className="tabular rounded-full bg-panel px-2.5 py-0.5 text-[12px] font-medium text-muted shadow-card ring-1 ring-line">{lib.partial ? '…' : fmtNumber(count)}</span>
+          <h1 className="truncate text-[26px] leading-tight font-semibold tracking-[-0.02em]">{title}</h1>
+          <span className="tabular shrink-0 rounded-full bg-panel-2 px-2 py-0.5 text-[12px] font-medium text-muted">{lib.partial ? '…' : fmtNumber(count)}</span>
           {actions}
         </div>
         {description ? <p className="mt-0.5 line-clamp-1 text-[13.5px] text-muted">{description}</p> : null}
@@ -361,80 +367,82 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
 
   const unreadInView = items.filter((b) => !b.read).length;
   const pendingAi = items.filter((b) => !b.aiAt && !b.partial).length;
+  const sortLabel = tOr(`sort.${effectiveSort}`, SORT_LABELS[effectiveSort]);
 
   return (
     <div className="relative mx-auto w-full max-w-[1500px] px-5 pt-7 pb-28 sm:px-8">
-      <div aria-hidden className="aurora pointer-events-none absolute inset-x-0 top-0 -z-0 h-[220px] opacity-70" />
-      <div className="relative">
-        <ScopeHeader route={route} count={items.length} />
-      </div>
+      <ScopeHeader route={route} count={items.length} />
 
-      <div className="sticky top-0 z-20 -mx-5 mt-5 bg-bg/80 px-5 py-3 backdrop-blur-xl backdrop-saturate-150 sm:-mx-8 sm:px-8">
+      {/* Sits below the app's own mobile top bar (h-12, hidden from lg up). */}
+      <div className="sticky top-12 z-20 -mx-5 mt-5 bg-bg px-5 py-3 sm:-mx-8 sm:px-8 lg:top-0">
+        {/* Wide screens: one row. Phones: search and voice on the first row, sort and view controls beneath. */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative min-w-[240px] flex-1">
-            <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-faint" />
-            <Input
-              ref={searchRef}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  if (query) setQuery('');
-                  else (e.target as HTMLInputElement).blur();
-                }
-                if (e.key === 'Enter' || e.key === 'ArrowDown') {
-                  const first = items[0];
-                  if (first) {
-                    setFocus(first.id);
-                    (e.target as HTMLInputElement).blur();
+          {/* Search and voice input: a full row on phones, the leading control on wider screens. */}
+          <div className="flex min-w-0 grow basis-full items-center gap-2 sm:basis-0 sm:min-w-[220px]">
+            <div className="relative min-w-0 grow">
+              <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-faint" />
+              <Input
+                ref={searchRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    if (query) setQuery('');
+                    else (e.target as HTMLInputElement).blur();
                   }
-                }
-              }}
-              placeholder={t('library.searchPlaceholder')}
-              className="h-11 rounded-[14px] pr-24 pl-10 text-[14px]"
-              spellCheck={false}
-            />
-            <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1">
-              {query ? (
-                <button type="button" onClick={() => setQuery('')} className="grid size-6 place-items-center rounded-md text-muted hover:bg-panel-2 hover:text-fg" aria-label={t('library.clearSearch')}>
-                  <X className="size-3.5" />
-                </button>
-              ) : (
-                <Kbd>/</Kbd>
-              )}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button type="button" className="h-6 rounded-md px-1.5 text-[11.5px] font-medium text-muted hover:bg-panel-2 hover:text-fg">
-                    {t('library.filters')}
+                  if (e.key === 'Enter' || e.key === 'ArrowDown') {
+                    const first = items[0];
+                    if (first) {
+                      setFocus(first.id);
+                      (e.target as HTMLInputElement).blur();
+                    }
+                  }
+                }}
+                placeholder={t('library.searchPlaceholder')}
+                className="h-9 rounded-lg border-line bg-panel pr-24 pl-9 text-[14px] shadow-none focus:border-accent focus:ring-accent/20"
+                spellCheck={false}
+              />
+              <div className="absolute top-1/2 right-1.5 flex -translate-y-1/2 items-center gap-1">
+                {query ? (
+                  <button type="button" onClick={() => setQuery('')} className="grid size-6 place-items-center rounded-md text-muted hover:bg-panel-2 hover:text-fg" aria-label={t('library.clearSearch')}>
+                    <X className="size-3.5" />
                   </button>
-                </PopoverTrigger>
-                <PopoverContent align="end" className="w-[360px] p-2">
-                  <div className="px-2 pt-1 pb-2 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">{t('library.operatorsHint')}</div>
-                  {OPERATOR_HELP.map((o) => (
-                    <button
-                      key={o.op}
-                      type="button"
-                      onClick={() => {
-                        setQuery(`${query.trim()} ${o.example}`.trim());
-                        searchRef.current?.focus();
-                      }}
-                      className="flex w-full items-center gap-3 rounded-lg px-2 py-1.5 text-left hover:bg-panel-2"
-                    >
-                      <code className="w-36 shrink-0 truncate text-[12px] text-accent">{o.example}</code>
-                      <span className="truncate text-[12.5px] text-muted">{tOr(`op.${o.op}` as ExtraKey, o.description)}</span>
+                ) : (
+                  <Kbd>/</Kbd>
+                )}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button type="button" className="h-6 rounded-md px-1.5 text-[12px] font-medium text-muted hover:bg-panel-2 hover:text-fg">
+                      {t('library.filters')}
                     </button>
-                  ))}
-                </PopoverContent>
-              </Popover>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-[360px] p-2">
+                    <div className="px-2 pt-1 pb-2 text-[12px] font-medium text-muted">{t('library.operatorsHint')}</div>
+                    {OPERATOR_HELP.map((o) => (
+                      <button
+                        key={o.op}
+                        type="button"
+                        onClick={() => {
+                          setQuery(`${query.trim()} ${o.example}`.trim());
+                          searchRef.current?.focus();
+                        }}
+                        className="flex w-full items-center gap-3 rounded-lg px-2 py-1.5 text-left hover:bg-panel-2"
+                      >
+                        <code className="w-36 shrink-0 truncate font-mono text-[12px] text-fg">{o.example}</code>
+                        <span className="truncate text-[12.5px] text-muted">{tOr(`op.${o.op}` as ExtraKey, o.description)}</span>
+                      </button>
+                    ))}
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
+            <VoiceSearchButton className="shrink-0" purpose="Speak your search" onResult={(text) => { if (text) setQuery(text); }} />
           </div>
-
-          <VoiceSearchButton className="shrink-0" purpose="Speak your search" onResult={(text) => { if (text) setQuery(text); }} />
 
           <Menu>
             <MenuTrigger asChild>
-              <Button size="md" variant="outline" className="h-11 rounded-[14px]">
-                <ArrowUpDown /> <span className="hidden sm:inline">{tOr(`sort.${effectiveSort}`, SORT_LABELS[effectiveSort])}</span>
+              <Button size="md" variant="ghost" className="text-fg-2 hover:text-fg" aria-label={`${t('library.sortBy')}: ${sortLabel}`}>
+                <ArrowUpDown /> <span className="hidden sm:inline">{sortLabel}</span>
               </Button>
             </MenuTrigger>
             <MenuContent className="w-48">
@@ -451,7 +459,8 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
             </MenuContent>
           </Menu>
 
-          <div className="flex h-11 items-center rounded-[14px] border border-line-strong bg-panel p-1 shadow-card">
+          {/* Layouts: one segmented control. */}
+          <div className="ml-auto flex h-9 items-center gap-0.5 rounded-lg border border-line bg-panel p-0.5">
             {VIEW_OPTIONS.map((v, i) => (
               <Tip key={v.id} label={t(v.label)} shortcut={String(i + 1)}>
                 <button
@@ -459,7 +468,8 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
                   onClick={() => setView(v.id)}
                   aria-label={t('library.viewLabel', { name: t(v.label) })}
                   aria-pressed={view === v.id}
-                  className={cn('grid h-full w-9 place-items-center rounded-[10px] transition-all [&_svg]:size-4', view === v.id ? 'bg-panel-3 text-fg shadow-card' : 'text-muted hover:text-fg')}
+                  data-layout={v.id}
+                  className={cn('grid h-7 w-8 place-items-center rounded-md transition-colors [&_svg]:size-4', view === v.id ? 'bg-panel-3 text-fg' : 'text-muted hover:bg-panel-2 hover:text-fg')}
                 >
                   {v.icon}
                 </button>
@@ -467,93 +477,88 @@ export function LibraryView({ route, settings, aiAvailable, onAi }: { route: Rou
             ))}
           </div>
 
-          <Tip label={selectMode ? t('library.doneSelecting') : t('library.selectPosts')} shortcut="X">
-            <Button size="icon" variant={selectMode ? 'soft' : 'outline'} className="h-11 w-11 rounded-[14px]" onClick={() => (selectMode ? (setSelectMode(false), clearSelection()) : setSelectMode(true))} aria-label={t('library.selectMode')}>
-              <ListChecks />
-            </Button>
-          </Tip>
-
-          <Menu>
-            <MenuTrigger asChild>
-              <Button size="icon" variant="outline" className="h-11 w-11 rounded-[14px]" aria-label={t('common.more')}>
-                <Ellipsis />
-              </Button>
-            </MenuTrigger>
-            <MenuContent className="w-60">
-              <MenuItem disabled={!unreadInView} onSelect={() => void setRead(items.filter((b) => !b.read).map((b) => b.id), true).then(() => toast.success(t('library.markedRead', { count: unreadInView })))}>
-                <CheckCheck /> {t('library.markAllRead')}
-              </MenuItem>
-              {aiAvailable ? (
-                <MenuItem disabled={!items.length} onSelect={() => onAi(items.map((b) => b.id))}>
-                  <Sparkles /> {t('library.reorganizeAi')}
-                </MenuItem>
-              ) : null}
-              <MenuSeparator />
-              <MenuLabel>{t('library.exportView')}</MenuLabel>
-              <MenuItem onSelect={() => void exportMarkdown(items)}>{t('common.exportMd')}</MenuItem>
-              <MenuItem onSelect={() => void exportCsv(items)}>{t('common.exportCsv')}</MenuItem>
-              <MenuItem onSelect={() => void exportJson(items)}>{t('common.exportJson')}</MenuItem>
-            </MenuContent>
-          </Menu>
-        </div>
-
-        <div className="mt-3 flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none]">
-          {QUICK_FILTERS.map((f) => {
-            const on = new RegExp(`(^|\\s)${f.op}(\\s|$)`, 'i').test(query);
-            return (
-              <button
-                key={f.op}
-                type="button"
-                onClick={() => setQuery(toggleOperator(query, f.op))}
-                className={cn(
-                  'inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[12.5px] transition-colors [&_svg]:size-3.5',
-                  on ? 'border-accent/50 bg-accent-soft text-accent' : 'border-line bg-panel text-fg-2 hover:border-line-strong',
-                )}
+          {/* Select and more: one group of icon actions. */}
+          <div className="flex h-9 items-center gap-0.5 rounded-lg border border-line bg-panel p-0.5">
+            <Tip label={selectMode ? t('library.doneSelecting') : t('library.selectPosts')} shortcut="X">
+              <Button
+                size="icon-sm"
+                variant={selectMode ? 'soft' : 'ghost'}
+                aria-pressed={selectMode}
+                onClick={() => (selectMode ? (setSelectMode(false), clearSelection()) : setSelectMode(true))}
+                aria-label={t('library.selectMode')}
               >
-                {f.icon}
-                {t(f.label)}
-              </button>
-            );
-          })}
-          {categoryBreakdown.length > 1 ? <span className="mx-1 h-4 w-px shrink-0 bg-line-strong" /> : null}
-          {categoryBreakdown.length > 1
-            ? categoryBreakdown.slice(0, 10).map(([id, n]) => {
-                const c = lib.categoryMap.get(id);
-                if (!c) return null;
-                const op = `cat:${id}`;
-                const on = new RegExp(`(^|\\s)${op}(\\s|$)`).test(query);
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => setQuery(toggleOperator(query, op))}
-                    className={cn('inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border px-2.5 text-[12.5px] transition-colors', on ? 'border-transparent text-fg' : 'border-line bg-panel text-fg-2 hover:border-line-strong')}
-                    style={on ? { background: `color-mix(in oklab, ${c.color} 22%, transparent)` } : undefined}
-                  >
-                    <span>{c.emoji}</span>
-                    {catName(c)}
-                    <span className="text-faint tabular-nums">{n}</span>
-                  </button>
-                );
-              })
-            : null}
-          {aiAvailable && pendingAi > 0 ? (
-            <button
-              type="button"
-              onClick={() => onAi()}
-              className="ml-auto inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full bg-accent-soft px-3 text-[12.5px] font-medium text-accent hover:bg-accent/20"
-            >
-              <Sparkles className="size-3.5" /> {t('library.organizeAi', { count: fmtNumber(pendingAi) })}
-            </button>
-          ) : null}
+                <ListChecks />
+              </Button>
+            </Tip>
+
+            <Menu>
+              <MenuTrigger asChild>
+                <Button size="icon-sm" variant="ghost" aria-label={t('common.more')}>
+                  <Ellipsis />
+                </Button>
+              </MenuTrigger>
+              <MenuContent className="w-60">
+                <MenuItem disabled={!unreadInView} onSelect={() => void setRead(items.filter((b) => !b.read).map((b) => b.id), true).then(() => toast.success(t('library.markedRead', { count: unreadInView })))}>
+                  <CheckCheck /> {t('library.markAllRead')}
+                </MenuItem>
+                {aiAvailable ? (
+                  <MenuItem disabled={!items.length} onSelect={() => onAi(items.map((b) => b.id))}>
+                    <Sparkles /> {t('library.reorganizeAi')}
+                  </MenuItem>
+                ) : null}
+                <MenuSeparator />
+                <MenuLabel>{t('library.exportView')}</MenuLabel>
+                <MenuItem onSelect={() => void exportMarkdown(items)}>{t('common.exportMd')}</MenuItem>
+                <MenuItem onSelect={() => void exportCsv(items)}>{t('common.exportCsv')}</MenuItem>
+                <MenuItem onSelect={() => void exportJson(items)}>{t('common.exportJson')}</MenuItem>
+              </MenuContent>
+            </Menu>
+          </div>
         </div>
+      </div>
+
+      <div className="mt-3 flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none]">
+        {QUICK_FILTERS.map((f) => {
+          const on = new RegExp(`(^|\\s)${f.op}(\\s|$)`, 'i').test(query);
+          return (
+            <button key={f.op} type="button" aria-pressed={on} data-op={f.op} onClick={() => setQuery(toggleOperator(query, f.op))} className={chipCls(on)}>
+              {f.icon}
+              {t(f.label)}
+            </button>
+          );
+        })}
+        {categoryBreakdown.length > 1 ? <span className="mx-1 h-4 w-px shrink-0 bg-line-strong" /> : null}
+        {categoryBreakdown.length > 1
+          ? categoryBreakdown.slice(0, 10).map(([id, n]) => {
+              const c = lib.categoryMap.get(id);
+              if (!c) return null;
+              const op = `cat:${id}`;
+              const on = new RegExp(`(^|\\s)${op}(\\s|$)`).test(query);
+              return (
+                <button key={id} type="button" aria-pressed={on} data-op={op} onClick={() => setQuery(toggleOperator(query, op))} className={chipCls(on)}>
+                  <CategoryGlyph category={c} />
+                  {catName(c)}
+                  <span className={cn('tabular-nums', on ? 'text-accent' : 'text-muted')}>{n}</span>
+                </button>
+              );
+            })
+          : null}
+        {aiAvailable && pendingAi > 0 ? (
+          <button
+            type="button"
+            onClick={() => onAi()}
+            className="ml-auto inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full bg-accent-soft px-2.5 text-[12px] font-medium text-accent transition-colors hover:bg-accent/20 [&_svg]:size-3.5"
+          >
+            <Sparkles /> {t('library.organizeAi', { count: fmtNumber(pendingAi) })}
+          </button>
+        ) : null}
       </div>
 
       <div className="mt-4">
         {lib.loading ? (
           <LoadingGrid />
         ) : !lib.counts.total ? (
-          <EmptyState icon={<Sparkles />} title={t('library.emptyTitle')} action={<SyncButton hasData={false} size="lg" />}>
+          <EmptyState icon={<Bookmark />} title={t('library.emptyTitle')} action={<SyncButton hasData={false} size="lg" />}>
             {t('library.emptyBody')}
           </EmptyState>
         ) : !items.length ? (
@@ -595,9 +600,9 @@ function LoadingGrid() {
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
       {Array.from({ length: 9 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-line bg-panel p-4">
+        <div key={i} className="rounded-xl border border-line bg-panel p-4">
           <div className="flex gap-3">
-            <div className="skeleton size-10 rounded-full" />
+            <div className="skeleton size-9 rounded-full" />
             <div className="flex-1 space-y-2 pt-1">
               <div className="skeleton h-3 w-1/2 rounded" />
               <div className="skeleton h-3 w-1/3 rounded" />
@@ -608,10 +613,9 @@ function LoadingGrid() {
             <div className="skeleton h-3 w-5/6 rounded" />
             <div className="skeleton h-3 w-2/3 rounded" />
           </div>
-          {i % 3 === 0 ? <div className="skeleton mt-4 h-40 rounded-xl" /> : null}
+          {i % 3 === 0 ? <div className="skeleton mt-4 h-40 rounded-lg" /> : null}
         </div>
       ))}
     </div>
   );
 }
-

@@ -25,13 +25,24 @@ export interface HeaderCopy {
 export interface MockupCopy {
   caption: string;
   tab: string;
-  nav: { home: string; library: string; insights: string };
+  search: string;
+  nav: {
+    home: string;
+    all: string;
+    unread: string;
+    starred: string;
+    archive: string;
+    insights: string;
+    recall: string;
+    shelf: string;
+    ask: string;
+    wrapped: string;
+  };
+  discover: string;
   categories: string;
-  collections: string;
-  collectionNames: [string, string, string];
-  more: string;
-  liveCapture: string;
-  synced: string;
+  title: string;
+  filters: string;
+  sort: string;
   all: string;
   thread: string;
 }
@@ -52,7 +63,6 @@ export interface Dictionary {
   header: HeaderCopy;
   footer: {
     tagline: string;
-    worksIn: string;
     columns: Array<{ title: string; links: NavLink[] }>;
     rights: string;
     disclaimer: string;
@@ -67,29 +77,23 @@ export interface Dictionary {
     ctaChrome: string;
     ctaFirefox: string;
     badges: string[];
-    worksIn: string;
-    languagesLabel: string;
     mobile: { text: string; whatsapp: string; copy: string; copied: string; shareText: string };
     mockup: MockupCopy;
   };
   how: {
-    eyebrow: string;
     title: ReactNode;
     description: string;
-    steps: Array<{ title: string; body: string; detail: string }>;
+    steps: Array<{ title: string; body: string }>;
   };
   whatsNew: {
-    eyebrow: string;
     title: ReactNode;
     description: string;
-    newBadge: string;
     recall: {
       title: string;
       body: string;
       today: string;
       progress: string;
       streak: string;
-      minutes: string;
       savedAgo: string;
       post: string;
       ratings: [string, string, string];
@@ -134,7 +138,6 @@ export interface Dictionary {
     };
   };
   india: {
-    eyebrow: string;
     title: ReactNode;
     description: string;
     languages: { title: string; body: string; beta: string; /** English, Hindi, Bengali, … in UI_LANGUAGES order. */ names: string[] };
@@ -146,26 +149,19 @@ export interface Dictionary {
     privacy: { title: string; body: string };
   };
   features: {
-    eyebrow: string;
     title: ReactNode;
     description: string;
-    sync: {
-      title: string;
-      body: string;
-      syncing: string;
-      modes: Array<[string, string]>;
-    };
-    capture: { title: string; body: string; saved: string; from: string };
-    categories: { title: string; body: (n: number) => string; yourOwn: string };
-    ai: { title: string; body: string; gist: string; gistText: string };
-    search: { title: string; body: ReactNode; results: string; toSearch: string };
-    library: { title: string; body: string; views: [string, string, string, string] };
-    insights: { title: string; body: string; overTime: string; when: string };
-    export: { title: string; body: string; formats: Array<[string, string]>; importLabel: string };
+    sync: { title: string; body: string };
+    capture: { title: string; body: string };
+    categories: { title: string; body: (n: number) => string };
+    ai: { title: string; body: string };
+    search: { title: string; body: ReactNode };
+    library: { title: string; body: string };
+    insights: { title: string; body: string };
+    export: { title: string; body: string };
     extras: string[];
   };
   categories: {
-    eyebrow: string;
     title: (n: number) => ReactNode;
     description: string;
     listLabel: string;
@@ -175,14 +171,12 @@ export interface Dictionary {
     names?: Record<string, string>;
   };
   search: {
-    eyebrow: string;
     title: ReactNode;
     description: string;
     operators: string[];
     demo: { label: string; results: string; examples: Array<{ label: string; caption: string }> };
   };
   privacy: {
-    eyebrow: string;
     title: ReactNode;
     description: string;
     points: Array<{ title: string; body: string }>;
@@ -190,7 +184,6 @@ export interface Dictionary {
     diagram: { caption: string; browser: string; bookmarks: string; onDevice: string; nvidia: string; nvidiaNote: string };
   };
   pricing: {
-    eyebrow: string;
     title: ReactNode;
     description: string;
     periodLabel: string;
@@ -213,7 +206,6 @@ export interface Dictionary {
     pro: { name: string; badge: string; tagline: string; cta: string; features: string[]; fine: string };
   };
   faq: {
-    eyebrow: string;
     title: ReactNode;
     description: ReactNode;
     items: Array<{ q: string; a: ReactNode; id?: string }>;

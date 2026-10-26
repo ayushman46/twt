@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { ArrowRight, ArrowUpDown, Copy, Download, ExternalLink, LayoutGrid, Library, List, Search, SearchX, X } from 'lucide-react';
-import { memo, useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
+import { memo, useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { fmtLongDate, fmtNumber, fmtShortDate, plural } from '@/lib/format';
 import { usePaintMark } from '@/lib/perf';
@@ -12,17 +12,17 @@ import { useUi } from '@/store/ui';
 import { Avatar } from '@/components/Brand';
 import { copyText } from '@/components/BookmarkMenu';
 import { DetailPanel } from '@/components/DetailPanel';
-import { TypeGlyph, typeInk, typeWash, useShelf } from '@/components/ShelfWidget';
+import { TYPE_ICON, useShelf } from '@/components/ShelfWidget';
 import { SyncButton } from '@/components/SyncControl';
 import { Menu, MenuContent, MenuItem, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuSeparator, MenuTrigger, Popover, PopoverContent, PopoverTrigger, Tip } from '@/components/ui/overlays';
-import { Button, EmptyState, Eyebrow, Input, Kbd, cn } from '@/components/ui/primitives';
+import { Button, EmptyState, Input, Kbd, cn } from '@/components/ui/primitives';
 
 type Filter = ResourceType | 'all';
 type ShelfLayout = 'grid' | 'list';
 
 const DAY = 86_400_000;
-const GRID_ROW = 214;
-const LIST_ROW = 66;
+const GRID_ROW = 184;
+const LIST_ROW = 44;
 const SORTS: ShelfSort[] = ['shared', 'recent', 'az'];
 
 /* ---------- small persistence helpers (per-viewer conveniences) ---------- */
@@ -153,11 +153,11 @@ function VirtualRows<T>({
 
 /* ---------- pieces ---------- */
 
-function Faces({ sharers, size = 20 }: { sharers: Sharer[]; size?: number }) {
+function Faces({ sharers, size = 18 }: { sharers: Sharer[]; size?: number }) {
   if (!sharers.length) return null;
   const names = sharers.slice(0, 8).map((s) => `@${s.handle}`).join(', ') + (sharers.length > 8 ? ` +${sharers.length - 8} more` : '');
   return (
-    <span className="flex shrink-0 -space-x-1.5" title={`Shared by ${names}`}>
+    <span className="flex shrink-0 -space-x-1" title={`Shared by ${names}`}>
       {sharers.slice(0, 3).map((s) => (
         <Avatar key={s.handle} src={s.avatar} name={s.name} handle={s.handle} size={size} className="ring-2 ring-panel" />
       ))}
@@ -168,7 +168,13 @@ function Faces({ sharers, size = 20 }: { sharers: Sharer[]; size?: number }) {
 function Thumb({ src, className }: { src: string; className?: string }) {
   const [failed, setFailed] = useState(false);
   if (failed) return null;
-  return <img src={src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setFailed(true)} className={cn('shrink-0 rounded-xl object-cover ring-1 ring-line', className)} />;
+  return <img src={src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setFailed(true)} className={cn('shrink-0 rounded-lg bg-panel-2 object-cover ring-1 ring-line', className)} />;
+}
+
+/** The type's line icon, muted. Type is never colour-coded. */
+function TypeIcon({ type, className }: { type: ResourceType; className?: string }) {
+  const Icon = TYPE_ICON[type];
+  return <Icon aria-hidden strokeWidth={1.75} className={cn('size-4 shrink-0 text-muted', className)} />;
 }
 
 interface CardActions {
@@ -182,24 +188,24 @@ function PostsList({ r, onPick, onFind }: { r: Resource; onPick: (id: string) =>
   const posts = useMemo(() => r.postIds.slice(0, 50).map((id) => lib.byId.get(id)).filter((b): b is Bookmark => !!b), [r, lib.byId]);
   return (
     <PopoverContent align="start" className="w-[min(360px,calc(100vw-24px))] p-1.5" onKeyDown={(e) => e.stopPropagation()}>
-      <div className="px-2.5 pt-1.5 pb-2 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">Saved in {plural(r.count, 'post')}</div>
+      <div className="px-2.5 pt-1.5 pb-2 text-[12px] text-muted">Saved in {plural(r.count, 'post')}</div>
       <div className="max-h-[320px] overflow-y-auto">
         {posts.map((b) => (
-          <button key={b.id} type="button" onClick={() => onPick(b.id)} className="flex w-full items-start gap-2.5 rounded-xl px-2 py-2 text-left outline-none hover:bg-panel-2 focus-visible:bg-panel-2">
-            <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={26} />
+          <button key={b.id} type="button" onClick={() => onPick(b.id)} className="flex w-full items-start gap-2.5 rounded-lg px-2 py-2 text-left outline-none transition-colors duration-150 hover:bg-panel-2 focus-visible:bg-panel-2 active:bg-panel-3">
+            <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={24} />
             <span className="min-w-0 flex-1">
               <span className="block truncate text-[12px] text-muted">
-                <span className="font-semibold text-fg">{b.author.name}</span> · saved {fmtShortDate(b.savedAt)}
+                <span className="font-medium text-fg">{b.author.name || b.author.handle}</span> · saved {fmtShortDate(b.savedAt)}
               </span>
-              <span className="mt-0.5 line-clamp-2 block text-[13px] leading-snug text-fg-2">{b.text || b.card?.title || b.article?.title || 'Media post'}</span>
+              <span className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-fg-2">{b.text || b.card?.title || b.article?.title || 'Media post'}</span>
             </span>
           </button>
         ))}
       </div>
       <div className="mt-1 border-t border-line pt-1">
-        <button type="button" onClick={onFind} className="flex h-9 w-full items-center gap-2 rounded-xl px-2.5 text-left text-[13px] font-medium text-accent outline-none hover:bg-panel-2 focus-visible:bg-panel-2">
+        <button type="button" onClick={onFind} className="flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-left text-[13px] font-medium text-fg-2 outline-none transition-colors duration-150 hover:bg-panel-2 hover:text-fg focus-visible:bg-panel-2">
           {r.count > posts.length ? `See all ${fmtNumber(r.count)} in Library` : 'Find these in Library'}
-          <ArrowRight className="ml-auto size-4" />
+          <ArrowRight className="ml-auto size-4 text-muted" strokeWidth={1.75} />
         </button>
       </div>
     </PopoverContent>
@@ -209,19 +215,21 @@ function PostsList({ r, onPick, onFind }: { r: Resource; onPick: (id: string) =>
 function PostsButton({ r, actions, className, compact }: { r: Resource; actions: CardActions; className?: string; compact?: boolean }) {
   const [open, setOpen] = useState(false);
   const label = compact ? `×${fmtNumber(r.count)}` : `in ${plural(r.count, 'post')}`;
-  const cls = cn('relative z-10 rounded-md font-medium text-fg-2 underline-offset-2 outline-none hover:text-fg hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ring)]', className);
+  const cls = cn('relative z-10 rounded-md whitespace-nowrap text-muted underline-offset-[3px] outline-none transition-colors duration-150 hover:text-fg hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ring)]', className);
   if (r.count === 1) {
     return (
-      <button type="button" className={cls} onClick={() => actions.onOpenPost(r, r.postIds[0])} aria-label={`Open the post that shared ${r.title}`}>
+      <button type="button" className={cls} onClick={() => actions.onOpenPost(r, r.postIds[0])}>
         {label}
+        <span className="sr-only">: open the post that shared {r.title}</span>
       </button>
     );
   }
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button type="button" className={cls} aria-label={`Show the ${r.count} posts that shared ${r.title}`}>
+        <button type="button" className={cls}>
           {label}
+          <span className="sr-only">: show the posts that shared {r.title}</span>
         </button>
       </PopoverTrigger>
       {open ? (
@@ -242,16 +250,17 @@ function PostsButton({ r, actions, className, compact }: { r: Resource; actions:
 }
 
 function HoverActions({ r, className }: { r: Resource; className?: string }) {
+  const btn = 'grid size-7 place-items-center rounded-lg text-muted outline-none transition-colors duration-150 hover:bg-panel-2 hover:text-fg active:bg-panel-3 focus-visible:ring-2 focus-visible:ring-[var(--ring)]';
   return (
-    <div className={cn('relative z-10 flex items-center gap-0.5 transition-opacity [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100', className)}>
+    <div className={cn('relative z-10 flex items-center gap-0.5 transition-opacity duration-150 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100', className)}>
       <Tip label="Copy link">
-        <button type="button" onClick={() => void copyText(r.url)} aria-label={`Copy link to ${r.title}`} className="grid size-7 place-items-center rounded-lg text-muted outline-none hover:bg-panel-2 hover:text-fg focus-visible:ring-2 focus-visible:ring-[var(--ring)]">
-          <Copy className="size-3.5" />
+        <button type="button" onClick={() => void copyText(r.url)} aria-label={`Copy link to ${r.title}`} className={btn}>
+          <Copy className="size-3.5" strokeWidth={1.75} />
         </button>
       </Tip>
       <Tip label="Open in new tab">
-        <a href={r.url} target="_blank" rel="noreferrer noopener" aria-label={`Open ${r.title} in a new tab`} className="grid size-7 place-items-center rounded-lg text-muted outline-none hover:bg-panel-2 hover:text-fg focus-visible:ring-2 focus-visible:ring-[var(--ring)]">
-          <ExternalLink className="size-3.5" />
+        <a href={r.url} target="_blank" rel="noreferrer noopener" aria-label={`Open ${r.title} in a new tab`} className={btn}>
+          <ExternalLink className="size-3.5" strokeWidth={1.75} />
         </a>
       </Tip>
     </div>
@@ -267,39 +276,42 @@ function TitleLink({ r, className }: { r: Resource; className?: string }) {
   );
 }
 
+function SiteButton({ domain, actions, className }: { domain: string; actions: CardActions; className?: string }) {
+  return (
+    <button
+      type="button"
+      onClick={() => actions.onSite(domain)}
+      className={cn('relative z-10 min-w-0 truncate rounded text-left text-muted outline-none transition-colors duration-150 hover:text-fg hover:underline focus-visible:underline', className)}
+      title={`More from ${domain}`}
+    >
+      {domain}
+    </button>
+  );
+}
+
 const ResourceCard = memo(function ResourceCard({ r, actions }: { r: Resource; actions: CardActions }) {
   return (
-    <article
-      className="group relative isolate flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-panel p-4 shadow-card transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-line-strong hover:shadow-hover has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-[var(--ring)]"
-      style={{ '--type': RESOURCE_META[r.type].color } as CSSProperties}
-    >
-      <span aria-hidden className="pointer-events-none absolute -top-16 -right-16 -z-10 size-40 rounded-full opacity-[0.14] blur-2xl transition-opacity duration-300 group-hover:opacity-30" style={{ background: 'var(--type)' }} />
-      <div className="flex items-center gap-2.5">
-        <TypeGlyph type={r.type} size={32} />
-        <div className="min-w-0 flex-1 leading-tight">
-          <div className="text-[12px] font-semibold" style={{ color: typeInk(r.type) }}>
-            {r.kind}
-          </div>
-          <button type="button" onClick={() => actions.onSite(r.domain)} className="relative z-10 max-w-full truncate text-[12px] text-muted outline-none hover:text-fg hover:underline focus-visible:underline" title={`More from ${r.domain}`}>
-            {r.domain}
-          </button>
-        </div>
-        <HoverActions r={r} />
+    <article className="group relative isolate flex h-full flex-col overflow-hidden rounded-xl border border-line bg-panel p-4 transition-[border-color,background-color] duration-150 ease-out hover:border-line-strong has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-[var(--ring)]">
+      <div className="flex min-h-7 items-center gap-2 text-[12px]">
+        <TypeIcon type={r.type} />
+        <span className="shrink-0 text-muted">{r.kind}</span>
+        <span aria-hidden className="text-faint">·</span>
+        <SiteButton domain={r.domain} actions={actions} />
+        <HoverActions r={r} className="-my-1 ml-auto" />
       </div>
-      <div className="mt-3 flex min-h-0 flex-1 gap-3">
+      <div className="mt-2.5 flex min-h-0 flex-1 gap-3">
         <div className="min-w-0 flex-1">
-          <h3 className="line-clamp-2 text-[15px] leading-[1.35] font-semibold tracking-[-0.015em] text-fg">
+          <h2 className="line-clamp-2 text-[14.5px] leading-[1.4] font-semibold tracking-[-0.01em] text-fg">
             <TitleLink r={r} />
-          </h3>
-          {r.description ? <p className="mt-1 line-clamp-2 text-[12.5px] leading-[1.5] text-muted">{r.description}</p> : null}
+          </h2>
+          {r.description ? <p className="mt-1 line-clamp-2 text-[13px] leading-[1.5] text-muted">{r.description}</p> : null}
         </div>
-        {r.image ? <Thumb src={r.image} className="size-[60px]" /> : null}
+        {r.image ? <Thumb src={r.image} className="size-14" /> : null}
       </div>
-      <div className="mt-3 flex items-center gap-2 border-t border-line pt-3 text-[12px] text-muted">
+      <div className="mt-3 flex min-h-5 items-center gap-2 text-[12px] text-muted">
         <Faces sharers={r.sharers} />
         <PostsButton r={r} actions={actions} />
-        <span aria-hidden className="text-faint">·</span>
-        <time dateTime={new Date(r.lastSavedAt).toISOString()} title={`Last saved ${fmtLongDate(r.lastSavedAt)}`} className="truncate tabular-nums">
+        <time dateTime={new Date(r.lastSavedAt).toISOString()} title={`Last saved ${fmtLongDate(r.lastSavedAt)}`} className="ml-auto shrink-0 tabular-nums">
           {fmtShortDate(r.lastSavedAt)}
         </time>
       </div>
@@ -307,28 +319,29 @@ const ResourceCard = memo(function ResourceCard({ r, actions }: { r: Resource; a
   );
 });
 
-const ResourceRow = memo(function ResourceRow({ r, actions }: { r: Resource; actions: CardActions }) {
+const ResourceRow = memo(function ResourceRow({ r, actions, first }: { r: Resource; actions: CardActions; first: boolean }) {
   return (
-    <div className="group relative flex h-full items-center gap-3 rounded-xl border border-transparent px-2.5 transition-colors hover:border-line hover:bg-panel has-[a:focus-visible]:border-line has-[a:focus-visible]:bg-panel has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-[var(--ring)]">
-      <TypeGlyph type={r.type} size={36} />
-      <div className="min-w-0 flex-1">
-        <div className="truncate text-[14px] font-semibold tracking-[-0.01em] text-fg">
-          <TitleLink r={r} />
-        </div>
-        <div className="truncate text-[12.5px] text-muted">
-          <span className="font-medium" style={{ color: typeInk(r.type) }}>
-            {r.kind}
-          </span>{' '}
-          · {r.domain}
-          {r.description ? <span className="hidden sm:inline"> — {r.description}</span> : null}
-        </div>
+    <div
+      className={cn(
+        'group relative flex h-full items-center gap-3 px-3 text-[13px] transition-colors duration-150 hover:bg-panel-2 has-[a:focus-visible]:bg-panel-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-[var(--ring)] has-[a:focus-visible]:ring-inset',
+        !first && 'border-t border-line',
+      )}
+    >
+      <Tip label={r.kind}>
+        <span className="relative z-10 grid size-5 shrink-0 place-items-center">
+          <TypeIcon type={r.type} />
+        </span>
+      </Tip>
+      <div className="min-w-0 flex-1 truncate font-medium text-fg">
+        <TitleLink r={r} />
       </div>
-      <div className="hidden shrink-0 items-center gap-2 text-[12px] md:flex">
-        <Faces sharers={r.sharers} />
-        <PostsButton r={r} actions={actions} className="text-muted" />
+      <SiteButton domain={r.domain} actions={actions} className="hidden w-[168px] shrink-0 text-[12.5px] md:block" />
+      <div className="hidden w-[132px] shrink-0 items-center gap-2 text-[12px] lg:flex">
+        <Faces sharers={r.sharers} size={16} />
+        <PostsButton r={r} actions={actions} />
       </div>
-      <PostsButton r={r} actions={actions} compact className="shrink-0 rounded-full bg-panel-2 px-2 py-0.5 text-[11.5px] text-muted no-underline md:hidden" />
-      <time dateTime={new Date(r.lastSavedAt).toISOString()} title={`Last saved ${fmtLongDate(r.lastSavedAt)}`} className="hidden w-14 shrink-0 text-right text-[12px] text-faint tabular-nums sm:block">
+      <PostsButton r={r} actions={actions} compact className="shrink-0 rounded-full bg-panel-2 px-2 py-0.5 text-[11.5px] no-underline tabular-nums lg:hidden" />
+      <time dateTime={new Date(r.lastSavedAt).toISOString()} title={`Last saved ${fmtLongDate(r.lastSavedAt)}`} className="hidden w-14 shrink-0 text-right text-[12px] text-muted tabular-nums sm:block">
         {fmtShortDate(r.lastSavedAt)}
       </time>
       <HoverActions r={r} className="hidden sm:flex" />
@@ -336,8 +349,7 @@ const ResourceRow = memo(function ResourceRow({ r, actions }: { r: Resource; act
   );
 });
 
-function TypePill({ id, label, count, active, onSelect, onKeyDown, glyph }: { id: Filter; label: string; count: number; active: boolean; onSelect: () => void; onKeyDown: (e: ReactKeyboardEvent<HTMLButtonElement>) => void; glyph: ReactNode }) {
-  const color = id === 'all' ? 'var(--accent)' : RESOURCE_META[id].color;
+function Segment({ id, label, count, active, onSelect, onKeyDown }: { id: Filter; label: string; count: number; active: boolean; onSelect: () => void; onKeyDown: (e: ReactKeyboardEvent<HTMLButtonElement>) => void }) {
   return (
     <button
       type="button"
@@ -348,64 +360,48 @@ function TypePill({ id, label, count, active, onSelect, onKeyDown, glyph }: { id
       onClick={onSelect}
       onKeyDown={onKeyDown}
       className={cn(
-        'inline-flex h-9 shrink-0 items-center gap-2 rounded-full border pr-3 pl-1.5 text-[13px] font-medium transition-[background,border-color,color,box-shadow] outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]',
-        active ? 'text-fg shadow-card' : 'border-line bg-panel text-fg-2 hover:border-line-strong hover:text-fg',
+        'inline-flex min-h-7 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium whitespace-nowrap outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-[var(--ring)] active:scale-[0.98]',
+        active ? 'bg-accent-soft text-accent' : 'text-fg-2 hover:bg-panel-2 hover:text-fg',
       )}
-      style={active ? { background: id === 'all' ? 'var(--accent-soft)' : typeWash(id, 16), borderColor: `color-mix(in oklab, ${color} 45%, transparent)` } : undefined}
     >
-      {glyph}
       {label}
-      <span className="tabular-nums" style={{ color: active ? (id === 'all' ? 'var(--accent)' : typeInk(id)) : 'var(--faint)' }}>
-        {fmtNumber(count)}
-      </span>
+      <span className={cn('text-[12px] font-normal tabular-nums', active ? 'text-accent' : 'text-muted')}>{fmtNumber(count)}</span>
     </button>
-  );
-}
-
-function StatChip({ value, label, tone }: { value: string; label: string; tone?: 'good' }) {
-  return (
-    <span className="inline-flex h-7 items-center gap-1.5 rounded-full border border-line bg-panel/80 px-2.5 text-[12.5px] text-muted shadow-card backdrop-blur">
-      <span className={cn('font-semibold text-fg tabular-nums', tone === 'good' && 'text-good')}>{value}</span>
-      {label}
-    </span>
   );
 }
 
 function ShelfSkeleton() {
   return (
-    <div className="mx-auto w-full max-w-[1240px] px-5 pt-8 pb-16 sm:px-8" aria-busy="true" aria-label="Loading your shelf">
-      <div className="skeleton h-3 w-20 rounded" />
-      <div className="skeleton mt-3 h-9 w-56 rounded-lg" />
-      <div className="skeleton mt-3 h-4 w-full max-w-[560px] rounded" />
-      <div className="mt-5 flex gap-2 overflow-hidden">
-        {[96, 120, 110, 104, 128, 96].map((w, i) => (
-          <div key={i} className="skeleton h-7 shrink-0 rounded-full" style={{ width: w }} />
+    <div className="mx-auto w-full max-w-[1200px] px-4 pt-8 pb-16 sm:px-8" aria-busy="true" aria-label="Loading your shelf">
+      <div className="skeleton h-8 w-28 rounded-lg" />
+      <div className="skeleton mt-3 h-4 w-full max-w-[520px] rounded" />
+      <div className="skeleton mt-2 h-3.5 w-64 rounded" />
+      <div className="mt-6 flex h-9 gap-1 overflow-hidden rounded-lg border border-line bg-panel p-1">
+        {[56, 72, 76, 70, 82, 64, 68].map((w, i) => (
+          <div key={i} className="skeleton h-7 shrink-0 rounded-md" style={{ width: w }} />
         ))}
       </div>
-      <div className="mt-6 flex gap-2 overflow-hidden">
-        {Array.from({ length: 8 }, (_, i) => (
-          <div key={i} className="skeleton h-9 w-28 shrink-0 rounded-full" />
-        ))}
+      <div className="mt-3 flex gap-2">
+        <div className="skeleton h-9 flex-1 rounded-lg" />
+        <div className="skeleton h-9 w-28 rounded-lg" />
+        <div className="skeleton h-9 w-[72px] rounded-lg" />
+        <div className="skeleton h-9 w-24 rounded-lg" />
       </div>
-      <div className="skeleton mt-4 h-11 rounded-[14px]" />
-      <div className="mt-5 grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))]">
+      <div className="mt-7 grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))]">
         {Array.from({ length: 9 }, (_, i) => (
-          <div key={i} className="flex h-[214px] flex-col rounded-2xl border border-line bg-panel p-4">
-            <div className="flex items-center gap-2.5">
-              <div className="skeleton size-8 rounded-[10px]" />
-              <div className="flex-1 space-y-1.5">
-                <div className="skeleton h-2.5 w-16 rounded" />
-                <div className="skeleton h-2.5 w-24 rounded" />
-              </div>
+          <div key={i} className="flex flex-col rounded-xl border border-line bg-panel p-4" style={{ height: GRID_ROW }}>
+            <div className="flex items-center gap-2">
+              <div className="skeleton size-4 rounded" />
+              <div className="skeleton h-3 w-32 rounded" />
             </div>
             <div className="mt-4 space-y-2">
               <div className="skeleton h-3.5 w-11/12 rounded" />
               <div className="skeleton h-3.5 w-2/3 rounded" />
               <div className="skeleton mt-3 h-3 w-full rounded" />
             </div>
-            <div className="mt-auto flex items-center gap-2 border-t border-line pt-3">
-              <div className="skeleton size-5 rounded-full" />
-              <div className="skeleton h-3 w-24 rounded" />
+            <div className="mt-auto flex items-center gap-2">
+              <div className="skeleton size-[18px] rounded-full" />
+              <div className="skeleton h-3 w-20 rounded" />
             </div>
           </div>
         ))}
@@ -527,6 +523,16 @@ export function ShelfView({ route }: { route: Route }) {
     requestAnimationFrame(() => pillsRef.current?.querySelector<HTMLButtonElement>(`[data-filter="${f}"]`)?.focus());
   };
 
+  // Keep the selected segment in view when the control scrolls (narrow screens).
+  useEffect(() => {
+    const group = pillsRef.current;
+    const scroller = group?.parentElement;
+    const el = group?.querySelector<HTMLElement>(`[data-filter="${filter}"]`);
+    if (!scroller || !el || scroller.scrollWidth <= scroller.clientWidth) return;
+    const left = el.offsetLeft - group.offsetLeft;
+    if (left < scroller.scrollLeft || left + el.offsetWidth > scroller.scrollLeft + scroller.clientWidth) scroller.scrollLeft = Math.max(0, left - 24);
+  }, [filter, pills.length]);
+
   const exportList = (list: readonly Resource[], scope?: string, slug?: string) => {
     if (!list.length) return;
     downloadText(`twtdash-shelf${slug ? '-' + slug : ''}-${format(Date.now(), 'yyyy-MM-dd')}.md`, shelfToMarkdown(list, { scope }));
@@ -534,7 +540,7 @@ export function ShelfView({ route }: { route: Route }) {
   };
 
   const renderCard = useCallback((r: Resource) => <ResourceCard r={r} actions={actions} />, [actions]);
-  const renderRow = useCallback((r: Resource) => <ResourceRow r={r} actions={actions} />, [actions]);
+  const renderRow = useCallback((r: Resource, i: number) => <ResourceRow r={r} actions={actions} first={i === 0} />, [actions]);
 
   usePaintMark('route:shelf:painted', !!shelf);
 
@@ -542,8 +548,8 @@ export function ShelfView({ route }: { route: Route }) {
 
   if (!lib.counts.total) {
     return (
-      <EmptyState icon={<Library />} title="Your shelf is empty" action={<SyncButton hasData={false} size="lg" />}>
-        Sync your X bookmarks and every repo, paper, video and tool they link to will be collected here — automatically, on this device.
+      <EmptyState icon={<Library strokeWidth={1.75} />} title="Your shelf is empty" action={<SyncButton hasData={false} size="lg" />}>
+        Sync your X bookmarks and every repo, paper, video and tool they link to will be collected here, on this device.
       </EmptyState>
     );
   }
@@ -552,34 +558,34 @@ export function ShelfView({ route }: { route: Route }) {
   const filtering = !!query || filter !== 'all';
   const filterLabel = filter === 'all' ? 'resources' : RESOURCE_META[filter].label.toLowerCase();
   const scopeText = [filter !== 'all' ? RESOURCE_META[filter].label : '', query ? `matching “${query}”` : ''].filter(Boolean).join(' ');
+  const facts: Array<[string, string]> = [
+    [fmtNumber(s.posts), s.posts === 1 ? 'post with links' : 'posts with links'],
+    ...(stats && stats.multi ? ([[fmtNumber(stats.multi), 'saved more than once']] as Array<[string, string]>) : []),
+    ...(stats && stats.fresh ? ([[`+${fmtNumber(stats.fresh)}`, 'this week']] as Array<[string, string]>) : []),
+  ];
 
   return (
-    <div className="relative">
-      <div aria-hidden className="aurora pointer-events-none absolute inset-x-0 top-0 h-[380px] opacity-80" />
-      <div aria-hidden className="dot-grid pointer-events-none absolute inset-x-0 top-0 h-[300px] [mask-image:linear-gradient(to_bottom,black,transparent)] opacity-30" />
-
-      <div className="relative mx-auto w-full max-w-[1240px] px-5 pt-8 pb-16 sm:px-8">
-        <header className="animate-rise">
-          <Eyebrow>Discover</Eyebrow>
-          <h1 className="mt-2.5 text-[34px] leading-[1.05] font-semibold tracking-[-0.045em] sm:text-[40px]">
-            Shelf <span className="serif-accent pr-1 text-[0.82em] text-muted">every link, unbundled</span>
-          </h1>
-          <p className="mt-2.5 max-w-[640px] text-[14.5px] leading-relaxed text-muted text-balance">
-            The repos, papers, videos, courses and tools inside your saved posts — found, deduplicated and organized on this device. Nothing leaves your browser.
+    <div className="relative [&_svg.lucide]:stroke-[1.75]">
+      <div className="mx-auto w-full max-w-[1200px] px-4 pt-8 pb-16 sm:px-8">
+        <header className="animate-fade-in">
+          <h1 className="text-[26px] leading-tight font-semibold tracking-[-0.02em] text-fg">Shelf</h1>
+          <p className="mt-1.5 max-w-[620px] text-[14px] leading-relaxed text-muted">
+            The repos, papers, videos, courses and tools inside your saved posts. Found, deduplicated and organised on this device.
           </p>
           {s.total ? (
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              <StatChip value={fmtNumber(s.total)} label={s.total === 1 ? 'resource' : 'resources'} />
-              <StatChip value={fmtNumber(s.posts)} label={s.posts === 1 ? 'post with links' : 'posts with links'} />
-              {stats && stats.multi ? <StatChip value={fmtNumber(stats.multi)} label="saved more than once" /> : null}
-              {stats && stats.fresh ? <StatChip value={`+${fmtNumber(stats.fresh)}`} label="this week" tone="good" /> : null}
-            </div>
+            <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
+              {([[fmtNumber(s.total), s.total === 1 ? 'resource' : 'resources'], ...facts] as Array<[string, string]>).map(([v, label]) => (
+                <span key={label} className="whitespace-nowrap">
+                  <span className="font-medium text-fg tabular-nums">{v}</span> {label}
+                </span>
+              ))}
+            </p>
           ) : null}
         </header>
 
         {!s.total ? (
           <EmptyState
-            icon={<Library />}
+            icon={<Library strokeWidth={1.75} />}
             title="No resources yet"
             action={
               <Button variant="secondary" onClick={() => navigate('#/library/all')}>
@@ -591,37 +597,25 @@ export function ShelfView({ route }: { route: Route }) {
           </EmptyState>
         ) : (
           <>
-            <div
-              ref={pillsRef}
-              role="radiogroup"
-              aria-label="Filter by type"
-              className="-mx-5 mt-6 flex animate-rise gap-2 overflow-x-auto px-5 pb-1 [animation-delay:60ms] [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
-            >
-              {pills.map((f) => (
-                <TypePill
-                  key={f}
-                  id={f}
-                  label={f === 'all' ? 'All' : RESOURCE_META[f].label}
-                  count={f === 'all' ? matches.length : (matchCounts.get(f) ?? 0)}
-                  active={filter === f}
-                  onSelect={() => selectFilter(f)}
-                  onKeyDown={onPillKey}
-                  glyph={
-                    f === 'all' ? (
-                      <span aria-hidden className="grid size-6 place-items-center rounded-full bg-accent-soft text-accent">
-                        <Library className="size-3.5" />
-                      </span>
-                    ) : (
-                      <TypeGlyph type={f} size={24} className="rounded-full" />
-                    )
-                  }
-                />
-              ))}
+            <div className="mt-6 max-w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div ref={pillsRef} role="radiogroup" aria-label="Filter by type" className="inline-flex gap-0.5 rounded-lg border border-line bg-panel p-[3px]">
+                {pills.map((f) => (
+                  <Segment
+                    key={f}
+                    id={f}
+                    label={f === 'all' ? 'All' : RESOURCE_META[f].label}
+                    count={f === 'all' ? matches.length : (matchCounts.get(f) ?? 0)}
+                    active={filter === f}
+                    onSelect={() => selectFilter(f)}
+                    onKeyDown={onPillKey}
+                  />
+                ))}
+              </div>
             </div>
 
-            <div className="mt-4 flex animate-rise flex-wrap items-center gap-2 [animation-delay:100ms]">
-              <div className="relative min-w-[min(100%,260px)] flex-1">
-                <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted" />
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <div className="relative min-w-[min(100%,240px)] flex-1">
+                <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted" />
                 <Input
                   ref={searchRef}
                   type="search"
@@ -633,14 +627,14 @@ export function ShelfView({ route }: { route: Route }) {
                       else (e.target as HTMLInputElement).blur();
                     }
                   }}
-                  placeholder="Search titles, sites, people…  try site:github.com or from:@handle"
+                  placeholder="Search titles, sites, people. Try site:github.com"
                   aria-label="Search your shelf"
                   spellCheck={false}
-                  className="h-11 rounded-[14px] pr-11 pl-10 text-[14px] [&::-webkit-search-cancel-button]:hidden"
+                  className="h-9 rounded-lg border-line bg-panel pr-10 pl-9 text-[13.5px] shadow-none [&::-webkit-search-cancel-button]:hidden"
                 />
-                <div className="absolute top-1/2 right-2.5 -translate-y-1/2">
+                <div className="absolute top-1/2 right-2 -translate-y-1/2">
                   {search ? (
-                    <button type="button" onClick={() => (setSearch(''), searchRef.current?.focus())} className="grid size-6 place-items-center rounded-md text-muted hover:bg-panel-2 hover:text-fg" aria-label="Clear search">
+                    <button type="button" onClick={() => (setSearch(''), searchRef.current?.focus())} className="grid size-6 place-items-center rounded-md text-muted transition-colors duration-150 hover:bg-panel-2 hover:text-fg" aria-label="Clear search">
                       <X className="size-3.5" />
                     </button>
                   ) : (
@@ -649,82 +643,87 @@ export function ShelfView({ route }: { route: Route }) {
                 </div>
               </div>
 
-              <Menu>
-                <MenuTrigger asChild>
-                  <Button size="md" variant="outline" className="h-11 rounded-[14px]" aria-label={`Sort: ${SHELF_SORT_LABELS[sort]}`}>
-                    <ArrowUpDown /> <span className="hidden sm:inline">{SHELF_SORT_LABELS[sort]}</span>
-                  </Button>
-                </MenuTrigger>
-                <MenuContent className="w-48">
-                  <MenuLabel>Sort by</MenuLabel>
-                  <MenuRadioGroup value={sort} onValueChange={(v) => setSort(v as ShelfSort)}>
-                    {SORTS.map((k) => (
-                      <MenuRadioItem key={k} value={k}>
-                        {SHELF_SORT_LABELS[k]}
-                      </MenuRadioItem>
-                    ))}
-                  </MenuRadioGroup>
-                </MenuContent>
-              </Menu>
+              <div className="flex items-center gap-2">
+                <Menu>
+                  <MenuTrigger asChild>
+                    <Button size="md" variant="ghost" className="h-9 rounded-lg px-2.5 text-fg-2" aria-label={`Sort: ${SHELF_SORT_LABELS[sort]}`}>
+                      <ArrowUpDown className="text-muted" /> <span className="hidden sm:inline">{SHELF_SORT_LABELS[sort]}</span>
+                    </Button>
+                  </MenuTrigger>
+                  <MenuContent className="w-48">
+                    <MenuLabel>Sort by</MenuLabel>
+                    <MenuRadioGroup value={sort} onValueChange={(v) => setSort(v as ShelfSort)}>
+                      {SORTS.map((k) => (
+                        <MenuRadioItem key={k} value={k}>
+                          {SHELF_SORT_LABELS[k]}
+                        </MenuRadioItem>
+                      ))}
+                    </MenuRadioGroup>
+                  </MenuContent>
+                </Menu>
 
-              <div className="flex h-11 items-center rounded-[14px] border border-line-strong bg-panel p-1 shadow-card" role="group" aria-label="Layout">
-                {(
-                  [
-                    ['grid', 'Cards', <LayoutGrid key="g" />],
-                    ['list', 'List', <List key="l" />],
-                  ] as const
-                ).map(([id, label, icon]) => (
-                  <Tip key={id} label={label}>
-                    <button
-                      type="button"
-                      onClick={() => setLayout(id)}
-                      aria-label={`${label} layout`}
-                      aria-pressed={layout === id}
-                      className={cn('grid h-full w-9 place-items-center rounded-[10px] transition-all [&_svg]:size-4', layout === id ? 'bg-panel-3 text-fg shadow-card' : 'text-muted hover:text-fg')}
-                    >
-                      {icon}
-                    </button>
-                  </Tip>
-                ))}
-              </div>
+                <div className="flex h-9 items-center gap-0.5 rounded-lg border border-line bg-panel p-[3px]" role="group" aria-label="Layout">
+                  {(
+                    [
+                      ['grid', 'Cards', <LayoutGrid key="g" strokeWidth={1.75} />],
+                      ['list', 'List', <List key="l" strokeWidth={1.75} />],
+                    ] as const
+                  ).map(([id, label, icon]) => (
+                    <Tip key={id} label={label}>
+                      <button
+                        type="button"
+                        onClick={() => setLayout(id)}
+                        aria-label={`${label} layout`}
+                        aria-pressed={layout === id}
+                        className={cn(
+                          'grid h-full w-8 place-items-center rounded-md transition-colors duration-150 active:scale-[0.96] [&_svg]:size-4',
+                          layout === id ? 'bg-accent-soft text-accent' : 'text-muted hover:bg-panel-2 hover:text-fg',
+                        )}
+                      >
+                        {icon}
+                      </button>
+                    </Tip>
+                  ))}
+                </div>
 
-              <Menu>
-                <MenuTrigger asChild>
-                  <Button size="md" variant="outline" className="h-11 rounded-[14px]" aria-label="Export shelf">
-                    <Download /> <span className="hidden sm:inline">Export</span>
-                  </Button>
-                </MenuTrigger>
-                <MenuContent className="w-60">
-                  <MenuLabel>Markdown (.md)</MenuLabel>
-                  {filtering ? (
-                    <MenuItem disabled={!items.length} onSelect={() => exportList(items, scopeText, filter !== 'all' ? RESOURCE_META[filter].slug : undefined)}>
-                      This view <span className="ml-auto pl-4 text-[11px] text-faint tabular-nums">{fmtNumber(items.length)}</span>
+                <Menu>
+                  <MenuTrigger asChild>
+                    <Button size="md" variant="outline" className="h-9 rounded-lg shadow-none" aria-label="Export shelf">
+                      <Download className="text-muted" /> <span className="hidden sm:inline">Export</span>
+                    </Button>
+                  </MenuTrigger>
+                  <MenuContent className="w-60">
+                    <MenuLabel>Markdown (.md)</MenuLabel>
+                    {filtering ? (
+                      <MenuItem disabled={!items.length} onSelect={() => exportList(items, scopeText, filter !== 'all' ? RESOURCE_META[filter].slug : undefined)}>
+                        This view <span className="ml-auto pl-4 text-[11.5px] text-muted tabular-nums">{fmtNumber(items.length)}</span>
+                      </MenuItem>
+                    ) : null}
+                    <MenuItem onSelect={() => exportList(sorted)}>
+                      Entire shelf <span className="ml-auto pl-4 text-[11.5px] text-muted tabular-nums">{fmtNumber(s.total)}</span>
                     </MenuItem>
-                  ) : null}
-                  <MenuItem onSelect={() => exportList(sorted)}>
-                    Entire shelf <span className="ml-auto pl-4 text-[11px] text-faint tabular-nums">{fmtNumber(s.total)}</span>
-                  </MenuItem>
-                  <MenuSeparator />
-                  <div className="px-2.5 pt-1 pb-1.5 text-[11.5px] leading-snug text-faint">Grouped by type, with who shared each link and how often you saved it.</div>
-                </MenuContent>
-              </Menu>
+                    <MenuSeparator />
+                    <div className="px-2.5 pt-1 pb-1.5 text-[12px] leading-snug text-muted">Grouped by type, with who shared each link and how often you saved it.</div>
+                  </MenuContent>
+                </Menu>
+              </div>
             </div>
 
-            <div className="mt-5 mb-3 flex min-h-6 items-center justify-between gap-3 text-[13px] text-muted" aria-live="polite">
+            <div className="mt-6 mb-3 flex min-h-6 items-center justify-between gap-3 text-[13px] text-muted" aria-live="polite">
               <span className="truncate">
                 {query ? (
                   <>
-                    <span className="font-semibold text-fg tabular-nums">{fmtNumber(items.length)}</span> {items.length === 1 ? 'match' : 'matches'} for “{query}”
+                    <span className="font-medium text-fg tabular-nums">{fmtNumber(items.length)}</span> {items.length === 1 ? 'match' : 'matches'} for “{query}”
                     {filter !== 'all' ? <> in {RESOURCE_META[filter].label}</> : null}
                   </>
                 ) : (
                   <>
-                    <span className="font-semibold text-fg tabular-nums">{fmtNumber(items.length)}</span> {items.length === 1 && filter !== 'all' ? RESOURCE_META[filter].one.toLowerCase() : filterLabel} · {SHELF_SORT_LABELS[sort].toLowerCase()}
+                    <span className="font-medium text-fg tabular-nums">{fmtNumber(items.length)}</span> {items.length === 1 && filter !== 'all' ? RESOURCE_META[filter].one.toLowerCase() : filterLabel} · {SHELF_SORT_LABELS[sort].toLowerCase()}
                   </>
                 )}
               </span>
               {filtering ? (
-                <button type="button" onClick={() => (setSearch(''), selectFilter('all'))} className="shrink-0 rounded-md px-1.5 py-0.5 text-[12.5px] font-medium text-accent hover:bg-accent-soft">
+                <button type="button" onClick={() => (setSearch(''), selectFilter('all'))} className="shrink-0 rounded-md px-1.5 py-0.5 text-[12.5px] font-medium text-fg-2 transition-colors duration-150 hover:bg-panel-2 hover:text-fg">
                   Clear filters
                 </button>
               ) : null}
@@ -732,7 +731,7 @@ export function ShelfView({ route }: { route: Route }) {
 
             {!items.length ? (
               <EmptyState
-                icon={<SearchX />}
+                icon={<SearchX strokeWidth={1.75} />}
                 title="Nothing matches"
                 action={
                   <Button variant="secondary" onClick={() => (setSearch(''), selectFilter('all'))}>
@@ -743,10 +742,10 @@ export function ShelfView({ route }: { route: Route }) {
                 {query ? 'Try fewer words, or search everything with “All”.' : `No ${filterLabel} on your shelf yet.`}
               </EmptyState>
             ) : layout === 'grid' ? (
-              <VirtualRows key="grid" items={items} getKey={getKey} render={renderCard} minColWidth={300} maxCols={4} rowHeight={GRID_ROW} gap={16} label="Resources" />
+              <VirtualRows key="grid" items={items} getKey={getKey} render={renderCard} minColWidth={300} maxCols={4} rowHeight={GRID_ROW} gap={12} label="Resources" />
             ) : (
-              <div className="rounded-2xl border border-line bg-panel/60 p-1.5 shadow-card">
-                <VirtualRows key="list" items={items} getKey={getKey} render={renderRow} minColWidth={10_000} maxCols={1} rowHeight={LIST_ROW} gap={2} label="Resources" />
+              <div className="overflow-hidden rounded-xl border border-line bg-panel">
+                <VirtualRows key="list" items={items} getKey={getKey} render={renderRow} minColWidth={10_000} maxCols={1} rowHeight={LIST_ROW} gap={0} label="Resources" />
               </div>
             )}
           </>

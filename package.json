@@ -1,6 +1,7 @@
 {
   "name": "twtdash",
   "private": true,
+  "license": "UNLICENSED",
   "description": "twtdash — sync, auto-categorize and beautifully browse your X (Twitter) bookmarks.",
   "scripts": {
     "install:all": "npm --prefix apps/extension install && npm --prefix apps/web install",

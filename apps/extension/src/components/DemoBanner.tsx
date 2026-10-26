@@ -1,4 +1,3 @@
-import { FlaskConical, X } from 'lucide-react';
 import { useMemo } from 'react';
 import { toast } from 'sonner';
 import { t, useT } from '@/i18n';
@@ -19,18 +18,18 @@ export function DemoBanner() {
     navigate('#/home');
   };
   return (
-    <div className="relative flex flex-wrap items-center gap-3 overflow-hidden border-b border-line px-5 py-2.5 text-[13px] sm:px-8">
-      <span aria-hidden className="aurora absolute inset-0" />
-      <FlaskConical className="relative size-4 text-accent" />
-      <span className="relative min-w-0 flex-1">
-        <b className="font-semibold">{t('demo.title')}</b> <span className="text-muted">{t('demo.body', { count: demo })}</span>
-      </span>
-      <Button size="xs" variant="primary" className="relative" onClick={() => void startSync('bookmark', 'full')}>
-        {t('demo.sync')}
-      </Button>
-      <Button size="xs" variant="ghost" className="relative" onClick={() => void remove()}>
-        <X /> {t('demo.remove')}
-      </Button>
+    <div data-demo-banner className="flex flex-col gap-2 border-b border-line bg-panel px-5 py-2.5 text-[13px] sm:flex-row sm:items-center sm:gap-4 sm:px-8">
+      <p className="min-w-0 text-fg-2 sm:flex-1">
+        <span className="font-medium text-fg">{t('demo.title')}</span> <span className="text-muted">{t('demo.body', { count: demo })}</span>
+      </p>
+      <div className="flex flex-wrap items-center gap-1.5">
+        <Button size="sm" variant="primary" onClick={() => void startSync('bookmark', 'full')}>
+          {t('demo.sync')}
+        </Button>
+        <Button size="sm" variant="ghost" data-action="remove-demo" onClick={() => void remove()}>
+          {t('demo.remove')}
+        </Button>
+      </div>
     </div>
   );
 }

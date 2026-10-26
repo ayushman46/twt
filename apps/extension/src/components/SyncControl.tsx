@@ -19,33 +19,40 @@ export async function startSync(source: Source = 'bookmark', mode: SyncMode = 'q
   }
 }
 
+const HEIGHT = { sm: 'h-8', md: 'h-9', lg: 'h-11' } as const;
+
+/**
+ * One primary sync button, with a small sibling dropdown for the other modes.
+ * The dropdown trigger is a sibling of the primary button, never a child of it.
+ */
 export function SyncButton({ className, size = 'sm', hasData }: { className?: string; size?: 'sm' | 'md' | 'lg'; hasData: boolean }) {
   useT();
   const state = useSyncState();
   const active = isSyncActive(state);
+  const square = cn('w-8', HEIGHT[size]);
 
   if (active) {
     return (
-      <div className={cn('flex items-center gap-1', className)}>
-        <Button size={size} variant="soft" onClick={() => void startSync(state.source, state.mode)}>
+      <div className={cn('flex items-center gap-1.5', className)}>
+        <Button size={size} variant="soft" className="min-w-0 flex-1" onClick={() => void startSync(state.source, state.mode)}>
           <RefreshCw className="animate-spin" />
-          {state.found ? t('sync.syncingCount', { count: fmtNumber(state.found) }) : t('sync.syncing')}
+          <span className="truncate">{state.found ? t('sync.syncingCount', { count: fmtNumber(state.found) }) : t('sync.syncing')}</span>
         </Button>
-        <Button size={size === 'lg' ? 'icon' : 'icon-sm'} variant="ghost" aria-label={t('sync.stop')} onClick={() => void send('sync/stop', {})}>
-          <Square className="!size-3.5 fill-current" />
+        <Button size="icon" variant="secondary" className={square} aria-label={t('sync.stop')} onClick={() => void send('sync/stop', {})}>
+          <Square className="!size-3 fill-current" />
         </Button>
       </div>
     );
   }
 
   return (
-    <div className={cn('flex items-center', className)}>
-      <Button size={size} variant="primary" className="rounded-r-none" onClick={() => void startSync('bookmark', hasData ? 'quick' : 'full')}>
-        <RefreshCw /> {hasData ? t('sync.sync') : t('sync.syncBookmarks')}
+    <div className={cn('flex items-center gap-1.5', className)}>
+      <Button size={size} variant="primary" className="min-w-0 flex-1" onClick={() => void startSync('bookmark', hasData ? 'quick' : 'full')}>
+        <RefreshCw /> <span className="truncate">{hasData ? t('sync.sync') : t('sync.syncBookmarks')}</span>
       </Button>
       <Menu>
         <MenuTrigger asChild>
-          <Button size={size} variant="primary" className="rounded-l-none border-l border-white/20 px-2" aria-label={t('sync.moreOptions')}>
+          <Button size="icon" variant="secondary" className={square} aria-label={t('sync.moreOptions')}>
             <ChevronDown />
           </Button>
         </MenuTrigger>
@@ -54,14 +61,14 @@ export function SyncButton({ className, size = 'sm', hasData }: { className?: st
             <Zap />
             <div>
               <div className="font-medium">{t('sync.quick')}</div>
-              <div className="text-[11.5px] text-muted">{t('sync.quickDesc')}</div>
+              <div className="text-[12px] text-muted">{t('sync.quickDesc')}</div>
             </div>
           </MenuItem>
           <MenuItem onSelect={() => void startSync('bookmark', 'full')} className="h-auto py-2">
             <RefreshCw />
             <div>
               <div className="font-medium">{t('sync.full')}</div>
-              <div className="text-[11.5px] text-muted">{t('sync.fullDesc')}</div>
+              <div className="text-[12px] text-muted">{t('sync.fullDesc')}</div>
             </div>
           </MenuItem>
           <MenuSeparator />
@@ -69,7 +76,7 @@ export function SyncButton({ className, size = 'sm', hasData }: { className?: st
             <Heart />
             <div>
               <div className="font-medium">{t('sync.importLikes')}</div>
-              <div className="text-[11.5px] text-muted">{t('sync.importLikesDesc')}</div>
+              <div className="text-[12px] text-muted">{t('sync.importLikesDesc')}</div>
             </div>
           </MenuItem>
         </MenuContent>

@@ -16,7 +16,6 @@ const mail = <a href={SUPPORT_URL}>{SUPPORT_LABEL}</a>;
 export default function TermsPage() {
   return (
     <LegalPage
-      eyebrow="Legal"
       title="Terms of Service"
       effectiveDate={LEGAL_EFFECTIVE_DATE}
       intro={

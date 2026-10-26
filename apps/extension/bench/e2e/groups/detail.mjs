@@ -129,7 +129,7 @@ export async function run({ base, suite }) {
     await suite.check('Home: detail panel opens from a resurfaced post and Esc closes it', async () => {
       await setHash(page, '#/home');
       const opened = await page.evaluate(() => {
-        const btn = [...document.querySelectorAll('main button')].find((b) => b.querySelector('img, span') && b.className.includes('animate-rise') && b.textContent.length > 40);
+        const btn = document.querySelector('main button[data-resurface]');
         btn?.click();
         return !!btn;
       });

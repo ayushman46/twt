@@ -6,19 +6,19 @@ type Variant = "primary" | "secondary" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "group/btn relative inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium tracking-[-0.01em] transition-[background-color,border-color,color,box-shadow,filter,transform] duration-200 active:translate-y-px disabled:pointer-events-none";
+  "inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium transition-[background-color,border-color,color,transform] duration-150 ease-out active:scale-[0.98] aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0";
 
 const variants: Record<Variant, string> = {
-  // Brand gradient with an inner top highlight and a soft colored glow (see .btn-primary in globals.css).
-  primary: "btn-primary",
-  secondary: "btn-secondary",
-  ghost: "text-zinc-300 hover:bg-white/[0.06] hover:text-white",
+  // Solid accent, no glow.
+  primary: "bg-accent text-accent-fg hover:bg-accent-hover",
+  secondary: "border border-line-strong bg-panel text-fg hover:bg-panel-2",
+  ghost: "text-fg-2 hover:bg-panel-2 hover:text-fg",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-4 text-sm",
-  md: "h-11 px-5 text-[0.9375rem]",
-  lg: "h-12 px-6 text-[0.9875rem]",
+  sm: "h-8 px-3 text-[13px]",
+  md: "h-9 px-4 text-sm",
+  lg: "h-11 px-5 text-[15px]",
 };
 
 export function buttonClasses({ variant = "primary", size = "md", className }: { variant?: Variant; size?: Size; className?: string } = {}) {

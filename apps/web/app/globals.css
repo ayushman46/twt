@@ -1,68 +1,85 @@
 @import "tailwindcss";
 
-@theme inline {
-  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: var(--font-instrument), ui-serif, Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-}
-
-@theme {
-  /* Surfaces */
-  --color-ink: #08080c;
-  --color-ink-raised: #0e0e14;
-  --color-surface: #13131b;
-  --color-surface-strong: #191922;
-  --color-line: rgb(255 255 255 / 0.07);
-  --color-line-strong: rgb(255 255 255 / 0.12);
-
-  /* twtdash brand */
-  --color-brand: #8b6dff; /* solid accent: links, focus */
-  --color-brand-soft: #bcaaff; /* accent text on dark */
-  --color-brand-deep: #6a4cf5;
-  --color-brand-violet: #7b61ff;
-  --color-brand-purple: #b14cf2;
-  --color-brand-pink: #ff5c9d;
-  --color-accent: #ff94bf; /* soft pink for secondary highlights */
-  --color-paper: #fafafa;
-
-  /* Secondary text: a touch lighter than stock zinc-500 so small copy passes WCAG AA (≥4.5:1) on every surface. */
-  --color-zinc-500: #84848e;
-
-  --animate-float: float 9s ease-in-out infinite;
-  --animate-shimmer: shimmer 3.2s linear infinite;
-  --animate-blink: blink 1.1s steps(2, start) infinite;
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translate3d(0, 0, 0);
-    }
-    50% {
-      transform: translate3d(0, -12px, 0);
-    }
-  }
-  @keyframes shimmer {
-    from {
-      background-position: 200% 0;
-    }
-    to {
-      background-position: -200% 0;
-    }
-  }
-  @keyframes blink {
-    to {
-      visibility: hidden;
-    }
-  }
-}
+/*
+ * twtdash marketing site. Same system as the extension (apps/extension/src/styles/globals.css):
+ * a neutral warm-grey canvas, one indigo accent, hairline borders, Geist sans.
+ * No gradients, glows, glass or serif accents. Dark by default, light when the OS asks for it.
+ */
 
 :root {
   color-scheme: dark;
-  --gradient-brand: linear-gradient(135deg, #7b61ff 0%, #b14cf2 55%, #ff5c9d 100%);
+  --bg: #0c0c0d;
+  --bg-2: #101011;
+  --inset: #101011;
+  --panel: #141416;
+  --panel-2: #1a1a1d;
+  --panel-3: #222226;
+  --line: rgb(255 255 255 / 0.075);
+  --line-strong: rgb(255 255 255 / 0.13);
+  --fg: #f2f2f0;
+  --fg-2: #cfcfcb;
+  --muted: #8f8f8a;
+  --faint: #5f5f5b;
+  --accent: #7f8fff;
+  --accent-hover: #95a2ff;
+  --accent-soft: rgb(127 143 255 / 0.12);
+  --accent-fg: #0c0c0d;
+  --good: #4ade80;
+  --bad: #ff7a70;
+  --selection: rgb(127 143 255 / 0.3);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #f7f7f5;
+    --bg-2: #f1f1ee;
+    --inset: #f8f8f6;
+    --panel: #ffffff;
+    --panel-2: #f5f5f2;
+    --panel-3: #ebebe7;
+    --line: rgb(17 17 17 / 0.08);
+    --line-strong: rgb(17 17 17 / 0.14);
+    --fg: #141414;
+    --fg-2: #3b3b39;
+    --muted: #6b6b67;
+    --faint: #9b9b96;
+    --accent: #3d5bd9;
+    --accent-hover: #3149bf;
+    --accent-soft: rgb(61 91 217 / 0.08);
+    --accent-fg: #ffffff;
+    --good: #17803d;
+    --bad: #b42318;
+    --selection: rgb(61 91 217 / 0.18);
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-inset: var(--inset);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-panel-3: var(--panel-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-fg: var(--accent-fg);
+  --color-good: var(--good);
+  --color-bad: var(--bad);
 }
 
 html {
-  background-color: var(--color-ink);
+  background-color: var(--bg);
   -webkit-text-size-adjust: 100%;
 }
 
@@ -73,22 +90,29 @@ html {
 }
 
 body {
-  background-color: var(--color-ink);
-  color: #ececf1;
+  background-color: var(--bg);
+  color: var(--fg);
   font-family: var(--font-sans);
-  font-feature-settings: "ss01", "ss02", "cv01";
+  font-feature-settings: "ss01", "ss02", "cv11";
+  letter-spacing: -0.006em;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
 }
 
 ::selection {
-  background: rgb(139 109 255 / 0.42);
-  color: #fff;
+  background: var(--selection);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-brand);
-  outline-offset: 3px;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* One stroke weight for every lucide icon on the site. */
+svg.lucide {
+  stroke-width: 1.75px;
 }
 
 /* ---------- Hindi pages (html lang="hi") ---------- */
@@ -98,7 +122,7 @@ html:lang(hi) body {
   font-family: var(--font-geist), var(--font-deva), ui-sans-serif, system-ui, sans-serif;
 }
 /* Negative tracking collides matras and conjuncts; Latin islands marked lang="en" keep theirs. */
-:lang(hi) {
+:is(:lang(hi), :lang(mr), :lang(bn), :lang(pa), :lang(gu), :lang(ta), :lang(te), :lang(kn), :lang(ml)) {
   letter-spacing: 0;
 }
 h1:lang(hi) {
@@ -110,16 +134,8 @@ h2:lang(hi) {
 h3:lang(hi) {
   line-height: 1.45;
 }
-.leading-none:lang(hi),
-.leading-tight:lang(hi),
-.leading-snug:lang(hi) {
+:is(.leading-none, .leading-tight, .leading-snug, [class*="leading-[1."], [class*="leading-[0."]):lang(hi) {
   line-height: 1.45;
-}
-/* The serif italic accent has no Devanagari: use a bold upright sans instead of a faux italic. */
-.font-display:lang(hi) {
-  font-family: inherit;
-  font-style: normal;
-  font-weight: 700;
 }
 
 /* ---------- Currency & billing period (lib/head-script.ts + components/landing/pricing.tsx) ---------- */
@@ -132,13 +148,13 @@ html:not([data-currency]):lang(hi) .cur-usd,
 [data-period="yearly"] .per-monthly {
   display: none !important;
 }
-/* Active ₹/$ button follows <html data-currency> so it is right before hydration too. */
+/* Active ₹/$ segment follows <html data-currency> so it is right before hydration too. */
 html[data-currency="inr"] .cur-btn[data-cur-btn="inr"],
 html[data-currency="usd"] .cur-btn[data-cur-btn="usd"],
 html:not([data-currency]):not(:lang(hi)) .cur-btn[data-cur-btn="usd"],
 html:not([data-currency]):lang(hi) .cur-btn[data-cur-btn="inr"] {
-  background-color: #fff;
-  color: var(--color-ink);
+  background-color: var(--panel-3);
+  color: var(--fg);
 }
 
 /* ---------- Reveal on scroll (CSS + a few lines in lib/head-script.ts; no animation library) ---------- */
@@ -147,12 +163,12 @@ html[data-rv] [data-reveal]:not([data-shown]) {
   opacity: 0;
 }
 html[data-rv] [data-reveal][data-shown] {
-  animation: reveal-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--rd, 0s) backwards;
+  animation: reveal-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) var(--rd, 0s) backwards;
 }
 @keyframes reveal-in {
   from {
     opacity: 0;
-    transform: translate3d(0, var(--ry, 18px), 0);
+    transform: translate3d(0, var(--ry, 8px), 0);
   }
 }
 
@@ -165,9 +181,9 @@ html[data-rv] [data-reveal][data-shown] {
   overflow: hidden;
   opacity: 0;
   transition:
-    block-size 0.3s ease-out,
-    opacity 0.3s ease-out,
-    content-visibility 0.3s allow-discrete;
+    block-size 0.24s ease-out,
+    opacity 0.2s ease-out,
+    content-visibility 0.24s allow-discrete;
 }
 .faq-item[open]::details-content {
   block-size: auto;
@@ -191,26 +207,11 @@ html[data-rv] [data-reveal][data-shown] {
   }
 }
 
-/* ---------- Brand utilities (usable with variants) ---------- */
-
-@utility bg-brand-gradient {
-  background-image: var(--gradient-brand);
-}
-
-/* Gradient text — used for the wordmark X and editorial accents */
-@utility text-brand-gradient {
-  background-image: var(--gradient-brand);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}
-
 @layer components {
+  /* 1200px content, 16px gutters on phones, 32px on desktop. */
   .container-page {
     width: 100%;
-    max-width: 76rem;
+    max-width: 79rem;
     margin-inline: auto;
     padding-inline: 1rem;
   }
@@ -225,284 +226,47 @@ html[data-rv] [data-reveal][data-shown] {
     }
   }
 
-  /* Soft panel used for cards across the site */
-  .panel {
-    border: 1px solid var(--color-line);
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.035), rgb(255 255 255 / 0.01));
-    border-radius: 1.25rem;
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
-  }
-
-  /* 1px gradient ring drawn with a mask. Override --ring for other gradients. */
-  .ring-gradient {
-    position: relative;
-    isolation: isolate;
-  }
-  .ring-gradient::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: var(
-      --ring,
-      linear-gradient(180deg, rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.05) 32%, rgb(177 76 242 / 0.3) 100%)
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    z-index: -1;
-  }
-  .ring-brand {
-    --ring: var(--gradient-brand);
-  }
-
-  /* ---------- Buttons ---------- */
-  .btn-primary {
-    isolation: isolate;
-    color: #fff;
-    background-image: var(--gradient-brand);
-    text-shadow: 0 1px 1px rgb(36 0 64 / 0.28);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.38),
-      inset 0 -1px 0 rgb(30 0 50 / 0.18),
-      0 0 0 1px rgb(177 76 242 / 0.5),
-      0 10px 28px -10px rgb(139 76 242 / 0.75),
-      0 6px 48px -18px rgb(255 92 157 / 0.6);
-  }
-  .btn-primary::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0) 52%);
-    pointer-events: none;
-  }
-  .btn-primary:hover {
-    filter: brightness(1.08) saturate(1.06);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.45),
-      inset 0 -1px 0 rgb(30 0 50 / 0.18),
-      0 0 0 1px rgb(200 120 255 / 0.65),
-      0 14px 36px -10px rgb(139 76 242 / 0.9),
-      0 8px 64px -16px rgb(255 92 157 / 0.75);
-  }
-
-  .btn-secondary {
-    color: #f4f4f5;
-    border: 1px solid rgb(255 255 255 / 0.1);
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.025));
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07);
-  }
-  .btn-secondary:hover {
-    border-color: rgb(255 255 255 / 0.18);
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.04));
-  }
-
-  /* Icon tile filled with the brand gradient */
-  .icon-tile-brand {
-    position: relative;
-    isolation: isolate;
-    color: #fff;
-    background-image: var(--gradient-brand);
-    box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.35),
-      0 0 0 1px rgb(177 76 242 / 0.4),
-      0 10px 30px -12px rgb(177 76 242 / 0.8);
-  }
-  .icon-tile-brand::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.24), transparent 55%);
-  }
-
-  /* Subtle icon tile: tinted glass with a gradient hairline */
-  .icon-tile-soft {
-    position: relative;
-    isolation: isolate;
-    color: #e9e3ff;
-    background:
-      linear-gradient(135deg, rgb(123 97 255 / 0.18), rgb(177 76 242 / 0.12) 55%, rgb(255 92 157 / 0.14)),
-      rgb(255 255 255 / 0.02);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
-  }
-  .icon-tile-soft::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: linear-gradient(135deg, rgb(123 97 255 / 0.6), rgb(177 76 242 / 0.25) 55%, rgb(255 92 157 / 0.5));
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-
-  /* ---------- Backdrops ---------- */
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
-    background-size: 64px 64px;
-    background-position: center top;
-    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 75%);
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 75%);
-  }
-
-  .bg-dots {
-    background-image: radial-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1px);
-    background-size: 18px 18px;
-  }
-
-  .noise-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  /* Hairline that fades out at both ends, used as a section divider */
-  .hairline {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.1) 20%, rgb(255 255 255 / 0.1) 80%, transparent);
-  }
-
-  /* Soft, slowly drifting brand aurora */
-  .aurora {
-    position: absolute;
-    isolation: isolate;
-    pointer-events: none;
-  }
-  .aurora-blob {
-    position: absolute;
-    border-radius: 9999px;
-    mix-blend-mode: screen;
-    will-change: transform;
-  }
-  .aurora-blob-1 {
-    left: 0;
-    top: 10%;
-    width: 58%;
-    height: 78%;
-    background: radial-gradient(closest-side, rgb(123 97 255 / 0.62), rgb(123 97 255 / 0.2) 55%, transparent);
-  }
-  .aurora-blob-2 {
-    left: 24%;
-    top: 0;
-    width: 52%;
-    height: 72%;
-    background: radial-gradient(closest-side, rgb(177 76 242 / 0.55), rgb(177 76 242 / 0.16) 55%, transparent);
-  }
-  .aurora-blob-3 {
-    right: 0;
-    top: 16%;
-    width: 54%;
-    height: 78%;
-    background: radial-gradient(closest-side, rgb(255 92 157 / 0.5), rgb(255 92 157 / 0.14) 55%, transparent);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .aurora-blob-1 {
-      animation: aurora-drift-1 18s ease-in-out infinite alternate;
-    }
-    .aurora-blob-2 {
-      animation: aurora-drift-2 23s ease-in-out infinite alternate;
-    }
-    .aurora-blob-3 {
-      animation: aurora-drift-3 27s ease-in-out infinite alternate;
-    }
-  }
-  @keyframes aurora-drift-1 {
-    0% {
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-    50% {
-      transform: translate3d(14%, -8%, 0) scale(1.12);
-    }
-    100% {
-      transform: translate3d(-6%, 6%, 0) scale(0.94);
-    }
-  }
-  @keyframes aurora-drift-2 {
-    0% {
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-    50% {
-      transform: translate3d(-12%, 10%, 0) scale(0.9);
-    }
-    100% {
-      transform: translate3d(10%, -4%, 0) scale(1.14);
-    }
-  }
-  @keyframes aurora-drift-3 {
-    0% {
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-    50% {
-      transform: translate3d(-16%, -6%, 0) scale(1.1);
-    }
-    100% {
-      transform: translate3d(4%, 8%, 0) scale(0.96);
-    }
-  }
-
   .kbd {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 1.5rem;
-    height: 1.5rem;
-    padding-inline: 0.375rem;
-    border-radius: 0.375rem;
-    border: 1px solid var(--color-line-strong);
-    border-bottom-width: 2px;
-    background: rgb(255 255 255 / 0.04);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: #d4d4d8;
-  }
-
-  .shimmer-text {
-    background-image: linear-gradient(90deg, #a1a1aa 0%, #fafafa 50%, #a1a1aa 100%);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: var(--animate-shimmer);
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding-inline: 0.3125rem;
+    border-radius: 0.3125rem;
+    border: 1px solid var(--line-strong);
+    background: var(--panel);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--muted);
   }
 
   /* Long-form legal / docs copy */
   .prose-legal {
-    color: #c4c4cc;
+    color: var(--fg-2);
     font-size: 1rem;
     line-height: 1.75;
   }
   .prose-legal > * + * {
     margin-top: 1.1em;
   }
+  .prose-legal > h2:first-child {
+    margin-top: 1.4em;
+  }
   .prose-legal h2 {
     margin-top: 2.6em;
-    color: #fafafa;
+    color: var(--fg);
     font-size: 1.375rem;
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.3;
-    scroll-margin-top: 6rem;
+    scroll-margin-top: 5rem;
   }
   .prose-legal h3 {
     margin-top: 1.8em;
-    color: #ededf2;
+    color: var(--fg);
     font-size: 1.0625rem;
     font-weight: 600;
     letter-spacing: -0.01em;
@@ -519,16 +283,16 @@ html[data-rv] [data-reveal][data-shown] {
     margin-top: 0.45em;
   }
   .prose-legal li::marker {
-    color: #71717a;
+    color: var(--faint);
   }
   .prose-legal strong {
-    color: #ededf2;
+    color: var(--fg);
     font-weight: 600;
   }
   .prose-legal a {
-    color: var(--color-brand-soft);
+    color: var(--accent);
     text-decoration: underline;
-    text-decoration-color: rgb(139 109 255 / 0.45);
+    text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
     text-underline-offset: 3px;
     overflow-wrap: anywhere;
   }
@@ -540,8 +304,19 @@ html[data-rv] [data-reveal][data-shown] {
     font-size: 0.875em;
     padding: 0.1em 0.35em;
     border-radius: 0.35rem;
-    background: rgb(255 255 255 / 0.06);
-    color: #e4e4e7;
+    background: var(--panel-2);
+    color: var(--fg);
     overflow-wrap: anywhere;
+  }
+}
+
+/* Inline text link in body copy (dictionary strings use it too). */
+@utility link-inline {
+  color: var(--accent);
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
+  text-underline-offset: 3px;
+  &:hover {
+    text-decoration-color: currentColor;
   }
 }

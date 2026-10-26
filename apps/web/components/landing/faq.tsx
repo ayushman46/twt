@@ -1,6 +1,5 @@
 import { Plus } from "lucide-react";
-import { Reveal } from "@/components/ui/reveal";
-import { SectionHeading } from "@/components/ui/section-heading";
+import { Section, SectionHeading } from "@/components/ui/section-heading";
 import type { Dictionary } from "@/lib/i18n/types";
 
 /**
@@ -10,32 +9,26 @@ import type { Dictionary } from "@/lib/i18n/types";
  */
 export function Faq({ t }: { t: Dictionary["faq"] }) {
   return (
-    <section id="faq" aria-labelledby="faq-title" className="cv-auto relative scroll-mt-20 py-24 sm:py-32">
-      <div className="container-page">
-        <SectionHeading id="faq-title" eyebrow={t.eyebrow} title={t.title} description={t.description} />
-        <Reveal className="panel mx-auto mt-14 max-w-3xl overflow-hidden">
+    <Section id="faq" labelledBy="faq-title">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-16">
+        <div className="lg:sticky lg:top-24 lg:self-start">
+          <SectionHeading id="faq-title" title={t.title} description={t.description} />
+        </div>
+        <div className="border-t border-line">
           {t.items.map((item, i) => (
-            <details
-              key={item.q}
-              id={item.id}
-              name="faq"
-              open={i === 0}
-              className="faq-item group scroll-mt-24 border-b border-line last:border-b-0"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-5 text-left text-zinc-100 transition-colors hover:text-white sm:px-6 [&::-webkit-details-marker]:hidden">
-                <h3 className="text-[0.9875rem] font-medium">{item.q}</h3>
-                <span
-                  className="flex size-7 shrink-0 items-center justify-center rounded-full border border-white/10 text-zinc-400 transition-transform duration-300 group-open:rotate-45 group-open:border-brand/40 group-open:text-brand-soft"
+            <details key={item.q} id={item.id} name="faq" open={i === 0} className="faq-item group scroll-mt-24 border-b border-line">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 rounded-md py-5 text-left text-fg transition-colors duration-150 hover:text-fg-2 [&::-webkit-details-marker]:hidden">
+                <h3 className="text-[15.5px] font-medium tracking-[-0.01em]">{item.q}</h3>
+                <Plus
+                  className="size-4 shrink-0 text-muted transition-transform duration-200 ease-out group-open:rotate-45"
                   aria-hidden="true"
-                >
-                  <Plus className="size-3.5" />
-                </span>
+                />
               </summary>
-              <p className="px-5 pb-5 pr-14 text-[0.9375rem] leading-relaxed text-zinc-400 sm:px-6 sm:pr-16">{item.a}</p>
+              <div className="pb-6 pr-10 text-[15px] leading-relaxed text-muted">{item.a}</div>
             </details>
           ))}
-        </Reveal>
+        </div>
       </div>
-    </section>
+    </Section>
   );
 }

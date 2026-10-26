@@ -1,6 +1,6 @@
 import { Dialog as D, DropdownMenu as M, Popover as P, Switch as S, Tooltip as T } from 'radix-ui';
 import { Check, ChevronRight, X } from 'lucide-react';
-import { cloneElement, useState, type ComponentPropsWithoutRef, type ReactElement, type ReactNode, type SyntheticEvent } from 'react';
+import { cloneElement, createContext, useContext, useState, type ComponentPropsWithoutRef, type ReactElement, type ReactNode, type SyntheticEvent } from 'react';
 import { t } from '@/i18n/core';
 import { cn } from './primitives';
 
@@ -22,10 +22,10 @@ export function Tip({ label, children, side = 'top', shortcut }: { label: ReactN
         <T.Content
           side={side}
           sideOffset={6}
-          className="z-[80] flex animate-fade-in items-center gap-2 rounded-lg bg-fg px-2 py-1 text-xs font-medium text-bg shadow-pop"
+          className="z-[80] flex animate-fade-in items-center gap-2 rounded-lg border border-line bg-panel px-2 py-1 text-xs font-medium text-fg shadow-pop"
         >
           {label}
-          {shortcut ? <span className="rounded bg-bg/15 px-1 text-[10px]">{shortcut}</span> : null}
+          {shortcut ? <span className="rounded bg-panel-2 px-1 text-[10px] text-muted">{shortcut}</span> : null}
         </T.Content>
       </T.Portal>
     </T.Root>
@@ -132,7 +132,7 @@ export function MenuSubContent({ className, ...props }: ComponentPropsWithoutRef
 }
 
 export function MenuLabel({ children }: { children: ReactNode }) {
-  return <M.Label className="px-2.5 pt-2 pb-1 text-[11px] font-semibold tracking-wide text-faint uppercase">{children}</M.Label>;
+  return <M.Label className="px-2.5 pt-2 pb-1 text-[12px] font-medium text-muted">{children}</M.Label>;
 }
 
 export function MenuSeparator() {
@@ -152,7 +152,7 @@ export function PopoverContent({ className, align = 'start', ...props }: Compone
         align={align}
         sideOffset={8}
         collisionPadding={12}
-        className={cn('z-[70] rounded-2xl border border-line bg-panel p-3 text-sm text-fg shadow-pop outline-none data-[state=open]:animate-fade-in', className)}
+        className={cn('z-[70] rounded-xl border border-line bg-panel p-3 text-sm text-fg shadow-pop outline-none data-[state=open]:animate-fade-in', className)}
         {...props}
       />
     </P.Portal>
@@ -181,7 +181,7 @@ export function Dialog({
   return (
     <D.Root open={open} onOpenChange={onOpenChange}>
       <D.Portal>
-        <D.Overlay className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-[2px] data-[state=open]:animate-fade-in" />
+        <D.Overlay className="fixed inset-0 z-[60] bg-black/40 data-[state=open]:animate-fade-in" />
         <D.Content
           aria-describedby={description ? undefined : undefined}
           className={cn(
@@ -205,10 +205,16 @@ export function Dialog({
 
 /* Switch */
 
-export function Switch({ checked, onCheckedChange, disabled, id }: { checked: boolean; onCheckedChange: (v: boolean) => void; disabled?: boolean; id?: string }) {
+/** Id of the visible label for controls rendered inside a labelled settings row. */
+export const FieldLabelContext = createContext<string | undefined>(undefined);
+
+export function Switch({ checked, onCheckedChange, disabled, id, label }: { checked: boolean; onCheckedChange: (v: boolean) => void; disabled?: boolean; id?: string; label?: string }) {
+  const labelledBy = useContext(FieldLabelContext);
   return (
     <S.Root
       id={id}
+      aria-label={label}
+      aria-labelledby={label ? undefined : labelledBy}
       checked={checked}
       onCheckedChange={onCheckedChange}
       disabled={disabled}

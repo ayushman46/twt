@@ -81,7 +81,7 @@ export async function run({ base, suite }) {
           await page.waitForFunction(() => location.hash === '#/home', { timeout: 15000 });
           const rows = await waitIdb(page, 'bookmarks', (r) => (r.length > 0 ? r : null), { timeout: 15000 });
           assert(rows.every((b) => b.id.startsWith('demo-')), 'non-demo ids');
-          await page.waitForSelector(`main ${icon('flask-conical')}`, { timeout: 8000 });
+          await page.waitForSelector('main [data-demo-banner]', { timeout: 8000 });
           await settle(page);
           const w = await isWelcome(page);
           assert(!w.fileInput, 'still on the welcome screen after loading samples');
@@ -96,12 +96,11 @@ export async function run({ base, suite }) {
         });
 
         await suite.check('"Remove sample data" (banner) empties the library', async () => {
-          const ok = await page.evaluate((x, f) => {
-            const banner = document.querySelector(f)?.closest('div');
-            const btn = [...(banner?.querySelectorAll('button') ?? [])].find((b) => b.querySelector(x));
+          const ok = await page.evaluate(() => {
+            const btn = document.querySelector('main [data-demo-banner] [data-action="remove-demo"]');
             btn?.click();
             return !!btn;
-          }, icon('x'), `main ${icon('flask-conical')}`);
+          });
           assert(ok, 'banner remove button not found');
           await waitIdb(page, 'bookmarks', (r) => r.length === 0, { timeout: 8000 });
           await page.waitForFunction(() => location.hash === '#/home', { timeout: 5000 });

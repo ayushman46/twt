@@ -96,9 +96,9 @@ export function ShelfWidget({ limit = 5, className }: { limit?: number; classNam
 
   return (
     <section className={className} aria-labelledby="shelf-widget-title">
-      <div className="mb-4 flex items-end justify-between gap-3">
+      <div className="mb-3 flex items-end justify-between gap-3">
         <div className="min-w-0">
-          <h2 id="shelf-widget-title" className="text-[20px] font-semibold tracking-[-0.03em]">
+          <h2 id="shelf-widget-title" className="text-[15px] font-semibold tracking-[-0.01em]">
             New on your shelf
           </h2>
           <p className="mt-0.5 text-[13px] text-muted">Repos, papers and tools pulled from your latest saves.</p>
@@ -107,16 +107,13 @@ export function ShelfWidget({ limit = 5, className }: { limit?: number; classNam
           Open shelf <ArrowRight />
         </Button>
       </div>
-      <div className="overflow-hidden rounded-2xl border border-line bg-panel shadow-card">
+      <div className="overflow-hidden rounded-xl border border-line bg-panel">
         {!shelf ? (
           <div className="divide-y divide-line" aria-busy="true" aria-label="Loading shelf">
             {Array.from({ length: limit }, (_, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 py-3">
-                <div className="skeleton size-8 rounded-[10px]" />
-                <div className="flex-1 space-y-1.5">
-                  <div className="skeleton h-3 w-3/4 rounded" />
-                  <div className="skeleton h-2.5 w-1/3 rounded" />
-                </div>
+              <div key={i} className="px-4 py-3">
+                <div className="skeleton h-3 w-3/4 rounded" />
+                <div className="skeleton mt-2 h-2.5 w-1/3 rounded" />
               </div>
             ))}
           </div>
@@ -124,32 +121,35 @@ export function ShelfWidget({ limit = 5, className }: { limit?: number; classNam
           <ul className="divide-y divide-line">
             {latest.map((r) => (
               <li key={r.key}>
-                <a href={r.url} target="_blank" rel="noreferrer noopener" className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-panel-2/60 focus-visible:bg-panel-2/60 focus-visible:outline-none">
-                  <TypeGlyph type={r.type} size={32} />
+                <a
+                  href={r.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-panel-2 focus-visible:bg-panel-2 focus-visible:outline-none"
+                >
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-[13.5px] font-medium text-fg">{r.title}</div>
-                    <div className="truncate text-[12px] text-muted">
-                      <span style={{ color: typeInk(r.type) }}>{r.kind}</span> · {r.domain}
+                    <div className="truncate text-[14px] font-medium text-fg">{r.title}</div>
+                    <div className="mt-0.5 truncate text-[12.5px] text-muted">
+                      {r.kind} · {r.domain}
                     </div>
                   </div>
-                  <span className="shrink-0 text-[12px] text-faint tabular-nums">{fmtShortDate(r.firstSavedAt)}</span>
+                  <span className="shrink-0 text-[12.5px] text-muted tabular-nums">{fmtShortDate(r.firstSavedAt)}</span>
                 </a>
               </li>
             ))}
           </ul>
         )}
         {shelf && topTypes.length ? (
-          <div className="flex flex-wrap items-center gap-1.5 border-t border-line bg-panel-2/40 px-3 py-2.5">
+          <div className="flex flex-wrap items-center gap-1.5 border-t border-line px-3 py-2.5">
             {topTypes.map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => navigate(`#/shelf/${RESOURCE_META[t].slug}`)}
-                className="inline-flex h-7 items-center gap-1.5 rounded-full border border-line bg-panel px-2.5 text-[12px] text-fg-2 transition-colors hover:border-line-strong hover:text-fg"
+                className="inline-flex h-7 items-center gap-1.5 rounded-full bg-panel-2 px-2.5 text-[12px] text-fg-2 transition-colors hover:bg-panel-3 hover:text-fg"
               >
-                <TypeGlyph type={t} size={16} className="rounded-[5px]" />
                 {RESOURCE_META[t].label}
-                <span className="text-faint tabular-nums">{fmtNumber(shelf.counts[t])}</span>
+                <span className="text-muted tabular-nums">{fmtNumber(shelf.counts[t])}</span>
               </button>
             ))}
           </div>

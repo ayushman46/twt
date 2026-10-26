@@ -34,7 +34,7 @@ function Tile({ m, onOpen, className, tall }: { m: Media; onOpen: () => void; cl
         else onOpen();
       }}
       className={cn('group/tile relative block size-full overflow-hidden bg-panel-2', className)}
-      aria-label={m.alt || (m.type === 'photo' ? t('media.openImage') : t('media.playVideo'))}
+      aria-label={m.alt || (m.type === 'photo' ? t('media.openImage') : `${t('media.playVideo')} ${m.type === 'gif' ? 'GIF' : fmtDuration(m.durationMs) || t('media.video')}`)}
     >
       <img
         src={mediaUrl(m.url, tall ? 'large' : 'medium')}
@@ -46,7 +46,7 @@ function Tile({ m, onOpen, className, tall }: { m: Media; onOpen: () => void; cl
       {m.type !== 'photo' ? (
         <>
           <span className="absolute inset-0 grid place-items-center">
-            <span className="grid size-12 place-items-center rounded-full bg-black/55 text-white backdrop-blur-sm transition-transform group-hover/tile:scale-110">
+            <span className="grid size-12 place-items-center rounded-full bg-black/60 text-white transition-transform group-hover/tile:scale-110">
               <Play className="size-5 translate-x-px fill-white" />
             </span>
           </span>
@@ -70,7 +70,7 @@ export function MediaGrid({ media, className, compact }: { media: Media[]; class
   return (
     <>
       <div
-        className={cn('overflow-hidden rounded-[14px] border border-line', n > 1 && 'grid gap-0.5', n === 2 && 'grid-cols-2', n >= 3 && 'grid-cols-2 grid-rows-2', className)}
+        className={cn('overflow-hidden rounded-xl border border-line', n > 1 && 'grid gap-0.5', n === 2 && 'grid-cols-2', n >= 3 && 'grid-cols-2 grid-rows-2', className)}
         style={n === 1 ? { aspectRatio: String(Math.max(0.75, Math.min(ratio, 2))), maxHeight: compact ? 260 : 440 } : { aspectRatio: n === 2 ? '16 / 9' : '4 / 3' }}
       >
         {items.map((m, i) => (
@@ -97,7 +97,7 @@ export function Lightbox({ media, index, onClose }: { media: Media[]; index: num
   return (
     <D.Root open={open} onOpenChange={(o) => !o && onClose()}>
       <D.Portal>
-        <D.Overlay className="fixed inset-0 z-[90] bg-black/85 backdrop-blur-sm data-[state=open]:animate-fade-in" />
+        <D.Overlay className="fixed inset-0 z-[90] bg-black/85 data-[state=open]:animate-fade-in" />
         <D.Content
           className="fixed inset-0 z-[91] grid place-items-center p-6 outline-none"
           onClick={onClose}
@@ -108,7 +108,7 @@ export function Lightbox({ media, index, onClose }: { media: Media[]; index: num
         >
           <D.Title className="sr-only">{t('media.image')}</D.Title>
           <D.Description className="sr-only">{m?.alt ?? t('media.imageFromPost')}</D.Description>
-          {m ? <img src={mediaUrl(m.url, 'orig')} alt={m.alt ?? ''} className="max-h-[92vh] max-w-[92vw] animate-fade-in rounded-lg object-contain shadow-2xl" onClick={(e) => e.stopPropagation()} /> : null}
+          {m ? <img src={mediaUrl(m.url, 'orig')} alt={m.alt ?? ''} className="max-h-[92vh] max-w-[92vw] animate-fade-in rounded-lg object-contain" onClick={(e) => e.stopPropagation()} /> : null}
           {media.length > 1 ? (
             <>
               <button

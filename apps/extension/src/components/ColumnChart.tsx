@@ -1,7 +1,7 @@
 /**
  * Lightweight single-series column chart (replaces recharts for the one chart
- * we draw). Thin columns ≤24px with 4px rounded tops, hairline grid, compact
- * y ticks, sparse x labels, and a per-column hover/focus tooltip.
+ * we draw). Thin neutral columns with the latest column in the accent, hairline
+ * grid, compact y ticks, sparse x labels, and a per-column hover/focus tooltip.
  */
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useT } from '@/i18n';
@@ -51,9 +51,10 @@ export function ColumnChart({ data, height = 240, unit }: { data: ColumnDatum[];
   const ticks = useMemo(() => niceTicks(Math.max(0, ...data.map((d) => d.value))), [data]);
   const yMax = ticks[ticks.length - 1] || 1;
   const band = data.length ? plotW / data.length : 0;
-  const barW = Math.max(2, Math.min(24, band * 0.62));
+  const barW = Math.max(2, Math.min(10, band * 0.5));
   const labelEvery = Math.max(1, Math.ceil(64 / Math.max(band, 1)));
   const y = (v: number) => top + plotH - (v / yMax) * plotH;
+  const last = data.length - 1;
 
   const hovered = hover !== null ? data[hover] : undefined;
 
@@ -64,7 +65,7 @@ export function ColumnChart({ data, height = 240, unit }: { data: ColumnDatum[];
           {ticks.map((tick) => (
             <g key={tick}>
               <line x1={left} x2={width - 4} y1={y(tick)} y2={y(tick)} stroke="var(--line)" strokeWidth={1} />
-              <text x={left - 8} y={y(tick)} dy="0.32em" textAnchor="end" fontSize={11} fill="var(--faint)">
+              <text x={left - 8} y={y(tick)} dy="0.32em" textAnchor="end" fontSize={11} fill="var(--muted)">
                 {fmtCompact(tick)}
               </text>
             </g>
@@ -75,13 +76,14 @@ export function ColumnChart({ data, height = 240, unit }: { data: ColumnDatum[];
             const h = Math.max(0, top + plotH - y(d.value));
             const x0 = cx - barW / 2;
             const y0 = top + plotH;
-            const r = Math.min(4, barW / 2, h);
+            const r = Math.min(3, barW / 2, h);
             const path = h > 0 ? `M${x0},${y0}V${y0 - h + r}Q${x0},${y0 - h} ${x0 + r},${y0 - h}H${x0 + barW - r}Q${x0 + barW},${y0 - h} ${x0 + barW},${y0 - h + r}V${y0}Z` : '';
+            const accent = i === last || hover === i;
             return (
               <g key={d.key}>
-                {path ? <path d={path} fill={hover === i ? 'var(--accent-hover)' : 'var(--accent)'} /> : null}
+                {path ? <path d={path} className={`fill-current transition-colors duration-150 ${accent ? 'text-accent' : 'text-fg/[0.22]'}`} /> : null}
                 {i % labelEvery === 0 ? (
-                  <text x={cx} y={height - 6} textAnchor="middle" fontSize={11} fill="var(--faint)">
+                  <text x={cx} y={height - 6} textAnchor="middle" fontSize={11} fill="var(--muted)">
                     {d.label}
                   </text>
                 ) : null}
@@ -93,6 +95,7 @@ export function ColumnChart({ data, height = 240, unit }: { data: ColumnDatum[];
                   height={plotH}
                   fill={hover === i ? 'var(--accent-soft)' : 'transparent'}
                   tabIndex={0}
+                  role="img"
                   aria-label={`${d.full}: ${amount(d.value)}`}
                   onPointerEnter={() => setHover(i)}
                   onPointerLeave={() => setHover((h0) => (h0 === i ? null : h0))}
@@ -107,12 +110,10 @@ export function ColumnChart({ data, height = 240, unit }: { data: ColumnDatum[];
       ) : null}
       {hovered && hover !== null ? (
         <div
-          className="pointer-events-none absolute z-10 rounded-xl border border-line bg-panel px-3 py-2 shadow-pop"
+          className="pointer-events-none absolute z-10 rounded-lg border border-line bg-panel px-3 py-2 shadow-pop"
           style={{ left: Math.min(Math.max(left + band * hover + band / 2 - 70, 0), Math.max(0, width - 150)), top: 0 }}
         >
-          <div className="text-[15px] font-semibold text-fg">
-            {amount(hovered.value)}
-          </div>
+          <div className="text-[15px] font-semibold tabular-nums text-fg">{amount(hovered.value)}</div>
           <div className="text-[12px] text-muted">{hovered.full}</div>
         </div>
       ) : null}

@@ -10,8 +10,9 @@ export default defineConfig({
   // Firefox review needs buildable sources, including the shared package.
   zip: {
     sourcesRoot: fileURLToPath(new URL('../..', import.meta.url)),
-    includeSources: ['apps/extension/**', 'packages/shared/**', 'package.json', 'README.md'],
-    excludeSources: ['**/node_modules/**', '**/.output/**', '**/.wxt/**'],
+    includeSources: ['apps/extension/**', 'packages/shared/**', 'package.json', 'README.md', 'LICENSE'],
+    // Local build output, benchmark browser profiles and results are not part of the source.
+    excludeSources: ['**/node_modules/**', '**/.output/**', '**/.wxt/**', '**/preview/dist/**', '**/bench/.profile/**', '**/bench/results/**'],
   },
   modules: ['@wxt-dev/module-react'],
   vite: () => ({

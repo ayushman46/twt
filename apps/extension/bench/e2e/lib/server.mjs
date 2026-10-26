@@ -35,7 +35,9 @@ export function buildPreview({ skip = false, outDir = PREVIEW_DIST, quiet = fals
   }
   const t0 = Date.now();
   if (!quiet) console.log(`[qa] building preview harness → ${outDir}`);
-  execSync(`npx vite build --config vite.preview.config.ts --outDir "${outDir}" --emptyOutDir --logLevel error`, {
+  // QA_DEBUG_BUILD=1 keeps names readable in stack traces (unminified, with source maps).
+  const debug = process.env.QA_DEBUG_BUILD ? ' --minify false --sourcemap' : '';
+  execSync(`npx vite build --config vite.preview.config.ts --outDir "${outDir}" --emptyOutDir --logLevel error${debug}`, {
     cwd: EXT_ROOT,
     stdio: quiet ? 'pipe' : 'inherit',
     env: { ...process.env, VITE_CACHE_DIR: VITE_CACHE },

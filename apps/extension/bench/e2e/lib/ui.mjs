@@ -323,8 +323,18 @@ export async function clickToastAction(page, re = L.undo, timeout = 5000) {
   await clickText(page, '[data-sonner-toast] button[data-button]', re, { timeout });
 }
 
+/**
+ * Get open toasts out of the way without touching the DOM tree: sonner's toasts
+ * are React-managed, and removing their nodes makes React's next insert crash
+ * (NotFoundError in insertBefore). Hide them; sonner removes them on its own.
+ */
 export async function dismissToasts(page) {
-  await page.evaluate(() => document.querySelectorAll('[data-sonner-toast]').forEach((t) => t.remove()));
+  await page.evaluate(() =>
+    document.querySelectorAll('[data-sonner-toast]').forEach((t) => {
+      t.style.visibility = 'hidden';
+      t.style.pointerEvents = 'none';
+    }),
+  );
 }
 
 /** Run a quick, deterministic interaction-free sanity on the current screen. */

@@ -12,6 +12,8 @@ import { Button, Input, Kbd, cn } from './ui/primitives';
 
 const EMOJIS = ['📌', '⭐', '📚', '💡', '🧠', '🛠️', '🚀', '🎨', '💻', '🤖', '📈', '💰', '🔥', '❤️', '🎯', '🧪', '🌱', '✍️', '🎬', '🎧', '🍳', '✈️', '🏋️', '🧘', '📝', '🗂️', '🔖', '👀', '🏆', '🧩'];
 
+const FIELD_LABEL = 'mb-2 text-[12.5px] font-medium text-muted';
+
 export function CollectionDialog() {
   useT();
   const state = useUi((s) => s.collectionDialog);
@@ -55,28 +57,33 @@ export function CollectionDialog() {
           e.preventDefault();
           void submit();
         }}
-        className="space-y-4"
+        className="space-y-5"
         onKeyDown={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-2">
-          <span className="grid size-9 shrink-0 place-items-center rounded-[10px] border border-line text-lg" style={{ background: `color-mix(in oklab, ${color} 16%, transparent)` }}>
+        <div className="flex items-center gap-2.5">
+          <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-line text-lg" style={{ background: `color-mix(in oklab, ${color} 16%, transparent)` }}>
             {emoji}
           </span>
           <Input autoFocus value={name} onChange={(e) => setName(e.target.value)} placeholder={t('collection.namePlaceholder')} maxLength={60} />
         </div>
         <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t('collection.descPlaceholder')} maxLength={140} />
         <div>
-          <div className="mb-2 text-[12px] font-medium text-muted">{t('collection.icon')}</div>
+          <div className={FIELD_LABEL}>{t('collection.icon')}</div>
           <div className="grid grid-cols-10 gap-1">
             {EMOJIS.map((e) => (
-              <button key={e} type="button" onClick={() => setEmoji(e)} className={cn('grid aspect-square place-items-center rounded-lg text-[17px] hover:bg-panel-2', emoji === e && 'bg-accent-soft ring-2 ring-accent/40')}>
+              <button
+                key={e}
+                type="button"
+                onClick={() => setEmoji(e)}
+                className={cn('grid aspect-square place-items-center rounded-lg text-[17px] transition-colors hover:bg-panel-2', emoji === e && 'bg-accent-soft ring-1 ring-accent/60')}
+              >
                 {e}
               </button>
             ))}
           </div>
         </div>
         <div>
-          <div className="mb-2 text-[12px] font-medium text-muted">{t('collection.color')}</div>
+          <div className={FIELD_LABEL}>{t('collection.color')}</div>
           <div className="flex flex-wrap gap-2">
             {COLLECTION_COLORS.map((c) => (
               <button
@@ -90,12 +97,13 @@ export function CollectionDialog() {
             ))}
           </div>
         </div>
-        <div className="flex items-center justify-between pt-1">
+        <div className="flex items-center justify-between border-t border-line pt-4">
           {editing ? (
             <Button
               type="button"
-              variant="danger"
+              variant="ghost"
               size="sm"
+              className="-ml-2.5 hover:text-bad"
               onClick={async () => {
                 await deleteCollection(editing.id);
                 toast(t('collection.deleted', { name: editing.name }), { description: t('collection.deletedDesc') });
@@ -109,7 +117,7 @@ export function CollectionDialog() {
             <span />
           )}
           <div className="flex gap-2">
-            <Button type="button" variant="ghost" onClick={close}>
+            <Button type="button" variant="outline" onClick={close}>
               {t('common.cancel')}
             </Button>
             <Button type="submit" variant="primary" disabled={!name.trim()}>
@@ -148,29 +156,41 @@ export function ShortcutsDialog() {
   const setOpen = useUi((s) => s.setShortcutsOpen);
   return (
     <Dialog open={open} onOpenChange={setOpen} title={t('shortcuts.title')} className="max-w-2xl">
-      <div className="grid gap-x-8 gap-y-1 sm:grid-cols-2">
-        <div className="space-y-1">
-          {SHORTCUTS.map(([keys, label]) => (
-            <div key={label} className="flex min-h-8 items-center justify-between gap-3 text-[13px]">
-              <span className="text-fg-2">{t(label)}</span>
-              <span className="flex gap-1">
-                {keys.map((k) => (
-                  <Kbd key={k}>{k}</Kbd>
-                ))}
-              </span>
-            </div>
-          ))}
+      <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+        <div>
+          <table className="w-full border-collapse text-[13px]">
+            <tbody className="divide-y divide-line">
+              {SHORTCUTS.map(([keys, label]) => (
+                <tr key={label}>
+                  <th scope="row" className="h-9 py-0 pr-3 text-left font-normal text-fg-2">
+                    {t(label)}
+                  </th>
+                  <td className="h-9 py-0 text-right">
+                    <span className="inline-flex justify-end gap-1">
+                      {keys.map((k) => (
+                        <Kbd key={k}>{k}</Kbd>
+                      ))}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <div>
-          <div className="mb-2 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">{t('shortcuts.operators')}</div>
-          <div className="space-y-1.5">
-            {OPERATOR_HELP.map((o) => (
-              <div key={o.op} className="text-[12.5px]">
-                <code className="rounded bg-panel-2 px-1.5 py-0.5 text-[12px] text-accent">{o.example}</code>
-                <span className="ml-2 text-muted">{tOr(`op.${o.op}` as ExtraKey, o.description)}</span>
-              </div>
-            ))}
-          </div>
+          <div className={FIELD_LABEL}>{t('shortcuts.operators')}</div>
+          <table className="w-full border-collapse text-[12.5px]">
+            <tbody className="divide-y divide-line">
+              {OPERATOR_HELP.map((o) => (
+                <tr key={o.op}>
+                  <th scope="row" className="py-2 pr-3 text-left font-normal align-top">
+                    <code className="rounded-md bg-panel-2 px-1.5 py-0.5 text-[12px] text-fg-2">{o.example}</code>
+                  </th>
+                  <td className="py-2 text-muted">{tOr(`op.${o.op}` as ExtraKey, o.description)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </Dialog>

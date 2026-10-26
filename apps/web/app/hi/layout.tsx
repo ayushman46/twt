@@ -33,9 +33,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = rootMetadata(hi);
 
+// Dark by default; follows the OS when it asks for light (tokens in globals.css).
 export const viewport: Viewport = {
-  themeColor: "#08080C",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0c0c0d" },
+    { media: "(prefers-color-scheme: light)", color: "#f7f7f5" },
+  ],
+  colorScheme: "dark light",
 };
 
 export default function HindiRootLayout({ children }: { children: React.ReactNode }) {

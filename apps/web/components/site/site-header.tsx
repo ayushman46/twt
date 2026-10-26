@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-import { ArrowRight, Menu, Puzzle, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { LOCALE_META, LOCALES, switchLocaleHref, type Locale } from "@/lib/i18n/config";
 import type { HeaderCopy } from "@/lib/i18n/types";
@@ -24,7 +24,7 @@ function LanguageSwitch({ locale, label, compact = false }: { locale: Locale; la
         href={switchLocaleHref(pathname, other)}
         hrefLang={meta.htmlLang}
         lang={meta.htmlLang}
-        className="inline-flex h-9 items-center rounded-full border border-white/10 bg-white/[0.04] px-3 text-sm font-medium text-zinc-200 transition-colors hover:border-white/20 hover:text-white"
+        className="inline-flex h-8 items-center rounded-lg border border-line px-2.5 text-[13px] font-medium text-fg-2 transition-colors duration-150 hover:bg-panel-2 hover:text-fg"
       >
         <span className="sr-only">{label}: </span>
         {meta.native}
@@ -32,7 +32,7 @@ function LanguageSwitch({ locale, label, compact = false }: { locale: Locale; la
     );
   }
   return (
-    <div role="group" aria-label={label} className="flex items-center rounded-full border border-white/[0.08] bg-white/[0.03] p-0.5 text-[13px]">
+    <div role="group" aria-label={label} className="flex h-8 items-center rounded-lg border border-line p-0.5 text-[13px]">
       {LOCALES.map((l) => {
         const meta = LOCALE_META[l];
         const active = l === locale;
@@ -44,8 +44,8 @@ function LanguageSwitch({ locale, label, compact = false }: { locale: Locale; la
             lang={meta.htmlLang}
             aria-current={active ? "true" : undefined}
             className={clsx(
-              "rounded-full px-2.5 py-1 font-medium transition-colors",
-              active ? "bg-white/[0.1] text-white" : "text-zinc-400 hover:text-white",
+              "flex h-full items-center rounded-md px-2 font-medium transition-colors duration-150",
+              active ? "bg-panel-3 text-fg" : "text-muted hover:text-fg",
             )}
           >
             {meta.native}
@@ -70,7 +70,7 @@ export function SiteHeader({ locale, t, chromeHref }: { locale: Locale; t: Heade
   }
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 4);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -92,95 +92,88 @@ export function SiteHeader({ locale, t, chromeHref }: { locale: Locale; t: Heade
     };
   }, [open]);
 
-  const glass = scrolled || open;
+  const solid = scrolled || open;
 
   return (
     <header
       className={clsx(
-        "sticky top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-300",
-        glass
-          ? "border-white/[0.07] bg-ink/90 shadow-[0_8px_32px_-16px_rgb(0_0_0/0.8)] md:bg-ink/70 md:backdrop-blur-xl md:backdrop-saturate-150"
-          : "border-transparent bg-transparent",
+        "sticky top-0 z-50 border-b bg-bg transition-[border-color] duration-200",
+        solid ? "border-line" : "border-transparent",
       )}
     >
-      {/* brand hairline that fades in once the page scrolls */}
-      <div
-        aria-hidden="true"
-        className={clsx(
-          "pointer-events-none absolute inset-x-0 -bottom-px h-px bg-[linear-gradient(90deg,transparent,rgb(123_97_255/0.45)_30%,rgb(255_92_157/0.4)_70%,transparent)] transition-opacity duration-300",
-          glass ? "opacity-60" : "opacity-0",
-        )}
-      />
-      <div className="container-page flex h-16 items-center justify-between gap-3">
-        <Link href={home} aria-label={t.homeAria} className="rounded-lg">
-          <Wordmark id="header" />
-        </Link>
-
-        <nav aria-label={t.mainNav} className="hidden md:block">
-          <ul className="flex items-center gap-0.5">
-            {t.nav.map((link) => (
-              <li key={link.href}>
+      <div className="container-page flex h-14 items-center justify-between gap-3">
+        <div className="flex items-center gap-8">
+          <Link href={home} aria-label={t.homeAria} className="-m-1 rounded-md p-1">
+            <Wordmark />
+          </Link>
+          <nav aria-label={t.mainNav} className="hidden md:block">
+            <ul className="flex items-center gap-1">
+              {t.nav.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="inline-flex h-8 items-center rounded-md px-2.5 text-[13.5px] text-muted transition-colors duration-150 hover:bg-panel-2 hover:text-fg"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+              <li className="hidden lg:block">
                 <Link
-                  href={link.href}
-                  className="rounded-full px-3 py-2 text-sm text-zinc-400 transition-colors hover:bg-white/[0.05] hover:text-white lg:px-3.5"
+                  href={t.installGuide.href}
+                  aria-current={pathname === t.installGuide.href ? "page" : undefined}
+                  className="inline-flex h-8 items-center rounded-md px-2.5 text-[13.5px] text-muted transition-colors duration-150 hover:bg-panel-2 hover:text-fg aria-[current=page]:text-fg"
                 >
-                  {link.label}
+                  {t.installGuide.label}
                 </Link>
               </li>
-            ))}
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <div className="hidden md:block">
             <LanguageSwitch locale={locale} label={t.language} />
           </div>
           <div className="md:hidden">
             <LanguageSwitch locale={locale} label={t.language} compact />
           </div>
-          <Link
-            href={t.installGuide.href}
-            className="hidden rounded-full px-3.5 py-2 text-sm text-zinc-400 transition-colors hover:text-white xl:inline-flex"
-          >
-            {t.installGuide.label}
-          </Link>
+          {/* Phones can't install extensions: the header CTA starts at sm. */}
           <div className="hidden sm:block">
             <ButtonLink href={chromeHref} size="sm">
-              <Puzzle className="size-4" aria-hidden="true" />
               {t.cta}
             </ButtonLink>
           </div>
           <button
             type="button"
-            className="inline-flex size-10 items-center justify-center rounded-full text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white md:hidden"
+            className="inline-flex size-8 items-center justify-center rounded-lg text-fg-2 transition-colors duration-150 hover:bg-panel-2 hover:text-fg md:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? t.closeMenu : t.openMenu}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
+            {open ? <X className="size-[18px]" aria-hidden="true" /> : <Menu className="size-[18px]" aria-hidden="true" />}
           </button>
         </div>
       </div>
 
-      <div id="mobile-nav" hidden={!open} className="border-t border-white/[0.07] md:hidden">
-        <nav aria-label={t.mobileNav} className="container-page py-4">
-          <ul className="flex flex-col gap-1">
+      <div id="mobile-nav" hidden={!open} className="border-t border-line bg-bg md:hidden">
+        <nav aria-label={t.mobileNav} className="container-page py-3">
+          <ul className="flex flex-col">
             {[...t.nav, t.installGuide].map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-between rounded-xl px-3 py-3 text-base text-zinc-300 transition-colors hover:bg-white/[0.05] hover:text-white"
+                  aria-current={pathname === link.href ? "page" : undefined}
+                  className="flex min-h-11 items-center rounded-lg px-2 text-[15px] text-fg-2 transition-colors duration-150 hover:bg-panel-2 hover:text-fg aria-[current=page]:bg-panel-2 aria-[current=page]:text-fg"
                 >
                   {link.label}
-                  <ArrowRight className="size-4 text-zinc-500" aria-hidden="true" />
                 </Link>
               </li>
             ))}
           </ul>
-          <ButtonLink href={chromeHref} className="mt-4 w-full" onClick={() => setOpen(false)}>
-            <Puzzle className="size-4" aria-hidden="true" />
+          <ButtonLink href={chromeHref} size="lg" className="mt-3 w-full" onClick={() => setOpen(false)}>
             {t.ctaLong}
           </ButtonLink>
         </nav>

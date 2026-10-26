@@ -25,8 +25,9 @@ export function CopyCode({ value, className }: { value: string; className?: stri
 
   return (
     <span
+      lang="en"
       className={clsx(
-        "inline-flex max-w-full items-center gap-1 rounded-lg border border-white/10 bg-black/30 py-0.5 pl-2.5 pr-0.5 align-middle font-mono text-[0.8125rem] text-zinc-200",
+        "inline-flex max-w-full items-center gap-1 rounded-lg border border-line bg-inset py-0.5 pl-3 pr-0.5 align-middle font-mono text-[13px] text-fg",
         className,
       )}
     >
@@ -34,10 +35,10 @@ export function CopyCode({ value, className }: { value: string; className?: stri
       <button
         type="button"
         onClick={copy}
-        className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
+        className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted transition-colors duration-150 hover:bg-panel-2 hover:text-fg active:scale-95"
         aria-label={copied ? `Copied ${value}` : `Copy ${value}`}
       >
-        {copied ? <Check className="size-3.5 text-emerald-400" aria-hidden="true" /> : <Copy className="size-3.5" aria-hidden="true" />}
+        {copied ? <Check className="size-3.5 text-good" aria-hidden="true" /> : <Copy className="size-3.5" aria-hidden="true" />}
       </button>
       <span className="sr-only" aria-live="polite">
         {copied ? "Copied to clipboard" : ""}

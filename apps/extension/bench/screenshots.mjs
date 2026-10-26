@@ -79,9 +79,11 @@ try {
   await p.keyboard.press('1');
   await sleep(1500);
   await save(p, 'library-dark');
-  // Detail panel
-  await p.$eval('article[data-id] div.mt-3', (e) => e.click());
-  await p.waitForSelector('[aria-label="Post details"]');
+  // Detail panel: click the body of the first card.
+  const card = await p.$('main article[data-id]');
+  const cardBox = await card.boundingBox();
+  await p.mouse.click(cardBox.x + cardBox.width / 2, cardBox.y + 80);
+  await p.waitForSelector('aside[role="dialog"]');
   await sleep(800);
   await save(p, 'detail-dark');
   await p.keyboard.press('Escape');
@@ -97,7 +99,7 @@ try {
   await p.close();
 
   p = await open('#/insights');
-  await p.waitForSelector('svg[aria-label^="Column chart"]');
+  await p.waitForSelector('main svg[role="img"]');
   await sleep(600);
   await save(p, 'insights-dark');
   await p.close();
@@ -128,13 +130,16 @@ try {
   await save(p, 'popup', box);
   await p.close();
 
-  // Live marketing site
-  const site = await browser.newPage();
-  await site.setViewport({ width: 1440, height: 900, deviceScaleFactor: 2 });
-  await site.goto('https://twtdash.vercel.app', { waitUntil: 'networkidle0', timeout: 120000 });
-  await sleep(2500);
-  await save(site, 'landing');
-  await site.close();
+  // Marketing site (opt in: --landing=<url>, e.g. a local `next start` of the redesigned site)
+  const landing = process.argv.find((a) => a.startsWith('--landing='))?.slice(10);
+  if (landing) {
+    const site = await browser.newPage();
+    await site.setViewport({ width: 1440, height: 900, deviceScaleFactor: 2 });
+    await site.goto(landing, { waitUntil: 'networkidle0', timeout: 120000 });
+    await sleep(2500);
+    await save(site, 'landing');
+    await site.close();
+  }
 } finally {
   await browser.close();
   try {

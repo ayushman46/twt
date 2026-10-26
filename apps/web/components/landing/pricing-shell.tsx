@@ -26,6 +26,10 @@ function setCurrency(c: Currency) {
   window.dispatchEvent(new Event(CURRENCY_EVENT));
 }
 
+const group = "inline-flex h-9 items-center rounded-lg border border-line bg-panel p-0.5 text-[13px]";
+const segment =
+  "inline-flex h-full items-center justify-center gap-2 rounded-md px-3 font-medium transition-colors duration-150 active:scale-[0.98]";
+
 /**
  * Billing period + ₹/$ toggles. Prices are server-rendered for every
  * currency × period; CSS shows the matching ones (`data-period` here,
@@ -34,10 +38,12 @@ function setCurrency(c: Currency) {
  */
 export function PricingShell({
   defaultCurrency,
+  heading,
   labels,
   children,
 }: {
   defaultCurrency: Currency;
+  heading: ReactNode;
   labels: {
     period: string;
     monthly: string;
@@ -52,56 +58,43 @@ export function PricingShell({
 
   return (
     <div data-period={period}>
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-        <div
-          role="group"
-          aria-label={labels.period}
-          className="inline-flex items-center rounded-full border border-white/[0.08] bg-white/[0.03] p-1 text-sm shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]"
-        >
-          {(["monthly", "yearly"] as const).map((p) => (
-            <button
-              key={p}
-              type="button"
-              aria-pressed={period === p}
-              onClick={() => setPeriod(p)}
-              className={clsx(
-                "inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-medium transition-colors",
-                period === p ? "bg-white text-ink" : "text-zinc-400 hover:text-white",
-              )}
-            >
-              {p === "monthly" ? labels.monthly : labels.yearly}
-              {p === "yearly" ? (
-                <span
-                  className={clsx(
-                    "rounded-full px-1.5 py-px text-[11px] font-semibold",
-                    period === p ? "bg-brand-gradient text-white" : "bg-brand/20 text-brand-soft",
-                  )}
-                >
-                  <span className="cur-inr">−{labels.savings.inr}%</span>
-                  <span className="cur-usd">−{labels.savings.usd}%</span>
-                </span>
-              ) : null}
-            </button>
-          ))}
-        </div>
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        {heading}
+        <div className="flex flex-wrap items-center gap-2">
+          <div role="group" aria-label={labels.period} className={group}>
+            {(["monthly", "yearly"] as const).map((p) => (
+              <button
+                key={p}
+                type="button"
+                aria-pressed={period === p}
+                onClick={() => setPeriod(p)}
+                className={clsx(segment, period === p ? "bg-panel-3 text-fg" : "text-muted hover:text-fg")}
+              >
+                {p === "monthly" ? labels.monthly : labels.yearly}
+                {p === "yearly" ? (
+                  <span className="rounded bg-accent-soft px-1 text-[11px] font-medium leading-[18px] text-accent tabular-nums">
+                    <span className="cur-inr">−{labels.savings.inr}%</span>
+                    <span className="cur-usd">−{labels.savings.usd}%</span>
+                  </span>
+                ) : null}
+              </button>
+            ))}
+          </div>
 
-        <div
-          role="group"
-          aria-label={labels.currency}
-          className="inline-flex items-center rounded-full border border-white/[0.08] bg-white/[0.03] p-1 text-sm shadow-[inset_0_1px_0_rgb(255_255_255/0.05)]"
-        >
-          {(["inr", "usd"] as const).map((c) => (
-            <button
-              key={c}
-              type="button"
-              data-cur-btn={c}
-              aria-pressed={currency === c}
-              onClick={() => setCurrency(c)}
-              className="cur-btn inline-flex min-w-[3.25rem] items-center justify-center rounded-full px-3 py-1.5 font-medium text-zinc-400 transition-colors hover:text-white"
-            >
-              {c === "inr" ? "₹ INR" : "$ USD"}
-            </button>
-          ))}
+          <div role="group" aria-label={labels.currency} className={group}>
+            {(["inr", "usd"] as const).map((c) => (
+              <button
+                key={c}
+                type="button"
+                data-cur-btn={c}
+                aria-pressed={currency === c}
+                onClick={() => setCurrency(c)}
+                className={clsx(segment, "cur-btn min-w-[4rem] text-muted hover:text-fg")}
+              >
+                {c === "inr" ? "₹ INR" : "$ USD"}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       {children}

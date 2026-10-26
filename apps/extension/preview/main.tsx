@@ -31,6 +31,7 @@ if (params.has('bench')) {
 }
 if (params.has('reset')) {
   await db.bookmarks.clear();
+  localStorage.removeItem('__twtdash_preview_storage');
   location.replace(location.pathname + location.hash);
 }
 

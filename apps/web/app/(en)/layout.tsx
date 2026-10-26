@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { SharedHead, SiteShell } from "@/components/site/site-shell";
 import { en } from "@/lib/i18n/en";
 import { rootMetadata } from "@/lib/metadata";
@@ -17,15 +17,6 @@ const geist = Geist({
   display: "swap",
 });
 
-// Only the italic is used (editorial accents in headings).
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: "italic",
-  variable: "--font-instrument",
-  display: "swap",
-});
-
 // Mono only appears in small UI previews: don't let it compete with critical fonts.
 const geistMono = Geist_Mono({
   subsets: ["latin"],
@@ -36,9 +27,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = rootMetadata(en);
 
+// Dark by default; follows the OS when it asks for light (tokens in globals.css).
 export const viewport: Viewport = {
-  themeColor: "#08080C",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0c0c0d" },
+    { media: "(prefers-color-scheme: light)", color: "#f7f7f5" },
+  ],
+  colorScheme: "dark light",
 };
 
 export default function EnglishRootLayout({ children }: { children: React.ReactNode }) {
@@ -47,7 +42,7 @@ export default function EnglishRootLayout({ children }: { children: React.ReactN
       lang="en"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${geist.variable} ${instrumentSerif.variable} ${geistMono.variable} antialiased`}
+      className={`${geist.variable} ${geistMono.variable} antialiased`}
     >
       <head>
         <SharedHead />

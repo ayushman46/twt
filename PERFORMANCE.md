@@ -69,6 +69,29 @@ Real extension bundles: dashboard startup JS **749 KB** (was ≈1.57 MB), popup 
 
 *Update:* AI now runs on NVIDIA's free OpenAI-compatible API through a small `fetch` client. The on-demand AI chunk shrank from 310 KB to **4 KB**, and the Chrome zip from 624 KB to **554 KB**.
 
+## After the redesign and new features (October 27, 2026)
+
+The interface was redesigned and Recall, Shelf, Ask, Wrapped, voice search, translation and nine UI languages were added. The same benchmark (`node bench/run.mjs <label> --runs 3 --cpu 1`, 10,000 posts, full speed on this PC) was rerun to check for regressions. Run-to-run noise is about ±20 %.
+
+| Interaction | Before the redesign | After |
+|---|---:|---:|
+| Library on screen | 1,086 ms | **1,029 ms** |
+| Full library loaded | 1,947 ms | **1,571 ms** |
+| Main-thread long tasks at startup | 669 ms | **609 ms** |
+| Switch → Home | 254 ms | **170 ms** |
+| Switch → Insights | 452 ms | **409 ms** |
+| Switch → Library | 199 ms | 237 ms |
+| Switch → Settings | 50 ms | 109 ms |
+| Star a post | 79 ms | **75 ms** |
+| Search, per keystroke | 108 ms | 131 ms |
+| Scrolling | 59.5 FPS, p95 16.8 ms | 58 FPS, p95 17 ms, 0 janky frames |
+| Jump to the oldest post | 81 ms | **80 ms** |
+| Total JS shipped (all lazy chunks included) | 1,157 KB | 1,423 KB |
+
+Startup did not regress; the new screens and language packs load on demand. Settings and search are slightly slower (the redesigned settings page renders more rows; search now also matches Indian scripts).
+
+**50,000 posts** (same benchmark, `--n 50000 --runs 1`): library on screen **1.0 s**, full library loaded **3.8 s**, search **250 ms** per keystroke, star **204 ms**, scrolling **55 FPS** (p95 33 ms), oldest post **145 ms**, JS heap **112 MB**.
+
 ## Known trade-offs / not fixed
 
 - Under 4× throttling, scroll p95 frame (133 ms) is worse than the baseline's 33 ms: the baseline only scrolled through cards it had already rendered (and covered less distance), while virtualization mounts new cards as you go. At full speed scrolling is a locked 60 FPS.

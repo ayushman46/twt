@@ -7,7 +7,7 @@ import { demoPage, stableCount } from './shared.mjs';
 
 export const name = 'palette';
 
-const item = (value) => `[cmdk-item][data-value="${value}"]`;
+const item = (value) => `[cmdk-item][data-value^="${value}"]`;
 const isOpen = (page) => page.evaluate(() => !!document.querySelector('[cmdk-input]'));
 
 async function open(page) {
@@ -76,8 +76,8 @@ export async function run({ base, suite }) {
       await page.type('[cmdk-input]', 'insig', { delay: 10 });
       await sleep(150);
       const values = await page.$$eval('[cmdk-item]', (l) => l.map((e) => e.getAttribute('data-value')));
-      assert(values.includes('insights stats analytics'), 'insights missing');
-      assert(!values.includes('archive'), 'unrelated items still listed');
+      assert(values.some((v) => v?.startsWith('insights stats analytics')), 'insights missing');
+      assert(!values.some((v) => v?.startsWith('archive ')), 'unrelated items still listed');
       await page.keyboard.press('Escape');
       await closed(page);
     });

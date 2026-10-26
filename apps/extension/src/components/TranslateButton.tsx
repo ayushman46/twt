@@ -15,7 +15,7 @@ import {
 } from '@/lib/ask';
 import { useSettings } from '@/hooks/data';
 import { navigate } from '@/hooks/route';
-import { Menu, MenuContent, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuTrigger, Popover, PopoverAnchor, PopoverContent } from './ui/overlays';
+import { Menu, MenuContent, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuTrigger, Popover, PopoverAnchor, PopoverContent, Tip } from './ui/overlays';
 import { Button, cn } from './ui/primitives';
 
 const STORAGE_KEY = 'twtdash:translate-lang';
@@ -136,26 +136,28 @@ export function TranslateButton({ text, postId, className }: { text: string; pos
   };
 
   const control = (
-    <div className="inline-flex items-center rounded-full border border-line bg-panel shadow-card">
+    <div className="inline-flex max-w-full items-stretch overflow-hidden rounded-lg border border-line bg-panel">
       <button
         type="button"
         onClick={onMain}
         aria-busy={loading}
-        className="inline-flex h-8 items-center gap-1.5 rounded-l-full pr-2 pl-3 text-[12.5px] font-medium text-fg-2 transition-colors hover:bg-panel-2 hover:text-fg [&_svg]:size-3.5"
+        className="group/tr inline-flex min-h-8 min-w-0 items-center gap-1.5 py-1 pr-2.5 pl-2.5 text-left text-[12.5px] font-medium text-fg-2 transition-colors duration-150 hover:bg-panel-2 hover:text-fg active:bg-panel-3 [&_svg]:size-3.5 [&_svg]:shrink-0"
       >
-        {loading ? <LoaderCircle className="animate-spin text-accent" /> : <Languages className="text-accent" />}
-        <span>{mainLabel}</span>
+        {loading ? <LoaderCircle className="animate-spin text-muted" strokeWidth={1.75} /> : <Languages className="text-muted transition-colors group-hover/tr:text-fg" strokeWidth={1.75} />}
+        <span className="min-w-0 truncate">{mainLabel}</span>
       </button>
       <Menu>
-        <MenuTrigger asChild>
-          <button
-            type="button"
-            aria-label="Choose translation language"
-            className="inline-flex h-8 items-center rounded-r-full border-l border-line pr-2.5 pl-1.5 text-muted transition-colors hover:bg-panel-2 hover:text-fg"
-          >
-            <ChevronDown className="size-3.5" />
-          </button>
-        </MenuTrigger>
+        <Tip label="Choose language">
+          <MenuTrigger asChild>
+            <button
+              type="button"
+              aria-label="Choose translation language"
+              className="inline-flex min-h-8 shrink-0 items-center border-l border-line px-2 text-muted transition-colors duration-150 hover:bg-panel-2 hover:text-fg active:bg-panel-3"
+            >
+              <ChevronDown className="size-3.5" strokeWidth={1.75} />
+            </button>
+          </MenuTrigger>
+        </Tip>
         <MenuContent align="start" className="w-60">
           <MenuLabel>Translate to</MenuLabel>
           <MenuRadioGroup value={target} onValueChange={pick}>
@@ -182,14 +184,12 @@ export function TranslateButton({ text, postId, className }: { text: string; pos
           <PopoverAnchor asChild>
             <div className="inline-flex">{control}</div>
           </PopoverAnchor>
-          <PopoverContent className="w-[300px] p-4">
+          <PopoverContent className="w-[min(300px,calc(100vw-24px))] p-4">
             <div className="flex items-center gap-2 text-[13.5px] font-semibold text-fg">
-              <span className="grid size-7 place-items-center rounded-lg bg-accent-soft text-accent">
-                <KeyRound className="size-3.5" />
-              </span>
+              <KeyRound className="size-4 shrink-0 text-muted" strokeWidth={1.75} />
               Translate with a free NVIDIA key
             </div>
-            <p className="mt-2 text-[12.5px] leading-relaxed text-muted">
+            <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">
               Read any post in हिन्दी, தமிழ், বাংলা and 9 more languages. The key is free and stays in this browser.
             </p>
             <Button
@@ -201,31 +201,31 @@ export function TranslateButton({ text, postId, className }: { text: string; pos
                 navigate('#/settings/ai');
               }}
             >
-              Add a free key <ArrowRight />
+              Add a free key <ArrowRight strokeWidth={1.75} />
             </Button>
           </PopoverContent>
         </Popover>
       )}
 
       {done && shown ? (
-        <div className="mt-3 animate-rise rounded-2xl border border-line bg-panel-2/50 p-4">
-          <div className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.06em] text-faint uppercase">
-            <Languages className="size-3.5 text-accent" />
-            <span>
-              Translated to <span className="normal-case">{lang.native}</span> by AI
+        <div className="mt-3 animate-fade-in rounded-xl border border-line bg-panel p-4">
+          <div className="mb-2 flex items-center gap-1.5 text-[12px] text-muted">
+            <Languages className="size-3.5 shrink-0" strokeWidth={1.75} />
+            <span className="min-w-0">
+              Translated to <span lang={lang.code === 'hinglish' ? 'hi-Latn' : lang.code}>{lang.native}</span> by AI
             </span>
           </div>
-          <p lang={lang.code === 'hinglish' ? 'hi-Latn' : lang.code} dir={lang.rtl ? 'rtl' : 'auto'} className="text-[15.5px] leading-[1.7] whitespace-pre-wrap text-fg">
+          <p lang={lang.code === 'hinglish' ? 'hi-Latn' : lang.code} dir={lang.rtl ? 'rtl' : 'auto'} className="text-[15px] leading-[1.7] whitespace-pre-wrap text-fg">
             {done.text}
           </p>
-          <div className="mt-3 flex items-center gap-1">
+          <div className="mt-3 flex flex-wrap items-center gap-1 [&_svg]:stroke-[1.75]">
             <Button size="xs" variant="ghost" onClick={() => setShown(false)}>
               Show original
             </Button>
             <Button size="xs" variant="ghost" onClick={() => void copy()}>
               {copied ? <Check /> : <Copy />} {copied ? 'Copied' : 'Copy'}
             </Button>
-            <span className="ml-auto text-[11px] text-faint">May contain mistakes</span>
+            <span className="ml-auto text-[11.5px] text-faint">May contain mistakes</span>
           </div>
         </div>
       ) : null}

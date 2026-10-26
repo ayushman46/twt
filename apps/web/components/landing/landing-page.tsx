@@ -49,9 +49,9 @@ export function LandingPage({ dict }: { dict: Dictionary }) {
       <HowItWorks t={dict.how} />
       <WhatsNew t={dict.whatsNew} categoryNames={names} />
       <BuiltForIndia t={dict.india} categoryNames={names} />
-      <Features t={dict.features} categoryNames={names} />
-      <CategoriesShowcase t={dict.categories} lang={dict.locale} />
+      <Features t={dict.features} />
       <SearchOperators t={dict.search} />
+      <CategoriesShowcase t={dict.categories} lang={dict.locale} />
       <PrivacySection t={dict.privacy} lang={dict.locale} />
       <Pricing dict={dict} />
       <Faq t={dict.faq} />

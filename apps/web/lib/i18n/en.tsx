@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { BRAND } from "@twtdash/shared";
-import { Accent } from "@/components/ui/section-heading";
 import { BROWSERS, SUPPORT_URL } from "@/lib/site";
 import type { Dictionary } from "./types";
 
-const link = "text-brand-soft underline decoration-brand-soft/40 underline-offset-2 hover:decoration-current";
+const link = "link-inline";
 const browsersList = `${BROWSERS.slice(0, -1).join(", ")} or ${BROWSERS.at(-1)}`;
 
 export const en: Dictionary = {
@@ -53,7 +52,6 @@ export const en: Dictionary = {
   },
   footer: {
     tagline: BRAND.tagline,
-    worksIn: `Works in ${BROWSERS.join(", ").replace(/, (?=[^,]*$)/, " and ")}. In English, हिन्दी and 8 more Indian languages.`,
     columns: [
       {
         title: "Product",
@@ -86,81 +84,75 @@ export const en: Dictionary = {
   },
   hero: {
     pillBadge: "New",
-    pillShort: "Recall, Shelf, Ask & Wrapped",
-    pillLong: "Recall, Shelf, Ask your bookmarks & Wrapped",
+    pillShort: "Recall, Shelf, Ask and Wrapped",
+    pillLong: "Recall, Shelf, Ask your bookmarks and Wrapped",
     titleLine1: "Your X bookmarks,",
     titleAccent: "finally organized.",
-    description: BRAND.description,
+    description:
+      "twtdash syncs everything you’ve saved on X, sorts it into categories on your device, and makes all of it searchable in seconds.",
     ctaChrome: "Add to Chrome — it’s free",
     ctaFirefox: "Add to Firefox",
-    badges: ["Free forever", "No account", "Local-first"],
-    worksIn: `Works in ${BROWSERS.join(" · ")}`,
-    languagesLabel: "Now in",
+    badges: ["Free forever", "No account", "Stays in your browser"],
     mobile: {
-      text: "On your phone? twtdash runs in desktop browsers — send yourself the link.",
-      whatsapp: "Send on WhatsApp",
+      text: "On your phone? twtdash runs in desktop browsers. Send yourself the link.",
+      whatsapp: "WhatsApp",
       copy: "Copy link",
       copied: "Link copied",
-      shareText: "twtdash — sync, sort and search all your X bookmarks. Install it on your laptop:",
+      shareText: "twtdash: sync, sort and search all your X bookmarks. Install it on your laptop:",
     },
     mockup: {
       caption:
-        "Preview of the twtdash dashboard: a sidebar of categories with bookmark counts, a search bar running the query “after:2025-06-01 min_likes:500 lang:en -crypto”, and a masonry grid of saved posts, each tagged with a category.",
+        "Preview of the twtdash library: a sidebar with sections and categories, a search bar running the query “after:2025-06-01 min_likes:500 -crypto”, and a grid of saved posts, each tagged with a category.",
       tab: "twtdash — Library",
-      nav: { home: "Home", library: "Library", insights: "Insights" },
+      search: "Search or jump to…",
+      nav: {
+        home: "Home",
+        all: "All bookmarks",
+        unread: "Unread",
+        starred: "Starred",
+        archive: "Archive",
+        insights: "Insights",
+        recall: "Recall",
+        shelf: "Shelf",
+        ask: "Ask your bookmarks",
+        wrapped: "Wrapped",
+      },
+      discover: "Discover",
       categories: "Categories",
-      collections: "Collections",
-      collectionNames: ["Read later", "Design refs", "Launch ideas"],
-      more: "more",
-      liveCapture: "Live capture on",
-      synced: "Synced 2 min ago · 12 new",
+      title: "All bookmarks",
+      filters: "Filters",
+      sort: "Recently saved",
       all: "All",
       thread: "Thread",
     },
   },
   how: {
-    eyebrow: "How it works",
-    title: (
-      <>
-        From bookmark chaos to a library in <Accent gradient>three steps</Accent>
-      </>
-    ),
-    description: "No scripts to run, no API keys, no exports to wrangle. twtdash does the tedious part while you watch.",
+    title: "From bookmark pile to library in three steps",
+    description: "No scripts, no API keys, no exports to wrangle. twtdash does the tedious part for you.",
     steps: [
       {
         title: "Install the extension",
         body: `Add twtdash to ${browsersList}. There’s no account to create and nothing to configure.`,
-        detail: "No account needed",
       },
       {
         title: "Sync in one click",
-        body: "twtdash opens your X bookmarks and scrolls through them for you, reading X’s own page data — no X API key or paid X plan. Quick sync grabs only what’s new; full sync re-reads everything. Pull in your Likes too, if you want.",
-        detail: "Quick or full sync",
+        body: "twtdash scrolls through your X bookmarks for you and reads X’s own page data. No X API key, no paid X plan.",
       },
       {
-        title: "Find anything, instantly",
-        body: "Every post is sorted into a category on your device. Search with operators, ask questions, tag, star and rediscover what you saved — all in a fast local dashboard.",
-        detail: "Instant full-text search",
+        title: "Find anything",
+        body: "Every post is sorted into a category on your device. Search with operators, ask questions, tag and star.",
       },
     ],
   },
   whatsNew: {
-    eyebrow: "New in twtdash",
-    title: (
-      <>
-        Don’t just save posts. <Accent gradient>Use them.</Accent>
-      </>
-    ),
-    description:
-      "Most bookmarks are never opened again. These new features bring the best of what you saved back to you — built right into the extension.",
-    newBadge: "New",
+    title: "Don’t just save posts. Use them.",
+    description: "Most bookmarks are never opened again. These features bring the best of what you saved back to you.",
     recall: {
       title: "Recall",
-      body: "A 5-minute daily session that resurfaces saved posts on a spaced schedule, so the good stuff actually sticks. Rate each card and keep your streak alive.",
+      body: "A five-minute daily review that resurfaces saved posts on a spaced schedule, so the good ones stick.",
       today: "Today’s Recall",
       progress: "4 / 10",
       streak: "12-day streak",
-      minutes: "≈ 5 min",
       savedAgo: "saved 3 months ago",
       post: "Most React performance problems are just state living too high in the tree. Move it down, memo less, ship faster.",
       ratings: ["Again", "Good", "Mastered"],
@@ -168,21 +160,21 @@ export const en: Dictionary = {
     },
     ask: {
       title: "Ask your bookmarks",
-      body: "Ask a question in English, हिन्दी or any Indian language and get an answer built from your own saved posts — with citations you can click.",
+      body: "Ask in English, हिन्दी or any Indian language and get an answer built from your own saved posts, with sources.",
       question: "What did I save about getting first customers without ads?",
       answer: (
         <>
-          Two posts stand out: a cold-email template that booked 40 demos <sup>[1]</sup>, and a UPI startup’s playbook for
-          onboarding merchants city by city <sup>[2]</sup>.
+          Two posts stand out: a cold-email template that booked 40 demos<sup>1</sup>, and a UPI startup’s playbook for
+          onboarding merchants city by city<sup>2</sup>.
         </>
       ),
       sources: "Sources",
-      languages: "Works in English, हिन्दी & more",
-      key: "Free with your NVIDIA key · or Pro",
+      languages: "English, हिन्दी and more",
+      key: "Free with your NVIDIA key, or with Pro",
     },
     shelf: {
       title: "Shelf",
-      body: "Every GitHub repo, paper, video, article, tool, book and course hiding in your bookmarks — pulled out automatically, on your device.",
+      body: "Every repo, paper, video, article, tool, book and course in your bookmarks, pulled out automatically on your device.",
       kinds: [
         { id: "repo", label: "Repos", count: 42 },
         { id: "paper", label: "Papers", count: 18 },
@@ -195,14 +187,14 @@ export const en: Dictionary = {
       items: [
         { kind: "repo", title: "vercel/next.js", meta: "GitHub · from @diegoships" },
         { kind: "paper", title: "Attention Is All You Need", meta: "arXiv · from @mayabuilds" },
-        { kind: "video", title: "Distributed systems — lecture 1", meta: "YouTube · from @theoreads" },
+        { kind: "video", title: "Distributed systems, lecture 1", meta: "YouTube · from @theoreads" },
         { kind: "book", title: "Designing Data-Intensive Applications", meta: "Book · from @priyamakes" },
       ],
-      onDevice: "Extracted on-device",
+      onDevice: "Extracted on your device",
     },
     wrapped: {
       title: "Wrapped",
-      body: "Your year in bookmarks as a shareable story — top topics, saving habits and your bookmark persona.",
+      body: "Your year in bookmarks as a shareable story: top topics, saving habits and your bookmark persona.",
       year: "2026 Wrapped",
       saved: "posts saved",
       savedCount: "1,284",
@@ -212,25 +204,19 @@ export const en: Dictionary = {
       share: "Share",
     },
     voice: {
-      title: "Voice search & translate",
-      body: "Search by speaking in Hindi, Tamil, Bengali and more. Translate any saved post into your language with one tap.",
+      title: "Voice search and translate",
+      body: "Search by speaking Hindi, Tamil, Bengali and more. Translate any saved post into your language in one tap.",
       listening: "Listening · हिन्दी",
       transcript: "क्रिकेट वाले posts दिखाओ",
       result: "23 posts",
-      translate: "Translate",
-      original: "Kal ka match ekdum paisa vasool tha 🏏",
-      translated: "Yesterday’s match was absolutely worth it 🏏",
+      translate: "Translated from Hinglish",
+      original: "Kal ka match ekdum paisa vasool tha",
+      translated: "Yesterday’s match was absolutely worth it",
     },
   },
   india: {
-    eyebrow: "Built for India 🇮🇳",
-    title: (
-      <>
-        Made for how India <Accent gradient>bookmarks</Accent>
-      </>
-    ),
-    description:
-      "Your language, your number system, your laptop and your data. twtdash is designed around the way India uses X.",
+    title: "Made for how India uses X",
+    description: "Your language, your number system, your laptop and your data. twtdash is built around the way India bookmarks.",
     languages: {
       title: "Your language, all the way",
       body: "Use twtdash in English or हिन्दी, with eight more Indian languages in beta.",
@@ -239,8 +225,8 @@ export const en: Dictionary = {
     },
     hinglish: {
       title: "Understands Hinglish",
-      body: "On-device sorting reads Hindi, Hinglish and Indian-language posts — so a cricket rant lands in Sports, not “Other”.",
-      post: "Kal ka match ekdum paisa vasool tha 🔥 last over mein 18 chahiye the",
+      body: "On-device sorting reads Hindi, Hinglish and Indian-language posts, so a cricket rant lands in Sports, not Other.",
+      post: "Kal ka match ekdum paisa vasool tha, last over mein 18 chahiye the",
       sortedInto: "Sorted into",
       author: "@rohanbats",
     },
@@ -249,7 +235,7 @@ export const en: Dictionary = {
       body: "Tap the mic and search in Hindi, Tamil, Telugu, Bengali or any supported Indian language.",
     },
     numbers: {
-      title: "Lakh & crore",
+      title: "Lakh and crore",
       body: "Counts and insights in the Indian number system.",
       ours: "1,28,400",
       theirs: "128,400",
@@ -257,11 +243,11 @@ export const en: Dictionary = {
     },
     lowEnd: {
       title: "Light on old laptops",
-      body: "A local library tuned to stay quick on budget machines — even with 10,000+ posts.",
+      body: "A local library tuned to stay quick on budget machines, even with 10,000+ posts.",
     },
     freeAi: {
       title: "AI that costs ₹0",
-      body: "Ask, AI sorting and gists run free with your own NVIDIA key. No credit card, no subscription.",
+      body: "Ask, AI sorting and gists run free with your own NVIDIA key. No card, no subscription.",
     },
     privacy: {
       title: "Your data stays home",
@@ -269,107 +255,70 @@ export const en: Dictionary = {
     },
   },
   features: {
-    eyebrow: "Features",
-    title: (
-      <>
-        Everything you saved, <Accent gradient>finally useful</Accent>
-      </>
-    ),
-    description: "twtdash turns a never-ending bookmark list into a library you can actually search, sort and come back to.",
+    title: "Everything you saved, finally useful",
+    description: "twtdash turns an endless bookmark list into a library you can search, sort and come back to.",
     sync: {
       title: "One-click sync",
-      body: "twtdash opens your X bookmarks and scrolls through them for you. It reads X’s own page data, so you don’t need an X API key or a paid X plan.",
-      syncing: "Syncing bookmarks…",
-      modes: [
-        ["Quick sync", "only new posts"],
-        ["Full sync", "re-read everything"],
-        ["Likes", "optional import"],
-      ],
+      body: "Scrolls through your bookmarks for you and reads X’s own page data. No API key or paid X plan.",
     },
     capture: {
       title: "Real-time capture",
-      body: "Bookmark a post on X and it appears in twtdash instantly. X Premium bookmark folders become collections.",
-      saved: "Saved to twtdash",
-      from: "just now · from your X tab",
+      body: "Bookmark a post on X and it appears in twtdash instantly. Premium folders become collections.",
     },
     categories: {
       title: "Smart categories",
-      body: (n) => `Every post is sorted on-device into ${n} categories. Add custom categories with your own keywords.`,
-      yourOwn: "+ your own",
+      body: (n) => `Every post is sorted on your device into ${n} categories. Add your own with custom keywords.`,
     },
     ai: {
-      title: "AI gists & auto-tags",
-      body: "Optional AI categorization, tags and one-line gists from open models on NVIDIA’s API — free with your own NVIDIA key, or with twtdash Pro and no key at all.",
-      gist: "Gist",
-      gistText: "Graders written before prompts lifted eval pass rate to 89%.",
+      title: "AI gists and auto-tags",
+      body: "Optional AI sorting, tags and one-line gists. Free with your NVIDIA key, or with Pro and no key at all.",
     },
     search: {
-      title: "Instant search with operators",
+      title: "Search with operators",
       body: (
         <>
-          Full-text search across everything you’ve saved, with operators like <code className="font-mono text-zinc-300">from:</code>,{" "}
-          <code className="font-mono text-zinc-300">has:video</code>, <code className="font-mono text-zinc-300">is:thread</code> and{" "}
-          <code className="font-mono text-zinc-300">min_likes:</code>. Press <span className="font-mono text-zinc-300">⌘K</span> for the command
-          palette.
+          Full-text search with operators like <code className="font-mono text-[0.9em] text-fg-2">from:</code>,{" "}
+          <code className="font-mono text-[0.9em] text-fg-2">has:video</code> and{" "}
+          <code className="font-mono text-[0.9em] text-fg-2">is:thread</code>. Press <span className="text-fg-2">⌘K</span> for the
+          command palette.
         </>
       ),
-      results: "14 results",
-      toSearch: "to search",
     },
     library: {
       title: "A library your way",
       body: "Browse as masonry, list, table or a media gallery. Smooth even with 10,000+ posts.",
-      views: ["Masonry", "List", "Table", "Media gallery"],
     },
     insights: {
       title: "Insights",
-      body: "See your bookmarks over time, category mix, top authors, content types and a when-you-bookmark heatmap.",
-      overTime: "Bookmarks over time",
-      when: "When you bookmark",
+      body: "Bookmarks over time, category mix, top authors and a heatmap of when you save.",
     },
     export: {
       title: "Export anywhere",
-      body: "Export to Markdown, CSV or JSON that drops straight into Obsidian, Notion or a spreadsheet — and import JSON backups whenever you like. Your library is never locked in.",
-      formats: [
-        ["md", "Obsidian & Notion"],
-        ["csv", "spreadsheets"],
-        ["json", "full backup"],
-      ],
-      importLabel: "Import a JSON backup",
+      body: "Markdown, CSV or JSON for Obsidian, Notion or a spreadsheet. Restore from a JSON backup any time.",
     },
     extras: [
       "Command palette (Ctrl/⌘ K)",
       "j / k, s, e, o, / shortcuts",
       "Rediscover on Home",
       "Private notes",
-      "Star, archive & read states",
-      "Tags & bulk actions",
-      "X Premium folders → collections",
-      "Dark & light themes",
+      "Star, archive and read states",
+      "Tags and bulk actions",
+      "X Premium folders become collections",
+      "Dark and light themes",
     ],
   },
   categories: {
-    eyebrow: "Smart categories",
-    title: (n) => (
-      <>
-        {n} categories, <Accent gradient>zero effort</Accent>
-      </>
-    ),
+    title: (n) => `${n} categories, sorted on your device`,
     description:
-      "twtdash reads each post’s text, links and domains — in English, Hindi or Hinglish — and sorts it right in your browser. Add your own categories with custom keywords, or switch on AI for even sharper sorting.",
+      "twtdash reads each post’s text, links and domains, in English, Hindi or Hinglish, and files it right in your browser. Switch on AI for even sharper sorting.",
     listLabel: "Built-in categories",
-    yourOwn: "Your own, with your keywords",
-    note: "Keyword sorting runs entirely on your device — AI is optional",
+    yourOwn: "Add your own, with your keywords",
+    note: "Keyword sorting runs on your device. AI is optional.",
   },
   search: {
-    eyebrow: "Search",
-    title: (
-      <>
-        Search like you <Accent gradient>mean it</Accent>
-      </>
-    ),
+    title: "Search like you mean it",
     description:
-      "Type a few words and twtdash searches the full text of everything you’ve saved — instantly, right in your browser. Add operators to slice your library any way you like, and combine as many as you need.",
+      "Type a few words to search the full text of everything you’ve saved, instantly and in your browser. Add operators to slice your library any way you like.",
     operators: [
       "Posts by one author",
       "Posts with a video",
@@ -396,12 +345,7 @@ export const en: Dictionary = {
     },
   },
   privacy: {
-    eyebrow: "Local-first",
-    title: (
-      <>
-        Your library never leaves <Accent gradient>your browser</Accent>
-      </>
-    ),
+    title: "Your library never leaves your browser",
     description: "twtdash is built so there’s nothing to breach: no accounts, no servers holding your data, nothing to sell.",
     points: [
       {
@@ -414,7 +358,7 @@ export const en: Dictionary = {
       },
       {
         title: "AI is opt-in",
-        body: "Bring your own free NVIDIA key and posts go straight from your browser to NVIDIA. With Pro, they pass through our API to NVIDIA and are never stored.",
+        body: "With your own NVIDIA key, posts go straight from your browser to NVIDIA. With Pro, they pass through our API and are never stored.",
       },
       {
         title: "Yours to take anywhere",
@@ -429,18 +373,13 @@ export const en: Dictionary = {
       bookmarks: "your bookmarks",
       onDevice: "on this device",
       nvidia: "NVIDIA API",
-      nvidiaNote: "Only if you turn on AI — post text, author and links",
+      nvidiaNote: "Only if you turn on AI: post text, author and links",
     },
   },
   pricing: {
-    eyebrow: "Pricing",
-    title: (
-      <>
-        Free forever. <Accent gradient>Pro</Accent> if you want AI on autopilot.
-      </>
-    ),
+    title: "Free forever. Pro if you want AI without the setup.",
     description:
-      "Everything in twtdash is free — including AI, with your own free NVIDIA key. Pro adds hosted AI so you never have to manage a key.",
+      "Everything in twtdash is free, including AI with your own free NVIDIA key. Pro adds hosted AI, so you never have to manage a key.",
     periodLabel: "Billing period",
     monthly: "Monthly",
     yearly: "Yearly",
@@ -448,24 +387,24 @@ export const en: Dictionary = {
     perMonth: "/ month",
     perYear: "/ year",
     yearlyNote: (perMonth) => `That’s ${perMonth}/month, billed yearly`,
-    monthlyNote: (perYear, pct) => `Or ${perYear}/year — save ${pct}%`,
+    monthlyNote: (perYear, pct) => `Or ${perYear}/year and save ${pct}%`,
     free: {
       name: "Free",
       tagline: "For everyone who bookmarks on X.",
       forever: "forever",
       cta: "Add to Chrome — it’s free",
       aiBanner: "Includes AI with your free NVIDIA key",
-      aiBannerNote: "Ask, AI sorting & gists. No credit card.",
+      aiBannerNote: "Ask, AI sorting and gists. No credit card.",
       features: [
-        "One-click sync, real-time capture & likes import",
-        "Smart categories that understand Hindi & Hinglish",
-        "Recall, Shelf & Wrapped",
+        "One-click sync, real-time capture and likes import",
+        "Smart categories that understand Hindi and Hinglish",
+        "Recall, Shelf and Wrapped",
         "Ask your bookmarks (with your NVIDIA key)",
-        "Voice search & translate",
-        "Search operators, ⌘K & keyboard shortcuts",
-        "Masonry, list, table & gallery views",
-        "Insights & export to Markdown / CSV / JSON",
-        "English, हिन्दी + 8 Indian languages (beta)",
+        "Voice search and translate",
+        "Search operators, ⌘K and keyboard shortcuts",
+        "Masonry, list, table and gallery views",
+        "Insights and export to Markdown, CSV or JSON",
+        "English, हिन्दी and 8 Indian languages (beta)",
       ],
     },
     pro: {
@@ -475,26 +414,21 @@ export const en: Dictionary = {
       cta: "Get twtdash Pro",
       features: [
         "Everything in Free",
-        "Hosted AI — no key to create or manage",
-        "AI sorting, auto-tags & one-line gists",
+        "Hosted AI, with no key to create or manage",
+        "AI sorting, auto-tags and one-line gists",
         "Ask your bookmarks without a key",
         "Priority support",
         "Early access to new features",
       ],
-      fine: "Your license key arrives by email — paste it into twtdash to unlock Pro. Cancel anytime; refunds within 14 days.",
+      fine: "Your license key arrives by email. Paste it into twtdash to unlock Pro. Cancel anytime; refunds within 14 days.",
     },
   },
   faq: {
-    eyebrow: "FAQ",
-    title: (
-      <>
-        Questions, <Accent gradient>answered</Accent>
-      </>
-    ),
+    title: "Questions and answers",
     description: (
       <>
         Can’t find what you need? Ask on{" "}
-        <a href={BRAND.supportUrl} className="text-zinc-200 underline decoration-white/30 underline-offset-2 hover:decoration-current">
+        <a href={BRAND.supportUrl} className="link-inline">
           {BRAND.supportLabel}
         </a>
         .
@@ -518,21 +452,21 @@ export const en: Dictionary = {
           <>
             It takes about a minute and needs no credit card:
             <span className="mt-3 block">
-              <strong className="font-medium text-zinc-200">1.</strong> Go to{" "}
+              <strong className="font-medium text-fg-2">1.</strong> Go to{" "}
               <a href="https://build.nvidia.com" className={link} rel="noopener">
                 build.nvidia.com
               </a>{" "}
               and sign in with a free NVIDIA account.
             </span>
             <span className="mt-1.5 block">
-              <strong className="font-medium text-zinc-200">2.</strong> Open any model and click{" "}
-              <strong className="font-medium text-zinc-200">Get API Key</strong>. Copy the key — it starts with{" "}
-              <code className="font-mono text-zinc-300">nvapi-</code>.
+              <strong className="font-medium text-fg-2">2.</strong> Open any model and click{" "}
+              <strong className="font-medium text-fg-2">Get API Key</strong>. Copy the key — it starts with{" "}
+              <code className="font-mono text-fg-2">nvapi-</code>.
             </span>
             <span className="mt-1.5 block">
-              <strong className="font-medium text-zinc-200">3.</strong> In twtdash, open{" "}
-              <strong className="font-medium text-zinc-200">Settings → AI organization</strong>, choose{" "}
-              <strong className="font-medium text-zinc-200">Free NVIDIA key</strong> and paste it.
+              <strong className="font-medium text-fg-2">3.</strong> In twtdash, open{" "}
+              <strong className="font-medium text-fg-2">Settings → AI organization</strong>, choose{" "}
+              <strong className="font-medium text-fg-2">Free NVIDIA key</strong> and paste it.
             </span>
             <span className="mt-3 block">
               Requests then go straight from your browser to NVIDIA. Pro is for people who would rather not manage a key.
@@ -634,11 +568,7 @@ export const en: Dictionary = {
     ],
   },
   cta: {
-    title: (
-      <>
-        Stop losing great posts in an <Accent gradient>endless list</Accent>
-      </>
-    ),
+    title: "Stop losing great posts in an endless list",
     body: "Install twtdash, sync once, and every bookmark you’ve ever saved is sorted, searchable and yours.",
     chrome: "Add to Chrome",
     firefox: "Add to Firefox",

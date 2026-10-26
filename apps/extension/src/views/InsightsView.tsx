@@ -1,7 +1,8 @@
 import { addDays, addMonths, startOfMonth, startOfWeek } from 'date-fns';
-import { ArrowDownRight, ArrowUpRight, ChartColumn, Check, Table2 } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, ChartColumn, Heart, Table2 } from 'lucide-react';
 import { useMemo, useState, type ReactNode } from 'react';
 import { ColumnChart } from '@/components/ColumnChart';
+import { CategoryGlyph } from '@/components/CategoryGlyph';
 import { catName, getLocale, rich, t, useLocale, useT, type MessageKey } from '@/i18n';
 import { usePaintMark } from '@/lib/perf';
 import { fmtCompact, fmtDate, fmtMonthDay, fmtNumber } from '@/lib/format';
@@ -30,10 +31,10 @@ function rangeStart(r: Range): number {
 
 function Panel({ title, subtitle, children, action, className }: { title: string; subtitle?: string; children: ReactNode; action?: ReactNode; className?: string }) {
   return (
-    <section className={cn('rounded-2xl border border-line bg-panel p-5 shadow-card', className)}>
+    <section className={cn('rounded-xl border border-line bg-panel p-5', className)}>
       <div className="mb-4 flex items-start justify-between gap-3">
-        <div>
-          <h2 className="text-[14.5px] font-semibold tracking-tight">{title}</h2>
+        <div className="min-w-0">
+          <h2 className="text-[15px] font-semibold tracking-tight">{title}</h2>
           {subtitle ? <p className="mt-0.5 text-[12.5px] text-muted">{subtitle}</p> : null}
         </div>
         {action}
@@ -43,17 +44,17 @@ function Panel({ title, subtitle, children, action, className }: { title: string
   );
 }
 
-function StatTile({ label, value, delta, hint }: { label: string; value: string; delta?: { value: number; vs: string }; hint?: string }) {
+function StatTile({ label, value, delta, hint }: { label: string; value: ReactNode; delta?: { value: number; vs: string }; hint?: string }) {
   const up = (delta?.value ?? 0) >= 0;
   return (
-    <div className="rounded-2xl border border-line bg-panel p-4 shadow-card">
+    <div className="min-w-0 rounded-xl border border-line bg-panel p-4">
       <div className="text-[12.5px] text-muted">{label}</div>
-      <div className="mt-1.5 text-[26px] leading-none font-semibold tracking-tight">{value}</div>
+      <div className="mt-2 text-[26px] leading-none font-semibold tracking-tight tabular-nums">{value}</div>
       {delta && delta.value === 0 ? (
         <div className="mt-2 text-[12px] text-muted">{t('home.sameAsLastWeek')}</div>
       ) : delta ? (
         <div className="mt-2 flex items-center gap-1 text-[12px] text-muted">
-          <span className={cn('inline-flex items-center font-medium', up ? 'text-good' : 'text-fg-2')}>
+          <span className={cn('inline-flex items-center font-medium tabular-nums', up ? 'text-good' : 'text-fg-2')}>
             {up ? <ArrowUpRight className="size-3.5" /> : <ArrowDownRight className="size-3.5" />}
             {up ? '+' : ''}
             {fmtNumber(delta.value)}
@@ -67,11 +68,11 @@ function StatTile({ label, value, delta, hint }: { label: string; value: string;
   );
 }
 
-/** Horizontal bar list: one hue (identity is carried by the text label). */
+/** Horizontal bar list. Neutral bars: the value label carries the number, the bar carries the rank. */
 function BarList({ rows, onSelect, max }: { rows: Array<{ key: string; label: ReactNode; value: number; title: string }>; onSelect?: (key: string) => void; max?: number }) {
   const top = max ?? Math.max(1, ...rows.map((r) => r.value));
   return (
-    <ul className="space-y-1.5">
+    <ul className="space-y-1">
       {rows.map((r) => (
         <li key={r.key}>
           <button
@@ -79,14 +80,11 @@ function BarList({ rows, onSelect, max }: { rows: Array<{ key: string; label: Re
             onClick={() => onSelect?.(r.key)}
             disabled={!onSelect}
             title={`${r.title}: ${fmtNumber(r.value)}`}
-            className="group grid w-full grid-cols-[minmax(0,180px)_1fr_auto] items-center gap-3 rounded-lg px-1.5 py-1 text-left hover:bg-panel-2 disabled:cursor-default disabled:hover:bg-transparent"
+            className="group grid w-full grid-cols-[minmax(0,180px)_1fr_auto] items-center gap-3 rounded-lg px-1.5 py-1.5 text-left hover:bg-panel-2 disabled:cursor-default disabled:hover:bg-transparent"
           >
-            <span className="flex min-w-0 items-center gap-2 truncate text-[13px] text-fg-2">{r.label}</span>
-            <span className="relative h-3.5">
-              <span
-                className="absolute inset-y-0 left-0 rounded-r-[4px] bg-accent transition-[filter] group-hover:brightness-110"
-                style={{ width: `${Math.max(1.5, (r.value / top) * 100)}%`, opacity: 0.9 }}
-              />
+            <span className="flex min-w-0 items-center gap-2 text-[13px] text-fg-2">{r.label}</span>
+            <span className="relative h-2 rounded-full bg-panel-2">
+              <span className="absolute inset-y-0 left-0 rounded-full bg-fg/25 transition-colors group-hover:bg-fg/40" style={{ width: `${Math.max(1.5, (r.value / top) * 100)}%` }} />
             </span>
             <span className="w-12 text-right text-[12.5px] font-medium text-fg tabular-nums">{fmtNumber(r.value)}</span>
           </button>
@@ -179,7 +177,7 @@ function Heatmap({ list }: { list: Bookmark[] }) {
         <div className="inline-grid min-w-full grid-cols-[36px_repeat(24,minmax(14px,1fr))] gap-[3px]" role="grid" aria-label={t('insights.heatmapAria')}>
           <span />
           {Array.from({ length: 24 }, (_, h) => (
-            <span key={h} className="pb-1 text-center text-[10px] text-faint">
+            <span key={h} className="pb-1 text-center text-[10px] text-muted">
               {h % 6 === 0 ? hourLabel(h) : ''}
             </span>
           ))}
@@ -206,7 +204,7 @@ function Heatmap({ list }: { list: Bookmark[] }) {
         <span className="min-h-[18px]">
           {hover ? (
             <>
-              <b className="font-semibold text-fg">{t('chart.saved', { count: fmtNumber(grid[hover.d]![hover.h]!) })}</b> · {DAYS[hover.d]} {hourLabel(hover.h)}–{hourLabel((hover.h + 1) % 24)}
+              <b className="font-semibold text-fg tabular-nums">{t('chart.saved', { count: fmtNumber(grid[hover.d]![hover.h]!) })}</b> · {DAYS[hover.d]} {hourLabel(hover.h)}–{hourLabel((hover.h + 1) % 24)}
             </>
           ) : peak.v > 0 ? (
             rich(t('insights.peak', { day: LONG_DAYS[peak.d], hour: hourLabel(peak.h) }), { b: (s) => <b className="font-semibold text-fg">{s}</b> })
@@ -275,10 +273,10 @@ export function InsightsView() {
         <div className="skeleton h-8 w-40 rounded-lg" />
         <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="skeleton h-[92px] rounded-2xl" />
+            <div key={i} className="skeleton h-[92px] rounded-xl" />
           ))}
         </div>
-        <div className="skeleton mt-4 h-[300px] rounded-2xl" />
+        <div className="skeleton mt-4 h-[300px] rounded-xl" />
       </div>
     );
   }
@@ -298,10 +296,10 @@ export function InsightsView() {
     <div className="mx-auto w-full max-w-[1240px] px-5 pt-6 pb-16 sm:px-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-semibold tracking-tight">{t('nav.insights')}</h1>
-          <p className="mt-0.5 text-[13.5px] text-muted">{t('insights.subtitle')}</p>
+          <h1 className="text-[26px] leading-tight font-semibold tracking-[-0.02em]">{t('nav.insights')}</h1>
+          <p className="mt-1 text-[13.5px] text-muted">{t('insights.subtitle')}</p>
         </div>
-        <div className="flex max-w-full overflow-x-auto rounded-xl border border-line-strong bg-panel p-0.5 [scrollbar-width:none]" role="radiogroup" aria-label={t('insights.timeRange')}>
+        <div className="inline-flex max-w-full overflow-x-auto rounded-lg border border-line-strong bg-panel p-0.5 [scrollbar-width:none]" role="radiogroup" aria-label={t('insights.timeRange')}>
           {RANGES.map((r) => (
             <button
               key={r.id}
@@ -309,20 +307,32 @@ export function InsightsView() {
               role="radio"
               aria-checked={range === r.id}
               onClick={() => setRange(r.id)}
-              className={cn('inline-flex h-8 shrink-0 items-center gap-1 rounded-[9px] px-3 text-[12.5px] font-medium whitespace-nowrap transition-colors', range === r.id ? 'bg-panel-2 text-fg shadow-card' : 'text-muted hover:text-fg')}
+              className={cn('inline-flex h-7 shrink-0 items-center rounded-md px-3 text-[12.5px] font-medium whitespace-nowrap transition-colors', range === r.id ? 'bg-panel-3 text-fg' : 'text-muted hover:text-fg')}
             >
-              {range === r.id ? <Check className="size-3.5" strokeWidth={3} /> : null}
               {t(r.label)}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatTile label={t('insights.savedInPeriod')} value={fmtNumber(list.length)} hint={t('insights.inLibrary', { count: fmtNumber(lib.counts.total) })} />
         <StatTile label={t('home.savedThisWeek')} value={fmtNumber(stats.thisWeek)} delta={{ value: stats.thisWeek - stats.lastWeek, vs: t('insights.vsLastWeek') }} />
         <StatTile label={t('insights.avgPerWeek')} value={stats.perWeek >= 10 ? fmtCompact(Math.round(stats.perWeek)) : stats.perWeek.toFixed(1)} hint={t('insights.opened', { pct: readPct })} />
-        <StatTile label={t('home.topCategory')} value={topCat ? `${topCat.emoji} ${catName(topCat)}` : '—'} hint={stats.categories[0] ? t('common.posts', { count: stats.categories[0][1] }) : undefined} />
+        <StatTile
+          label={t('home.topCategory')}
+          value={
+            topCat ? (
+              <span className="flex min-w-0 items-center gap-2 text-[22px] leading-none">
+                <CategoryGlyph category={topCat} className="size-4 text-muted" />
+                <span className="truncate">{catName(topCat)}</span>
+              </span>
+            ) : (
+              '—'
+            )
+          }
+          hint={stats.categories[0] ? t('common.posts', { count: stats.categories[0][1] }) : undefined}
+        />
       </div>
 
       <Panel
@@ -334,16 +344,16 @@ export function InsightsView() {
             type="button"
             onClick={() => setShowTable((x) => !x)}
             aria-pressed={showTable}
-            className={cn('inline-flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-[12px] font-medium', showTable ? 'bg-panel-2 text-fg' : 'text-muted hover:bg-panel-2 hover:text-fg')}
+            className={cn('inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-[12.5px] font-medium transition-colors', showTable ? 'bg-panel-3 text-fg' : 'text-muted hover:text-fg')}
           >
             <Table2 className="size-3.5" /> {t('insights.table')}
           </button>
         }
       >
         {showTable ? (
-          <div className="max-h-[260px] overflow-y-auto rounded-xl border border-line">
+          <div className="max-h-[260px] overflow-y-auto rounded-lg border border-line">
             <table className="w-full text-[13px]">
-              <thead className="sticky top-0 bg-panel-2 text-left text-[11.5px] text-muted">
+              <thead className="sticky top-0 bg-panel-2 text-left text-[12px] text-muted">
                 <tr>
                   <th className="px-3 py-2 font-medium">{unit === 'week' ? t('insights.week') : t('insights.month')}</th>
                   <th className="px-3 py-2 text-right font-medium">{t('layout.saved')}</th>
@@ -370,7 +380,17 @@ export function InsightsView() {
             rows={stats.categories.slice(0, 10).map(([id, n]) => {
               const c = lib.categoryMap.get(id);
               const name = c ? catName(c) : id;
-              return { key: id, value: n, title: name, label: <><span aria-hidden>{c?.emoji}</span><span className="truncate">{name}</span></> };
+              return {
+                key: id,
+                value: n,
+                title: name,
+                label: (
+                  <>
+                    {c ? <CategoryGlyph category={c} className="size-3.5 text-muted" /> : null}
+                    <span className="truncate">{name}</span>
+                  </>
+                ),
+              };
             })}
             onSelect={(id) => navigate(scopeHash({ kind: 'category', value: id }))}
           />
@@ -414,14 +434,17 @@ export function InsightsView() {
           <ol className="divide-y divide-line">
             {stats.popular.map((b, i) => (
               <li key={b.id}>
-                <a href={b.url} target="_blank" rel="noreferrer noopener" className="flex items-center gap-3 py-2.5 hover:opacity-90">
-                  <span className="w-5 text-center text-[13px] font-semibold text-faint tabular-nums">{i + 1}</span>
+                <a href={b.url} target="_blank" rel="noreferrer noopener" className="flex items-center gap-3 py-3 hover:opacity-80">
+                  <span className="w-5 text-center text-[12.5px] font-medium text-faint tabular-nums">{i + 1}</span>
                   <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={30} />
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[13.5px] text-fg">{b.text || b.card?.title || t('common.mediaPost')}</div>
                     <div className="text-[12px] text-muted">@{b.author.handle}</div>
                   </div>
-                  <span className="text-[12.5px] font-medium text-fg-2 tabular-nums">♥ {fmtCompact(b.metrics.likes)}</span>
+                  <span className="flex shrink-0 items-center gap-1 text-[12.5px] font-medium text-fg-2 tabular-nums">
+                    <Heart className="size-3.5 text-muted" aria-hidden />
+                    {fmtCompact(b.metrics.likes)}
+                  </span>
                 </a>
               </li>
             ))}

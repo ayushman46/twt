@@ -1,4 +1,4 @@
-import { Check, ExternalLink, Eye, Heart, MessageCircle, Ellipsis, Repeat2, Sparkles, Star, StickyNote } from 'lucide-react';
+import { Check, ExternalLink, Eye, Heart, MessageCircle, Ellipsis, Repeat2, Star, StickyNote } from 'lucide-react';
 import { memo, useState } from 'react';
 import { catName, useT, type MessageKey } from '@/i18n';
 import { setStarred } from '@/lib/actions';
@@ -6,11 +6,16 @@ import { fmtCompact, fmtLongDate, fmtShortDate } from '@/lib/format';
 import type { Bookmark, Category } from '@/lib/types';
 import { Avatar, Verified } from './Brand';
 import { BookmarkMenu } from './BookmarkMenu';
+import { CategoryGlyph } from './CategoryGlyph';
 import { MediaGrid } from './Media';
 import { ArticleCard, LinkPreview, PollView, QuotedPost } from './TweetParts';
 import { TweetText } from './TweetText';
 import { LazyTip } from './ui/overlays';
 import { cn } from './ui/primitives';
+
+/** Body text is clamped to this many lines in grid cards (keep in sync with `line-clamp-[8]` below). */
+export const CARD_LINES = 8;
+const CLAMP_AT = 360;
 
 export interface CardProps {
   b: Bookmark;
@@ -28,15 +33,13 @@ export interface CardProps {
   onSearch?: (q: string) => void;
 }
 
+/** Quiet category label: glyph and muted name, no background. */
 export function CategoryChip({ category, className }: { category?: Category; className?: string }) {
   useT();
   if (!category) return null;
   return (
-    <span
-      className={cn('inline-flex h-6 max-w-[150px] shrink-0 items-center gap-1 rounded-full px-2 text-[11.5px] font-medium', className)}
-      style={{ background: `color-mix(in oklab, ${category.color} 13%, transparent)`, color: `color-mix(in oklab, ${category.color} 70%, var(--fg))` }}
-    >
-      <span aria-hidden>{category.emoji}</span>
+    <span className={cn('inline-flex h-6 max-w-[160px] shrink-0 items-center gap-1.5 text-[12px] text-muted', className)}>
+      <CategoryGlyph category={category} className="text-[13px] text-muted" />
       <span className="truncate">{catName(category)}</span>
     </span>
   );
@@ -51,7 +54,7 @@ export function Metrics({ b, className }: { b: Bookmark; className?: string }) {
     { icon: Eye, v: b.metrics.views, label: 'metric.views' },
   ];
   return (
-    <div className={cn('flex items-center gap-3.5 text-[12px] text-faint tabular-nums', className)}>
+    <div className={cn('flex shrink-0 items-center gap-3 text-[12px] text-muted tabular-nums', className)}>
       {items.map(({ icon: Icon, v, label }) =>
         v ? (
           <span key={label} className="inline-flex items-center gap-1" title={t(label, { count: v })}>
@@ -76,23 +79,25 @@ export function SelectBox({ checked, onToggle, className }: { checked: boolean; 
         e.stopPropagation();
         onToggle();
       }}
-      className={cn(
-        'grid size-5 place-items-center rounded-md border transition-all',
-        checked ? 'border-accent bg-accent text-white' : 'border-line-strong bg-panel/90 text-transparent hover:border-accent/70',
-        className,
-      )}
+      // On phones the hit area grows to 36px; the visible box stays 20px and the layout doesn't move.
+      className={cn('group/sel grid size-5 shrink-0 place-items-center rounded-md max-sm:-m-2 max-sm:size-9', className)}
     >
-      <Check className="size-3.5" strokeWidth={3} />
+      <span
+        className={cn(
+          'grid size-5 place-items-center rounded-md border transition-colors',
+          checked ? 'border-accent bg-accent text-accent-fg' : 'border-line-strong bg-panel text-transparent group-hover/sel:border-accent/70',
+        )}
+      >
+        <Check className="size-3.5" strokeWidth={3} />
+      </span>
     </button>
   );
 }
 
-const CLAMP_AT = 420;
-
 export const TweetCard = memo(function TweetCard({ b, animate = true, category, highlight, selected, focused, selectMode, showSummary = true, showMetrics = true, onOpen, onToggleSelect, onSearch }: CardProps) {
   const t = useT();
   const [expanded, setExpanded] = useState(false);
-  const long = b.text.length > CLAMP_AT;
+  const long = b.text.length > CLAMP_AT || (b.text.match(/\n/g)?.length ?? 0) > 5;
 
   return (
     <article
@@ -102,28 +107,27 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
         else onOpen(b.id);
       }}
       className={cn(
-        animate && 'animate-rise',
-        'group relative cursor-pointer rounded-[20px] border bg-panel p-[18px] shadow-card transition-[box-shadow,border-color,transform] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-hover',
-        selected ? 'ring-brand border-transparent shadow-[0_0_0_4px_var(--accent-soft)]' : focused ? 'border-accent/50' : 'border-line hover:border-line-strong',
+        animate && 'animate-fade-in',
+        'group relative cursor-pointer rounded-xl border bg-panel p-4 transition-colors duration-150',
+        selected ? 'border-accent bg-accent-soft' : focused ? 'border-accent/60' : 'border-line hover:border-line-strong',
       )}
     >
-      {!b.read ? <span className="bg-brand absolute top-[26px] -left-[3px] size-1.5 rounded-full shadow-[0_0_8px_rgb(150_80_255/0.8)]" aria-label={t('card.unread')} /> : null}
-
       <header className="flex items-start gap-3">
-        <div className="relative">
-          <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={40} />
+        <div className="relative shrink-0">
+          <Avatar src={b.author.avatar} name={b.author.name} handle={b.author.handle} size={36} />
           <SelectBox
             checked={!!selected}
             onToggle={() => onToggleSelect(b.id)}
-            className={cn('absolute -top-1 -left-1 shadow-sm', selected || selectMode ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')}
+            className={cn('absolute -top-1 -left-1', selected || selectMode ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 focus-visible:opacity-100')}
           />
         </div>
-        <div className="min-w-0 flex-1 pt-0.5">
-          <div className="flex min-w-0 items-center gap-1">
-            <span className="truncate text-[14px] font-semibold text-fg">{b.author.name || b.author.handle}</span>
-            {b.author.verified ? <Verified /> : null}
+        <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <span className="truncate text-[14px] leading-5 font-semibold text-fg">{b.author.name || b.author.handle}</span>
+            {b.author.verified ? <Verified className="size-3.5 shrink-0 fill-accent text-accent-fg" /> : null}
+            {!b.read ? <span role="img" aria-label={t('card.unread')} title={t('card.unread')} className="size-1.5 shrink-0 rounded-full bg-accent" /> : null}
           </div>
-          <div className="truncate text-[12.5px] text-muted">
+          <div className="truncate text-[12px] leading-4 text-muted">
             <button
               type="button"
               className="hover:text-fg hover:underline"
@@ -137,58 +141,51 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
             · <time title={fmtLongDate(b.createdAt)}>{fmtShortDate(b.createdAt)}</time>
           </div>
         </div>
-        <div className="flex items-center gap-0.5">
-          <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
-            <LazyTip label={b.starred ? t('common.unstar') : t('common.star')} shortcut="S">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  void setStarred([b.id], !b.starred);
-                }}
-                className="grid size-7 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg"
-                aria-label={t('common.star')}
-              >
-                <Star key={b.starred} className={cn('size-4', b.starred && 'animate-pop fill-amber-400 text-amber-400')} />
-              </button>
-            </LazyTip>
-            <LazyTip label={t('common.openOnX')} shortcut="O">
-              <a
-                href={b.url}
-                target="_blank"
-                rel="noreferrer noopener"
-                onClick={(e) => e.stopPropagation()}
-                className="grid size-7 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg"
-                aria-label={t('common.openOnX')}
-              >
-                <ExternalLink className="size-4" />
-              </a>
-            </LazyTip>
-          </div>
-          {b.starred ? <Star className="size-3.5 fill-amber-400 text-amber-400 group-hover:hidden" /> : null}
+        <div className="flex shrink-0 items-center gap-0.5">
+          <LazyTip label={b.starred ? t('common.unstar') : t('common.star')} shortcut="S">
+            <button
+              type="button"
+              aria-pressed={!!b.starred}
+              onClick={(e) => {
+                e.stopPropagation();
+                void setStarred([b.id], !b.starred);
+              }}
+              className={cn('grid size-7 place-items-center rounded-lg transition-colors hover:bg-panel-2 max-sm:size-9', b.starred ? 'text-amber-500' : 'text-muted hover:text-fg')}
+              aria-label={t('common.star')}
+            >
+              <Star key={String(b.starred)} className={cn('size-4', b.starred && 'animate-pop fill-amber-400 text-amber-400')} />
+            </button>
+          </LazyTip>
+          <LazyTip label={t('common.openOnX')} shortcut="O">
+            <a
+              href={b.url}
+              target="_blank"
+              rel="noreferrer noopener"
+              onClick={(e) => e.stopPropagation()}
+              className="grid size-7 place-items-center rounded-lg text-muted opacity-0 transition-[opacity,color,background-color] group-hover:opacity-100 hover:bg-panel-2 hover:text-fg focus-visible:opacity-100"
+              aria-label={t('common.openOnX')}
+            >
+              <ExternalLink className="size-4" />
+            </a>
+          </LazyTip>
           <BookmarkMenu b={b}>
-            <button type="button" onClick={(e) => e.stopPropagation()} className="grid size-7 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg" aria-label={t('card.moreActions')}>
+            <button type="button" onClick={(e) => e.stopPropagation()} className="grid size-7 place-items-center rounded-lg text-muted hover:bg-panel-2 hover:text-fg max-sm:size-9" aria-label={t('card.moreActions')}>
               <Ellipsis className="size-4" />
             </button>
           </BookmarkMenu>
         </div>
       </header>
 
-      {showSummary && b.summary ? (
-        <div className="mt-3 flex gap-2 rounded-xl bg-accent-soft px-3 py-2 text-[12.5px] leading-snug text-fg-2 ring-1 ring-accent/15">
-          <Sparkles className="mt-px size-3.5 shrink-0 text-accent" />
-          <span>{b.summary}</span>
-        </div>
-      ) : null}
+      {showSummary && b.summary ? <p className="mt-3 rounded-lg bg-panel-2 px-3 py-2 text-[13px] leading-[1.5] text-fg-2">{b.summary}</p> : null}
 
       {b.text ? (
-        <div className="mt-3">
+        <div className="mt-2.5">
           <TweetText
             text={b.text}
             highlight={highlight}
             onHashtag={(tag) => onSearch?.(tag)}
             onMention={(h) => onSearch?.(`from:${h}`)}
-            className={cn('text-[14.75px] leading-[1.6] text-fg', long && !expanded && 'line-clamp-[9]')}
+            className={cn('text-[14px] leading-[1.55] text-fg-2', long && !expanded && 'line-clamp-[8]')}
           />
           {long ? (
             <button
@@ -197,7 +194,7 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
                 e.stopPropagation();
                 setExpanded((x) => !x);
               }}
-              className="mt-1 text-[13px] font-medium text-accent hover:underline"
+              className="mt-1 text-[12.5px] font-medium text-accent hover:underline"
             >
               {expanded ? t('card.showLess') : t('card.showMore')}
             </button>
@@ -220,13 +217,13 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
       {b.quoted ? <QuotedPost q={b.quoted} highlight={highlight} className="mt-3" /> : null}
 
       {b.note.trim() ? (
-        <div className="mt-3 flex gap-2 rounded-xl border border-amber-400/25 bg-amber-400/8 px-3 py-2 text-[12.5px] text-fg-2">
-          <StickyNote className="mt-px size-3.5 shrink-0 text-amber-500" />
+        <div className="mt-3 flex gap-2 rounded-lg border border-line bg-panel-2 px-3 py-2 text-[13px] text-fg-2">
+          <StickyNote className="mt-0.5 size-3.5 shrink-0 text-muted" />
           <span className="line-clamp-3 whitespace-pre-wrap">{b.note}</span>
         </div>
       ) : null}
 
-      <footer className="mt-3.5 flex flex-wrap items-center gap-x-2 gap-y-2">
+      <footer className="mt-3.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
         <CategoryChip category={category} />
         {b.tags.slice(0, 3).map((tag) => (
           <button
@@ -236,12 +233,12 @@ export const TweetCard = memo(function TweetCard({ b, animate = true, category, 
               e.stopPropagation();
               onSearch?.(`tag:"${tag}"`);
             }}
-            className="h-6 max-w-[140px] truncate rounded-full bg-panel-2 px-2 text-[11.5px] text-fg-2 hover:bg-panel-3"
+            className="max-w-[140px] truncate text-[12px] text-muted hover:text-fg hover:underline"
           >
             #{tag}
           </button>
         ))}
-        {b.tags.length > 3 ? <span className="text-[11.5px] text-faint">+{b.tags.length - 3}</span> : null}
+        {b.tags.length > 3 ? <span className="text-[12px] text-muted">+{b.tags.length - 3}</span> : null}
         {showMetrics ? <Metrics b={b} className="ml-auto" /> : null}
       </footer>
     </article>
