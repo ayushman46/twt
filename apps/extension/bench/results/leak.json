@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-27T20:55:17.421Z",
+  "rounds": 40,
+  "screensVisited": 400,
+  "samples": [
+    {
+      "round": 5,
+      "heapMB": 40.4,
+      "nodes": 2574,
+      "listeners": 615,
+      "documents": 1
+    },
+    {
+      "round": 20,
+      "heapMB": 41.5,
+      "nodes": 2574,
+      "listeners": 615,
+      "documents": 1
+    },
+    {
+      "round": 40,
+      "heapMB": 41.7,
+      "nodes": 2574,
+      "listeners": 615,
+      "documents": 1
+    }
+  ],
+  "heapGrowth": 3.2,
+  "nodeGrowth": 0,
+  "listenerGrowth": 0
+}

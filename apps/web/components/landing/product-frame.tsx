@@ -274,7 +274,7 @@ export function ProductFrame({ t, categoryNames }: { t: MockupCopy; categoryName
               </span>
               <span className="ml-auto rounded-md border border-line px-1.5 text-[10.5px] font-medium leading-[18px] text-muted">Pro</span>
             </div>
-            <div className="flex h-8 items-center gap-2 rounded-lg border border-line bg-panel px-2.5 text-[12.5px] text-faint">
+            <div className="flex h-8 items-center gap-2 rounded-lg border border-line bg-panel px-2.5 text-[12.5px] text-muted">
               <Search className="size-3.5 text-muted" />
               <span className="min-w-0 flex-1 truncate">{t.search}</span>
               <span className="kbd h-[18px] min-w-[18px] text-[10px]">⌘K</span>

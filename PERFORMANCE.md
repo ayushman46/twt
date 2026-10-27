@@ -92,6 +92,19 @@ Startup did not regress; the new screens and language packs load on demand. Sett
 
 **50,000 posts** (same benchmark, `--n 50000 --runs 1`): library on screen **1.0 s**, full library loaded **3.8 s**, search **250 ms** per keystroke, star **204 ms**, scrolling **55 FPS** (p95 33 ms), oldest post **145 ms**, JS heap **112 MB**.
 
+## Search: narrowing as you type (October 28, 2026)
+
+Search now folds text the same way as the rest of the app, so equivalent Unicode spellings match: "fancy" X letters, decomposed accents, Hindi nasal spellings, curly quotes and Indic digits. That makes building the index slower for non-Latin text. To more than make up for it, each keystroke that only extends the previous query ("de" → "des") now rescans just the previous matches instead of the whole library. Every post is also mapped to its index entry once per library snapshot rather than on every keystroke. A unit test types random queries letter by letter (with backspaces) and checks every step against a fresh search.
+
+Same runner and same idle machine, with only `scan-search.ts` swapped (`bench/results/search-before*.json` vs `search-after*.json`, `--cpu 1`):
+
+| Search, per keystroke | Before | After |
+|---|---:|---:|
+| 10,000 posts (median of 3 runs) | 51 ms | **42 ms** |
+| 50,000 posts (median of 2 runs) | 250 ms | **150 ms** |
+
+Startup, starring and scrolling are unchanged within run-to-run noise.
+
 ## Known trade-offs / not fixed
 
 - Under 4× throttling, scroll p95 frame (133 ms) is worse than the baseline's 33 ms: the baseline only scrolled through cards it had already rendered (and covered less distance), while virtualization mounts new cards as you go. At full speed scrolling is a locked 60 FPS.

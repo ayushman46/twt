@@ -12,7 +12,8 @@ import "./globals.css";
  * this standalone 404 (experimental.globalNotFound in next.config.ts).
  */
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
+// Same loading as the root layouts (see app/(en)/layout.tsx): no late font swap.
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "optional" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -1,0 +1,508 @@
+{
+  "default": {
+    "baseUrl": "http://localhost:3302",
+    "finishedAt": "2026-10-27T22:00:51.360Z",
+    "runsPerPage": 3,
+    "targets": {
+      "performance": 90,
+      "accessibility": 95,
+      "best-practices": 95,
+      "seo": 95
+    },
+    "pass": false,
+    "pages": {
+      "/": {
+        "url": "http://localhost:3302/",
+        "median": {
+          "scores": {
+            "performance": 79,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "FCP": "1.4 s",
+            "LCP": "3.2 s",
+            "TBT": "560 ms",
+            "CLS": "0",
+            "SI": "2.7 s"
+          },
+          "failing": [],
+          "opportunities": [
+            "legacy-javascript (100 ms)"
+          ],
+          "benchmarkIndex": 804,
+          "cpuSlowdownMultiplier": 4,
+          "warnings": [
+            "The tested device appears to have a slower CPU than  Lighthouse expects. This can negatively affect your performance score. Learn more about [calibrating an appropriate CPU slowdown multiplier](https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md#cpu-throttling)."
+          ],
+          "lighthouseVersion": "12.8.2",
+          "formFactor": "mobile"
+        },
+        "misses": [
+          "performance"
+        ],
+        "runs": [
+          {
+            "scores": {
+              "performance": 67,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "2.2 s",
+              "LCP": "3.8 s",
+              "TBT": "700 ms",
+              "CLS": "0",
+              "SI": "4.1 s"
+            },
+            "benchmarkIndex": 809
+          },
+          {
+            "scores": {
+              "performance": 79,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.4 s",
+              "LCP": "3.2 s",
+              "TBT": "560 ms",
+              "CLS": "0",
+              "SI": "2.7 s"
+            },
+            "benchmarkIndex": 804
+          },
+          {
+            "scores": {
+              "performance": 83,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.4 s",
+              "LCP": "3.0 s",
+              "TBT": "440 ms",
+              "CLS": "0",
+              "SI": "1.4 s"
+            },
+            "benchmarkIndex": 812
+          }
+        ]
+      },
+      "/hi": {
+        "url": "http://localhost:3302/hi",
+        "median": {
+          "scores": {
+            "performance": 81,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "FCP": "2.0 s",
+            "LCP": "3.6 s",
+            "TBT": "330 ms",
+            "CLS": "0",
+            "SI": "2.9 s"
+          },
+          "failing": [],
+          "opportunities": [],
+          "benchmarkIndex": 1029,
+          "cpuSlowdownMultiplier": 4,
+          "warnings": [],
+          "lighthouseVersion": "12.8.2",
+          "formFactor": "mobile"
+        },
+        "misses": [
+          "performance"
+        ],
+        "runs": [
+          {
+            "scores": {
+              "performance": 79,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "2.0 s",
+              "LCP": "3.6 s",
+              "TBT": "370 ms",
+              "CLS": "0",
+              "SI": "2.8 s"
+            },
+            "benchmarkIndex": 797
+          },
+          {
+            "scores": {
+              "performance": 81,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "2.0 s",
+              "LCP": "3.6 s",
+              "TBT": "330 ms",
+              "CLS": "0",
+              "SI": "2.9 s"
+            },
+            "benchmarkIndex": 1029
+          },
+          {
+            "scores": {
+              "performance": 86,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "2.1 s",
+              "LCP": "3.6 s",
+              "TBT": "140 ms",
+              "CLS": "0",
+              "SI": "2.8 s"
+            },
+            "benchmarkIndex": 1667
+          }
+        ]
+      },
+      "/install": {
+        "url": "http://localhost:3302/install",
+        "median": {
+          "scores": {
+            "performance": 84,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "FCP": "1.1 s",
+            "LCP": "2.8 s",
+            "TBT": "470 ms",
+            "CLS": "0",
+            "SI": "2.3 s"
+          },
+          "failing": [],
+          "opportunities": [
+            "legacy-javascript (260 ms)"
+          ],
+          "benchmarkIndex": 753,
+          "cpuSlowdownMultiplier": 4,
+          "warnings": [
+            "The tested device appears to have a slower CPU than  Lighthouse expects. This can negatively affect your performance score. Learn more about [calibrating an appropriate CPU slowdown multiplier](https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md#cpu-throttling)."
+          ],
+          "lighthouseVersion": "12.8.2",
+          "formFactor": "mobile"
+        },
+        "misses": [
+          "performance"
+        ],
+        "runs": [
+          {
+            "scores": {
+              "performance": 80,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.1 s",
+              "LCP": "2.9 s",
+              "TBT": "590 ms",
+              "CLS": "0",
+              "SI": "2.3 s"
+            },
+            "benchmarkIndex": 740
+          },
+          {
+            "scores": {
+              "performance": 84,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.1 s",
+              "LCP": "2.8 s",
+              "TBT": "470 ms",
+              "CLS": "0",
+              "SI": "2.3 s"
+            },
+            "benchmarkIndex": 753
+          },
+          {
+            "scores": {
+              "performance": 85,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.1 s",
+              "LCP": "2.8 s",
+              "TBT": "430 ms",
+              "CLS": "0",
+              "SI": "2.3 s"
+            },
+            "benchmarkIndex": 776
+          }
+        ]
+      }
+    }
+  },
+  "cpu-1x": {
+    "baseUrl": "http://localhost:3302",
+    "finishedAt": "2026-10-27T22:07:40.174Z",
+    "runsPerPage": 3,
+    "targets": {
+      "performance": 90,
+      "accessibility": 95,
+      "best-practices": 95,
+      "seo": 95
+    },
+    "pass": true,
+    "pages": {
+      "/": {
+        "url": "http://localhost:3302/",
+        "median": {
+          "scores": {
+            "performance": 94,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "FCP": "1.4 s",
+            "LCP": "3.1 s",
+            "TBT": "40 ms",
+            "CLS": "0",
+            "SI": "2.4 s"
+          },
+          "failing": [],
+          "opportunities": [
+            "unused-javascript (190 ms)",
+            "legacy-javascript (150 ms)"
+          ],
+          "benchmarkIndex": 724,
+          "cpuSlowdownMultiplier": 1,
+          "warnings": [],
+          "lighthouseVersion": "12.8.2",
+          "formFactor": "mobile"
+        },
+        "misses": [],
+        "runs": [
+          {
+            "scores": {
+              "performance": 93,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.4 s",
+              "LCP": "3.1 s",
+              "TBT": "40 ms",
+              "CLS": "0",
+              "SI": "2.6 s"
+            },
+            "benchmarkIndex": 736
+          },
+          {
+            "scores": {
+              "performance": 94,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.4 s",
+              "LCP": "3.1 s",
+              "TBT": "40 ms",
+              "CLS": "0",
+              "SI": "2.4 s"
+            },
+            "benchmarkIndex": 724
+          },
+          {
+            "scores": {
+              "performance": 94,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.4 s",
+              "LCP": "3.1 s",
+              "TBT": "0 ms",
+              "CLS": "0",
+              "SI": "2.3 s"
+            },
+            "benchmarkIndex": 1565
+          }
+        ]
+      },
+      "/hi": {
+        "url": "http://localhost:3302/hi",
+        "median": {
+          "scores": {
+            "performance": 91,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "FCP": "2.1 s",
+            "LCP": "3.2 s",
+            "TBT": "70 ms",
+            "CLS": "0",
+            "SI": "2.7 s"
+          },
+          "failing": [],
+          "opportunities": [
+            "unused-javascript (150 ms)",
+            "legacy-javascript (150 ms)"
+          ],
+          "benchmarkIndex": 710,
+          "cpuSlowdownMultiplier": 1,
+          "warnings": [],
+          "lighthouseVersion": "12.8.2",
+          "formFactor": "mobile"
+        },
+        "misses": [],
+        "runs": [
+          {
+            "scores": {
+              "performance": 90,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "2.1 s",
+              "LCP": "3.3 s",
+              "TBT": "50 ms",
+              "CLS": "0",
+              "SI": "2.9 s"
+            },
+            "benchmarkIndex": 639
+          },
+          {
+            "scores": {
+              "performance": 91,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "2.1 s",
+              "LCP": "3.2 s",
+              "TBT": "70 ms",
+              "CLS": "0",
+              "SI": "2.7 s"
+            },
+            "benchmarkIndex": 710
+          },
+          {
+            "scores": {
+              "performance": 93,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "2.1 s",
+              "LCP": "2.7 s",
+              "TBT": "20 ms",
+              "CLS": "0",
+              "SI": "3.3 s"
+            },
+            "benchmarkIndex": 513
+          }
+        ]
+      },
+      "/install": {
+        "url": "http://localhost:3302/install",
+        "median": {
+          "scores": {
+            "performance": 98,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "FCP": "1.1 s",
+            "LCP": "2.4 s",
+            "TBT": "30 ms",
+            "CLS": "0",
+            "SI": "2.3 s"
+          },
+          "failing": [],
+          "opportunities": [
+            "unused-javascript (240 ms)"
+          ],
+          "benchmarkIndex": 737,
+          "cpuSlowdownMultiplier": 1,
+          "warnings": [],
+          "lighthouseVersion": "12.8.2",
+          "formFactor": "mobile"
+        },
+        "misses": [],
+        "runs": [
+          {
+            "scores": {
+              "performance": 94,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.5 s",
+              "LCP": "2.7 s",
+              "TBT": "80 ms",
+              "CLS": "0",
+              "SI": "3.8 s"
+            },
+            "benchmarkIndex": 799
+          },
+          {
+            "scores": {
+              "performance": 98,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.1 s",
+              "LCP": "2.4 s",
+              "TBT": "30 ms",
+              "CLS": "0",
+              "SI": "2.3 s"
+            },
+            "benchmarkIndex": 737
+          },
+          {
+            "scores": {
+              "performance": 98,
+              "accessibility": 100,
+              "best-practices": 100,
+              "seo": 100
+            },
+            "metrics": {
+              "FCP": "1.1 s",
+              "LCP": "2.2 s",
+              "TBT": "20 ms",
+              "CLS": "0",
+              "SI": "1.1 s"
+            },
+            "benchmarkIndex": 762
+          }
+        ]
+      }
+    }
+  }
+}

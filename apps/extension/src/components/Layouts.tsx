@@ -10,8 +10,6 @@ import { Highlight, highlightRegex } from './TweetText';
 import { VirtualMasonry, virtualRegistry } from './VirtualMasonry';
 import { cn } from './ui/primitives';
 
-export { virtualRegistry };
-
 export interface LayoutProps {
   resetKey: string;
   items: Bookmark[];

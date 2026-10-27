@@ -42,7 +42,7 @@
     --line-strong: rgb(17 17 17 / 0.14);
     --fg: #141414;
     --fg-2: #3b3b39;
-    --muted: #6b6b67;
+    --muted: #696965;
     --faint: #9b9b96;
     --accent: #3d5bd9;
     --accent-hover: #3149bf;
@@ -144,15 +144,17 @@ html:not([data-currency="inr"]):not(:lang(hi)) .cur-inr,
 html[data-currency="usd"] .cur-inr,
 html[data-currency="inr"] .cur-usd,
 html:not([data-currency]):lang(hi) .cur-usd,
-[data-period="monthly"] .per-yearly,
-[data-period="yearly"] .per-monthly {
+html[data-period="monthly"] .per-yearly,
+html:not([data-period="monthly"]) .per-monthly {
   display: none !important;
 }
-/* Active ₹/$ segment follows <html data-currency> so it is right before hydration too. */
+/* Active segments follow <html data-currency|data-period> so they are right before hydration too. Yearly is the default. */
 html[data-currency="inr"] .cur-btn[data-cur-btn="inr"],
 html[data-currency="usd"] .cur-btn[data-cur-btn="usd"],
 html:not([data-currency]):not(:lang(hi)) .cur-btn[data-cur-btn="usd"],
-html:not([data-currency]):lang(hi) .cur-btn[data-cur-btn="inr"] {
+html:not([data-currency]):lang(hi) .cur-btn[data-cur-btn="inr"],
+html[data-period="monthly"] .period-btn[data-period-btn="monthly"],
+html:not([data-period="monthly"]) .period-btn[data-period-btn="yearly"] {
   background-color: var(--panel-3);
   color: var(--fg);
 }

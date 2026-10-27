@@ -58,6 +58,14 @@ export default defineBackground(() => {
 type Handler<T extends MessageType> = (msg: Message<T>, sender: Browser.runtime.MessageSender) => Promise<MessageMap[T]['res']>;
 type Handlers = { [T in MessageType]: Handler<T> };
 
+/** Serializes read-modify-write updates of the sync state (batches can arrive concurrently). */
+let syncStateLock: Promise<unknown> = Promise.resolve();
+function withSyncState<T>(fn: () => Promise<T>): Promise<T> {
+  const run = syncStateLock.then(fn, fn);
+  syncStateLock = run.catch(() => undefined);
+  return run;
+}
+
 const handlers: Handlers = {
   async 'capture/timeline'(msg, sender) {
     const state = await syncStateItem.getValue();
@@ -67,7 +75,11 @@ const handlers: Handlers = {
     const res = await ingestTweets(msg.tweets, { source: msg.source, collectionId });
     if (res.added) await unseenItem.setValue((await unseenItem.getValue()) + res.added);
     if (isSyncTab) {
-      await syncStateItem.setValue({ ...state, status: 'running', found: state.found + res.count, added: state.added + res.added });
+      await withSyncState(async () => {
+        const latest = await syncStateItem.getValue();
+        if (latest.runId !== state.runId || !isSyncActive(latest)) return;
+        await syncStateItem.setValue({ ...latest, status: 'running', found: latest.found + res.count, added: latest.added + res.added });
+      });
     }
     return { count: res.count, added: res.added, updated: res.updated };
   },
@@ -202,7 +214,10 @@ async function startSync(source: Source, mode: 'quick' | 'full'): Promise<{ ok: 
   const viewer = await viewerItem.getValue();
   const url = source === 'bookmark' ? 'https://x.com/i/bookmarks' : viewer?.handle ? `https://x.com/${viewer.handle}/likes` : 'https://x.com/home';
 
-  const tab = await browser.tabs.create({ url, active: true });
+  // Open a blank tab, record it as the sync tab, and only then load X. Loading X first
+  // let a fast page claim the run (or send its first page) before the state existed:
+  // the sync never started scrolling, or the first page wasn't counted.
+  const tab = await browser.tabs.create({ url: 'about:blank', active: true });
   if (tab.id === undefined) return { ok: false, error: 'Could not open X.' };
 
   resetOrderCursor(source);
@@ -217,10 +232,15 @@ async function startSync(source: Source, mode: 'quick' | 'full'): Promise<{ ok: 
     added: 0,
   };
   await syncStateItem.setValue(state);
+  await browser.tabs.update(tab.id, { url });
   return { ok: true };
 }
 
-async function finishSync(runId: string, status: 'done' | 'stopped' | 'error', message?: string) {
+function finishSync(runId: string, status: 'done' | 'stopped' | 'error', message?: string) {
+  return withSyncState(() => finishSyncNow(runId, status, message));
+}
+
+async function finishSyncNow(runId: string, status: 'done' | 'stopped' | 'error', message?: string) {
   const s = await syncStateItem.getValue();
   if (s.runId !== runId || !isSyncActive(s)) return;
   const finishedAt = Date.now();

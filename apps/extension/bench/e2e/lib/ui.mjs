@@ -220,6 +220,8 @@ export function clippedText(page, root = 'body') {
       const s = getComputedStyle(el);
       const r = el.getBoundingClientRect();
       if (r.width === 0 || r.height === 0 || s.visibility === 'hidden' || Number(s.opacity) === 0) continue;
+      // Screen-reader-only text (Tailwind sr-only: 1×1px, clipped) is meant to be invisible.
+      if (r.width <= 1 || r.height <= 1) continue;
       if (s.textOverflow === 'ellipsis' || s.webkitLineClamp !== 'none' || /line-clamp/.test(el.className)) continue;
       const clipsX = /(hidden|clip)/.test(s.overflowX) && el.scrollWidth > el.clientWidth + 2;
       const clipsY = /(hidden|clip)/.test(s.overflowY) && el.scrollHeight > el.clientHeight + 4 && s.whiteSpace !== 'nowrap';

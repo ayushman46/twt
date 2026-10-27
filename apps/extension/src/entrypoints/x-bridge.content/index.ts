@@ -32,6 +32,18 @@ const pageStats = {
   zeroNewStreak: 0,
 };
 
+/** Timeline batches sent to the background and not answered yet. */
+const pending = new Set<Promise<unknown>>();
+
+/**
+ * Wait (at most `ms`) until every batch sent so far is stored and counted, so
+ * stop decisions and the final count never run ahead of a slow machine.
+ */
+async function settle(ms: number) {
+  const until = Date.now() + ms;
+  while (pending.size && Date.now() < until) await Promise.race([Promise.allSettled([...pending]), sleep(until - Date.now())]);
+}
+
 let overlay: Overlay | null = null;
 const getOverlay = () => (overlay ??= new Overlay());
 let runner: SyncRunner | null = null;
@@ -45,14 +57,19 @@ async function forward(msg: MainMessage) {
   try {
     switch (msg.kind) {
       case 'timeline': {
-        const res = await send('capture/timeline', {
+        const req = send('capture/timeline', {
           source: msg.source,
           op: msg.op,
           tweets: msg.tweets,
           entryCount: msg.entryCount,
           folderId: msg.folderId,
         });
-        onBatch(res, msg.tweets.length, msg.entryCount);
+        pending.add(req);
+        try {
+          onBatch(await req, msg.tweets.length, msg.entryCount);
+        } finally {
+          pending.delete(req);
+        }
         return;
       }
       case 'saved': {
@@ -199,6 +216,7 @@ class SyncRunner {
   private async finish(status: 'done' | 'stopped' | 'error', message?: string) {
     if (this.finished) return;
     this.finished = true;
+    await settle(15_000);
     await send('sync/finish', { runId: this.task.runId, status, message }).catch(() => undefined);
     const o = getOverlay();
     const noun = this.label;
@@ -264,6 +282,7 @@ class SyncRunner {
       articles[articles.length - 1]?.scrollIntoView({ block: 'end' });
       window.scrollTo({ top: document.documentElement.scrollHeight });
       await sleep(delay + Math.random() * 300);
+      await settle(10_000);
 
       if (pageStats.ended) break;
       if (this.task.mode === 'quick' && pageStats.zeroNewStreak >= 2) break;

@@ -37,8 +37,13 @@ export async function exportJson(list?: Bookmark[]) {
   download(`twtdash-backup-${stamp()}.json`, JSON.stringify(backup, null, 2), 'application/json');
 }
 
+/** Spreadsheet apps run text cells starting with these as formulas (CSV injection). */
+const FORMULA_START = /^[=+\-@\t\r]/;
+
 function csvCell(v: unknown): string {
-  const s = v === undefined || v === null ? '' : String(v);
+  let s = v === undefined || v === null ? '' : String(v);
+  // Post text, names and notes are attacker-controlled: a leading quote makes them inert text.
+  if (typeof v === 'string' && FORMULA_START.test(s)) s = `'${s}`;
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
@@ -114,10 +119,63 @@ export interface ImportResult {
   collections: number;
 }
 
+const NOT_A_BACKUP = 'This file is not a twtdash backup.';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Row = Record<string, any>;
+const isRow = (v: unknown): v is Row => typeof v === 'object' && v !== null && !Array.isArray(v);
+const isStr = (v: unknown): v is string => typeof v === 'string';
+const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+const isStrs = (v: unknown) => Array.isArray(v) && v.every(isStr);
+/** A time `Date` can represent (every export formats dates). */
+const isTime = (v: unknown) => isNum(v) && Math.abs(v) <= 8.64e15;
+const isFlag = (v: unknown) => v === 0 || v === 1;
+const METRICS = ['likes', 'retweets', 'replies', 'quotes', 'views', 'bookmarks'];
+
+/** Rows the library can show, search and export; anything else in a file is skipped. */
+function isBookmark(b: unknown): b is Bookmark {
+  return (
+    isRow(b) &&
+    isStr(b.id) &&
+    b.id !== '' &&
+    isStr(b.url) &&
+    isStr(b.text) &&
+    isStr(b.note) &&
+    isStr(b.category) &&
+    isRow(b.author) &&
+    isStr(b.author.handle) &&
+    isStr(b.author.name) &&
+    isRow(b.metrics) &&
+    METRICS.every((k) => isNum(b.metrics[k])) &&
+    isTime(b.createdAt) &&
+    isTime(b.savedAt) &&
+    Array.isArray(b.media) &&
+    Array.isArray(b.links) &&
+    isStrs(b.tags) &&
+    isStrs(b.collections) &&
+    isStrs(b.sources) &&
+    isStrs(b.facets) &&
+    isFlag(b.starred) &&
+    isFlag(b.read) &&
+    isFlag(b.archived)
+  );
+}
+
+const isCollection = (c: unknown): c is Collection => isRow(c) && isStr(c.id) && c.id !== '' && isStr(c.name) && isNum(c.order);
+const isCategory = (c: unknown): c is Category => isCollection(c) && isStr((c as Row).keywords);
+
 export async function importJson(file: File): Promise<ImportResult> {
-  const data = JSON.parse(await file.text()) as Partial<twtdashBackup>;
-  if (data.app !== 'twtdash' || !Array.isArray(data.bookmarks)) throw new Error('This file is not a twtdash backup.');
-  const valid = data.bookmarks.filter((b) => b && typeof b.id === 'string' && b.author && typeof b.text === 'string');
+  let data: Row;
+  try {
+    data = JSON.parse(await file.text());
+  } catch {
+    throw new Error(NOT_A_BACKUP);
+  }
+  if (!isRow(data) || data.app !== 'twtdash' || !Array.isArray(data.bookmarks)) throw new Error(NOT_A_BACKUP);
+  const valid = data.bookmarks.filter(isBookmark);
+  if (data.bookmarks.length && !valid.length) throw new Error('None of the posts in this backup could be read.');
+  const collections = Array.isArray(data.collections) ? data.collections.filter(isCollection) : [];
+  const categories = Array.isArray(data.categories) ? data.categories.filter(isCategory) : [];
   await db.transaction('rw', [db.bookmarks, db.collections, db.categories], async () => {
     const existing = new Map((await db.bookmarks.bulkGet(valid.map((b) => b.id))).filter((b): b is Bookmark => !!b).map((b) => [b.id, b]));
     const now = Date.now();
@@ -127,19 +185,19 @@ export async function importJson(file: File): Promise<ImportResult> {
       return {
         ...prev,
         ...b,
-        tags: [...new Set([...prev.tags, ...(b.tags ?? [])])],
-        collections: [...new Set([...prev.collections, ...(b.collections ?? [])])],
+        tags: [...new Set([...prev.tags, ...b.tags])],
+        collections: [...new Set([...prev.collections, ...b.collections])],
         note: b.note || prev.note,
         updatedAt: now,
       };
     });
     await db.bookmarks.bulkPut(merged);
-    if (Array.isArray(data.collections)) await db.collections.bulkPut(data.collections);
-    if (Array.isArray(data.categories)) {
+    await db.collections.bulkPut(collections);
+    if (categories.length) {
       const have = new Set((await db.categories.toArray()).map((c) => c.id));
       // Keep local edits to built-ins; add custom categories from the backup.
-      await db.categories.bulkPut(data.categories.filter((c) => !have.has(c.id) || !c.builtin));
+      await db.categories.bulkPut(categories.filter((c) => !have.has(c.id) || !c.builtin));
     }
   });
-  return { bookmarks: valid.length, collections: data.collections?.length ?? 0 };
+  return { bookmarks: valid.length, collections: collections.length };
 }

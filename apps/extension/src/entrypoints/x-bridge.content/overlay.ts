@@ -8,7 +8,7 @@
  */
 import { OVERLAY_EN, overlayStringsItem, type OverlayKey, type OverlayStrings } from '@/i18n/overlay-en';
 
-const LOGO = `<svg viewBox="0 0 128 128" width="100%" height="100%" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#3D5BD9"/><path transform="translate(-2 0)" d="M44 24h44a7 7 0 0 1 7 7v71.2a3.2 3.2 0 0 1-5 2.6L66 88 42 104.8a3.2 3.2 0 0 1-5-2.6V31a7 7 0 0 1 7-7z" fill="#fff"/><rect x="52" y="49" width="24" height="9" rx="4.5" fill="#3D5BD9"/></svg>`;
+const LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#3D5BD9"/><path transform="translate(-2 0)" d="M44 24h44a7 7 0 0 1 7 7v71.2a3.2 3.2 0 0 1-5 2.6L66 88 42 104.8a3.2 3.2 0 0 1-5-2.6V31a7 7 0 0 1 7-7z" fill="#fff"/><rect x="52" y="49" width="24" height="9" rx="4.5" fill="#3D5BD9"/></svg>`;
 
 const CSS = `
 :host { all: initial; }
@@ -123,7 +123,9 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, cls?: string, text?: 
 
 function logo(): HTMLElement {
   const d = el('div', 'logo');
-  d.innerHTML = LOGO;
+  // Parsed rather than assigned through innerHTML: the markup is a constant, and this keeps
+  // store reviewers' "unsafe innerHTML" lint clean.
+  d.append(document.importNode(new DOMParser().parseFromString(LOGO, 'image/svg+xml').documentElement, true));
   return d;
 }
 

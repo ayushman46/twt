@@ -11,10 +11,13 @@ import "../globals.css";
  * pages download the Devanagari font.
  */
 
+// `optional` + preload: Geist renders when it arrives in time (and from cache
+// after), but a late font never swaps in. With any fallback face the mobile hero
+// headline wraps to 4 lines instead of 2, so a late swap shifted the page (CLS ~0.2).
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist",
-  display: "swap",
+  display: "optional",
 });
 
 // Mono only appears in small UI previews: don't let it compete with critical fonts.

@@ -7,6 +7,7 @@
  * builds each haystack lazily (or during idle time via `warm()`).
  */
 import { perfStat } from './perf';
+import { foldText } from './query';
 import type { Bookmark } from './types';
 
 interface Entry {
@@ -19,16 +20,18 @@ interface Entry {
   tags: string;
 }
 
-const WORD = /[\p{L}\p{N}]/u;
+// Marks (\p{M}) are part of words: Indic vowel signs, viramas, combining accents.
+const WORD = /[\p{L}\p{M}\p{N}]/u;
 const SEP = '\u0001';
 
 function signature(b: Bookmark): string {
   return `${b.updatedAt}|${b.note.length}|${b.tags.length}|${b.summary?.length ?? 0}`;
 }
 
+/** Haystacks and terms are folded the same way (`foldText`: case, NFKC, nukta, ZWJ, Indic digits…). */
 function build(b: Bookmark, sig: string): Entry {
-  const who = `${b.author.name} @${b.author.handle}`.toLowerCase();
-  const body = (b.quoted ? `${b.text}\n${b.quoted.text}` : b.text).toLowerCase();
+  const who = foldText(`${b.author.name} @${b.author.handle}`);
+  const body = foldText(b.quoted ? `${b.text}\n${b.quoted.text}` : b.text);
   const extraParts: string[] = [];
   if (b.card?.title) extraParts.push(b.card.title);
   if (b.card?.description) extraParts.push(b.card.description);
@@ -36,9 +39,9 @@ function build(b: Bookmark, sig: string): Entry {
   if (b.summary) extraParts.push(b.summary);
   for (const l of b.links) extraParts.push(l.display);
   for (const m of b.media) if (m.alt) extraParts.push(m.alt);
-  const extra = extraParts.join(' ').toLowerCase();
-  const note = b.note.toLowerCase();
-  const tags = b.tags.join(' ');
+  const extra = foldText(extraParts.join(' '));
+  const note = foldText(b.note);
+  const tags = foldText(b.tags.join(' '));
   return { sig, who, body, extra, note, tags, all: who + SEP + body + SEP + extra + SEP + note + SEP + tags };
 }
 
@@ -61,20 +64,29 @@ function score(e: Entry, terms: string[]): number {
 }
 
 export function tokenize(text: string): string[] {
-  return text
-    .toLowerCase()
+  return foldText(text)
     .split(/[\s,]+/)
-    .map((t) => t.replace(/^[^\p{L}\p{N}#@$]+|[^\p{L}\p{N}+#]+$/gu, ''))
+    .map((t) => t.replace(/^[^\p{L}\p{N}#@$]+|[^\p{L}\p{M}\p{N}+#]+$/gu, ''))
     .filter(Boolean);
+}
+
+/** Every match of `next` also matches `prev` when each earlier term grew in place (typing on). */
+function refines(prev: string[], next: string[]): boolean {
+  return next.length >= prev.length && prev.every((t, i) => next[i]!.includes(t));
 }
 
 export class SearchIndex {
   private entries = new Map<string, Entry>();
   private list: Bookmark[] = [];
   private warmHandle: number | null = null;
+  /** Entries in list order. Lists are immutable snapshots, so this is valid per list. */
+  private view: { list: Bookmark[]; entries: Entry[] } | null = null;
+  /** Indexes of the last all-terms matches; a refined query only rescans these. */
+  private last: { list: Bookmark[]; terms: string[]; hits: number[] } | null = null;
 
   /** O(1): remember the current library. Haystacks are built on demand. */
   sync(list: Bookmark[]) {
+    if (list !== this.list) this.view = this.last = null;
     this.list = list;
     if (this.entries.size > list.length * 1.5 + 100) this.entries.clear();
   }
@@ -111,8 +123,15 @@ export class SearchIndex {
     const out = new Map<string, number>();
     const terms = tokenize(text);
     if (!terms.length) return out;
-    const entries = this.list.map((b) => this.entry(b));
-    for (let i = 0; i < entries.length; i++) {
+    const list = this.list;
+    if (this.view?.list !== list) this.view = { list, entries: list.map((b) => this.entry(b)) };
+    const entries = this.view.entries;
+    const prev = this.last;
+    const candidates = prev && prev.list === list && refines(prev.terms, terms) ? prev.hits : null;
+    const hits: number[] = [];
+    const n = candidates ? candidates.length : entries.length;
+    for (let k = 0; k < n; k++) {
+      const i = candidates ? candidates[k]! : k;
       const e = entries[i]!;
       let ok = true;
       for (const t of terms) {
@@ -121,12 +140,16 @@ export class SearchIndex {
           break;
         }
       }
-      if (ok) out.set(this.list[i]!.id, score(e, terms));
+      if (ok) {
+        hits.push(i);
+        out.set(list[i]!.id, score(e, terms));
+      }
     }
+    this.last = { list, terms, hits };
     if (!out.size && terms.length > 1) {
       for (let i = 0; i < entries.length; i++) {
         const e = entries[i]!;
-        if (terms.some((t) => e.all.includes(t))) out.set(this.list[i]!.id, score(e, terms) * 0.5);
+        if (terms.some((t) => e.all.includes(t))) out.set(list[i]!.id, score(e, terms) * 0.5);
       }
     }
     perfStat('search', performance.now() - t0);

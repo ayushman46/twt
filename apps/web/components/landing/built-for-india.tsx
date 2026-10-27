@@ -76,7 +76,7 @@ export function BuiltForIndia({ t, categoryNames }: { t: T; categoryNames?: Reco
                 <div className="text-[1.75rem] font-semibold leading-none tracking-[-0.03em] text-fg tabular-nums">{t.numbers.ours}</div>
                 <div className="mt-1.5 text-[11.5px] text-muted">{t.numbers.label}</div>
               </div>
-              <div className="text-[13px] tabular-nums text-faint line-through">{t.numbers.theirs}</div>
+              <div className="text-[13px] tabular-nums text-muted line-through">{t.numbers.theirs}</div>
             </Inset>
           }
         >

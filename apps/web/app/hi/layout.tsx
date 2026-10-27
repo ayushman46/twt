@@ -10,18 +10,24 @@ import "../globals.css";
  * Devanagari font. Latin words (brand, tech terms) still render in Geist.
  */
 
+// Same loading as the English layout: no late swap that re-wraps the hero (CLS).
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist",
-  display: "swap",
+  display: "optional",
 });
 
 // One variable woff2 covers every weight. It is Android's own system
-// Devanagari face, so on most Indian phones the swap is invisible.
+// Devanagari face, so most Indian phones show the same glyphs before it loads.
+// Not preloaded: the bundler shares font CSS between both root layouts, so a
+// preload here was sent from every English page too (121 KB they never use).
+// `optional`: a late arrival is used from the next page view instead of
+// swapping in mid-read, which shifted the Hindi headline (CLS).
 const devanagari = Noto_Sans_Devanagari({
   subsets: ["devanagari"],
   variable: "--font-deva",
-  display: "swap",
+  display: "optional",
+  preload: false,
 });
 
 const geistMono = Geist_Mono({

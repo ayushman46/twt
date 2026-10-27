@@ -85,6 +85,17 @@ function tweetFields(t: TweetData): TweetData {
   };
 }
 
+/** Same stored data, ignoring `updatedAt` (a field set to `undefined` counts as absent). */
+function sameData(a: unknown, b: unknown, top = true): boolean {
+  if (a === b) return true;
+  if (!a || !b || typeof a !== 'object' || typeof b !== 'object' || Array.isArray(a) !== Array.isArray(b)) return false;
+  const x = a as Record<string, unknown>;
+  const y = b as Record<string, unknown>;
+  const keys = (o: Record<string, unknown>) => Object.keys(o).filter((k) => o[k] !== undefined && !(top && k === 'updatedAt'));
+  const kx = keys(x);
+  return kx.length === keys(y).length && kx.every((k) => sameData(x[k], y[k], false));
+}
+
 interface IngestOptions {
   source: Source;
   partial?: boolean;
@@ -107,9 +118,15 @@ export async function ingestTweets(items: TimelineTweet[], opts: IngestOptions):
   const addedIds: string[] = [];
   let updated = 0;
 
+  const exactTimes = unique.map(({ tweet, sortIndex }) => (opts.source === 'bookmark' || opts.source === 'like' ? bookmarkTimeFromSortIndex(sortIndex, tweet.createdAt) : undefined));
+  // Pages continue downwards, so a batch starting above the cursor is a fresh read
+  // (X refetched the top, or another folder): restart, or known times would drift down.
+  const newest = exactTimes.find((t) => t !== undefined);
+  if (!opts.savedNow && newest !== undefined && newest >= cursorFor(opts.source).t) resetOrderCursor(opts.source);
+
   unique.forEach(({ tweet, sortIndex }, idx) => {
     const prev = existing[idx];
-    const exactTime = opts.source === 'bookmark' || opts.source === 'like' ? bookmarkTimeFromSortIndex(sortIndex, tweet.createdAt) : undefined;
+    const exactTime = exactTimes[idx];
     const fields = tweetFields(tweet);
     const facets = computeFacets(tweet);
 
@@ -145,6 +162,8 @@ export async function ingestTweets(items: TimelineTweet[], opts: IngestOptions):
           next.categorySource = 'rule';
         }
       }
+      // A re-read with nothing new keeps updatedAt, so live views and search caches stay put.
+      if (sameData(next, prev)) next.updatedAt = prev.updatedAt;
       toPut.push(next);
       updated++;
       return;
@@ -190,7 +209,7 @@ export async function ingestTweets(items: TimelineTweet[], opts: IngestOptions):
       const others = await db.bookmarks.where('author.handle').equals(handle).toArray();
       for (const b of list) {
         const inferred = inferFromAuthor(others, b.id);
-        if (inferred) changes.push({ ...b, category: inferred, categorySource: 'author' });
+        if (inferred) changes.push({ ...b, category: inferred, categorySource: 'author', updatedAt: now });
       }
     }
     if (changes.length) await db.bookmarks.bulkPut(changes);

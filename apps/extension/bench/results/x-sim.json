@@ -1,0 +1,117 @@
+{
+  "suite": "x-sim",
+  "at": "2026-10-27T21:37:46.061Z",
+  "summary": {
+    "total": 13,
+    "pass": 13,
+    "fail": 0,
+    "warn": 0,
+    "skip": 0
+  },
+  "results": [
+    {
+      "group": "x-sim",
+      "name": "the built extension installs and its service worker starts",
+      "status": "pass",
+      "ms": 481,
+      "data": {
+        "extId": "ghiabbkkjfajihhcnfchhiboenhkaako"
+      }
+    },
+    {
+      "group": "x-sim",
+      "name": "dashboard opens to the welcome screen with an empty library",
+      "status": "pass",
+      "ms": 1399
+    },
+    {
+      "group": "x-sim",
+      "name": "full sync imports every bookmark from X (fetch and XHR)",
+      "status": "pass",
+      "ms": 5877,
+      "data": {
+        "stored": 87,
+        "pages": 6,
+        "found": 87,
+        "added": 87,
+        "seconds": 6
+      }
+    },
+    {
+      "group": "x-sim",
+      "name": "synced posts keep their content, media, quotes, cards and bookmark order",
+      "status": "pass",
+      "ms": 149
+    },
+    {
+      "group": "x-sim",
+      "name": "posts are auto-sorted into the right categories (incl. Hindi and Hinglish)",
+      "status": "pass",
+      "ms": 151,
+      "data": {
+        "accuracy": "100.0%",
+        "misses": []
+      }
+    },
+    {
+      "group": "x-sim",
+      "name": "the dashboard library shows the synced posts",
+      "status": "pass",
+      "ms": 683
+    },
+    {
+      "group": "x-sim",
+      "name": "quick sync adds only the new posts and stops early",
+      "status": "pass",
+      "ms": 2731,
+      "data": {
+        "added": 5,
+        "pages": 3,
+        "fullSyncPages": 6
+      }
+    },
+    {
+      "group": "x-sim",
+      "name": "a rate-limited page is retried and the sync still completes",
+      "status": "pass",
+      "ms": 55410
+    },
+    {
+      "group": "x-sim",
+      "name": "bookmarking a post on X saves it to twtdash instantly",
+      "status": "pass",
+      "ms": 2083,
+      "data": {
+        "category": "design"
+      }
+    },
+    {
+      "group": "x-sim",
+      "name": "removing the bookmark on X removes it from twtdash",
+      "status": "pass",
+      "ms": 795
+    },
+    {
+      "group": "x-sim",
+      "name": "when logged out of X, sync stops with a clear message",
+      "status": "pass",
+      "ms": 819,
+      "data": {
+        "message": "Log in to X in this tab, then press Sync again."
+      }
+    },
+    {
+      "group": "x-sim",
+      "name": "the toolbar popup shows the synced library",
+      "status": "pass",
+      "ms": 1073
+    },
+    {
+      "group": "x-sim",
+      "name": "no errors in the service worker, dashboard, popup or on x.com",
+      "status": "pass",
+      "ms": 257
+    }
+  ],
+  "errors": []
+}

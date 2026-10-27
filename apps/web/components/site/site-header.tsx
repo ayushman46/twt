@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { Menu, X } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
@@ -61,6 +61,7 @@ export function SiteHeader({ locale, t, chromeHref }: { locale: Locale; t: Heade
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [lastPathname, setLastPathname] = useState(pathname);
+  const toggleRef = useRef<HTMLButtonElement>(null);
   const home = locale === "en" ? "/" : "/hi";
 
   // Close the mobile menu after navigating to another page.
@@ -79,7 +80,10 @@ export function SiteHeader({ locale, t, chromeHref }: { locale: Locale; t: Heade
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key !== "Escape") return;
+      // Focus inside the menu would be lost when it hides: hand it back to the toggle.
+      if (document.getElementById("mobile-nav")?.contains(document.activeElement)) toggleRef.current?.focus();
+      setOpen(false);
     };
     const onResize = () => {
       if (window.matchMedia("(min-width: 768px)").matches) setOpen(false);
@@ -145,6 +149,7 @@ export function SiteHeader({ locale, t, chromeHref }: { locale: Locale; t: Heade
             </ButtonLink>
           </div>
           <button
+            ref={toggleRef}
             type="button"
             className="inline-flex size-8 items-center justify-center rounded-lg text-fg-2 transition-colors duration-150 hover:bg-panel-2 hover:text-fg md:hidden"
             aria-expanded={open}

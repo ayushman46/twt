@@ -1,10 +1,10 @@
 {
   "suite": "e2e",
-  "startedAt": "2026-10-26T21:27:26.182Z",
-  "durationMs": 332680,
+  "startedAt": "2026-10-27T22:23:24.431Z",
+  "durationMs": 304464,
   "build": {
     "dir": "C:\\Users\\Ayush\\AppData\\Local\\Temp\\claude\\C--Users-Ayush-Downloads-twt\\b4332329-e788-4b49-ad4a-dc77917b01c5\\scratchpad\\qa\\preview-dist",
-    "ms": 3836,
+    "ms": 3614,
     "skipped": false
   },
   "scratch": "C:\\Users\\Ayush\\AppData\\Local\\Temp\\claude\\C--Users-Ayush-Downloads-twt\\b4332329-e788-4b49-ad4a-dc77917b01c5\\scratchpad\\qa",
@@ -37,121 +37,121 @@
       "group": "welcome",
       "name": "dark: empty library shows the welcome screen on #/home",
       "status": "pass",
-      "ms": 1478
+      "ms": 1715
     },
     {
       "group": "welcome",
       "name": "dark: #/welcome is full-bleed (no sidebar, no mobile bar)",
       "status": "pass",
-      "ms": 383
+      "ms": 431
     },
     {
       "group": "welcome",
       "name": "empty library renders #/library/all",
       "status": "pass",
-      "ms": 487
+      "ms": 452
     },
     {
       "group": "welcome",
       "name": "empty library renders #/library/unread",
       "status": "pass",
-      "ms": 363
+      "ms": 382
     },
     {
       "group": "welcome",
       "name": "empty library renders #/library/starred",
       "status": "pass",
-      "ms": 367
+      "ms": 365
     },
     {
       "group": "welcome",
       "name": "empty library renders #/library/archived",
       "status": "pass",
-      "ms": 363
+      "ms": 381
     },
     {
       "group": "welcome",
       "name": "empty library renders #/library/likes",
       "status": "pass",
-      "ms": 366
+      "ms": 383
     },
     {
       "group": "welcome",
       "name": "empty library renders #/insights",
       "status": "pass",
-      "ms": 687
+      "ms": 667
     },
     {
       "group": "welcome",
       "name": "empty library renders #/settings/general",
       "status": "pass",
-      "ms": 481
+      "ms": 382
     },
     {
       "group": "welcome",
       "name": "empty library renders #/settings/categories",
       "status": "pass",
-      "ms": 615
+      "ms": 647
     },
     {
       "group": "welcome",
       "name": "empty library renders #/settings/ai",
       "status": "pass",
-      "ms": 350
+      "ms": 370
     },
     {
       "group": "welcome",
       "name": "empty library renders #/settings/sync",
       "status": "pass",
-      "ms": 367
+      "ms": 365
     },
     {
       "group": "welcome",
       "name": "empty library renders #/settings/data",
       "status": "pass",
-      "ms": 395
+      "ms": 367
     },
     {
       "group": "welcome",
       "name": "empty library renders #/settings/plan",
       "status": "pass",
-      "ms": 371
+      "ms": 351
     },
     {
       "group": "welcome",
       "name": "empty library renders #/settings/about",
       "status": "pass",
-      "ms": 349
+      "ms": 333
     },
     {
       "group": "welcome",
       "name": "empty library renders #/recall",
       "status": "pass",
-      "ms": 679
+      "ms": 667
     },
     {
       "group": "welcome",
       "name": "empty library renders #/shelf",
       "status": "pass",
-      "ms": 671
+      "ms": 699
     },
     {
       "group": "welcome",
       "name": "empty library renders #/ask",
       "status": "pass",
-      "ms": 650
+      "ms": 665
     },
     {
       "group": "welcome",
       "name": "empty library renders #/wrapped",
       "status": "pass",
-      "ms": 665
+      "ms": 650
     },
     {
       "group": "welcome",
       "name": "\"Explore with sample data\" loads the demo library",
       "status": "pass",
-      "ms": 1217,
+      "ms": 1113,
       "data": {
         "demoPosts": 64
       }
@@ -160,37 +160,37 @@
       "group": "welcome",
       "name": "library shows the demo posts with correct count",
       "status": "pass",
-      "ms": 678
+      "ms": 651
     },
     {
       "group": "welcome",
       "name": "\"Remove sample data\" (banner) empties the library",
       "status": "pass",
-      "ms": 245
+      "ms": 222
     },
     {
       "group": "welcome",
       "name": "light: empty library shows the welcome screen on #/home",
       "status": "pass",
-      "ms": 1090
+      "ms": 1118
     },
     {
       "group": "welcome",
       "name": "light: #/welcome is full-bleed (no sidebar, no mobile bar)",
       "status": "pass",
-      "ms": 374
+      "ms": 366
     },
     {
       "group": "welcome",
       "name": "?demo seeds only an empty library; ?reset clears posts",
       "status": "pass",
-      "ms": 2558
+      "ms": 2403
     },
     {
       "group": "routes",
       "name": "seed demo library with collection, archive and likes",
       "status": "pass",
-      "ms": 2698,
+      "ms": 2057,
       "data": {
         "category": "ai",
         "tag": "habits",
@@ -203,109 +203,109 @@
       "group": "routes",
       "name": "dark/desktop #/home",
       "status": "pass",
-      "ms": 326
+      "ms": 315
     },
     {
       "group": "routes",
       "name": "dark/desktop #/library/all",
       "status": "pass",
-      "ms": 723
+      "ms": 537
     },
     {
       "group": "routes",
       "name": "dark/desktop #/library/unread",
       "status": "pass",
-      "ms": 484
+      "ms": 416
     },
     {
       "group": "routes",
       "name": "dark/desktop #/library/starred",
       "status": "pass",
-      "ms": 452
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "dark/desktop #/library/archived",
       "status": "pass",
-      "ms": 380
+      "ms": 330
     },
     {
       "group": "routes",
       "name": "dark/desktop #/library/likes",
       "status": "pass",
-      "ms": 368
+      "ms": 365
     },
     {
       "group": "routes",
       "name": "dark/desktop #/library/category/ai",
       "status": "pass",
-      "ms": 418
+      "ms": 353
     },
     {
       "group": "routes",
       "name": "dark/desktop #/library/collection/col_qa_reading",
       "status": "pass",
-      "ms": 471
+      "ms": 370
     },
     {
       "group": "routes",
       "name": "dark/desktop #/library/tag/habits",
       "status": "pass",
-      "ms": 380
+      "ms": 342
     },
     {
       "group": "routes",
       "name": "dark/desktop #/library/author/devdan_codes",
       "status": "pass",
-      "ms": 416
+      "ms": 400
     },
     {
       "group": "routes",
       "name": "dark/desktop #/library/facet/link",
       "status": "pass",
-      "ms": 422
+      "ms": 375
     },
     {
       "group": "routes",
       "name": "dark/desktop #/insights",
       "status": "pass",
-      "ms": 698
+      "ms": 668
     },
     {
       "group": "routes",
       "name": "dark/desktop #/settings/general",
       "status": "pass",
-      "ms": 363
+      "ms": 359
     },
     {
       "group": "routes",
       "name": "dark/desktop #/settings/categories",
       "status": "pass",
-      "ms": 399
+      "ms": 366
     },
     {
       "group": "routes",
       "name": "dark/desktop #/settings/ai",
       "status": "pass",
-      "ms": 368
+      "ms": 333
     },
     {
       "group": "routes",
       "name": "dark/desktop #/settings/sync",
       "status": "pass",
-      "ms": 348
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "dark/desktop #/settings/data",
       "status": "pass",
-      "ms": 348
+      "ms": 333
     },
     {
       "group": "routes",
       "name": "dark/desktop #/settings/plan",
       "status": "pass",
-      "ms": 318
+      "ms": 350
     },
     {
       "group": "routes",
@@ -317,25 +317,25 @@
       "group": "routes",
       "name": "dark/desktop #/recall",
       "status": "pass",
-      "ms": 712
+      "ms": 714
     },
     {
       "group": "routes",
       "name": "dark/desktop #/shelf",
       "status": "pass",
-      "ms": 669
+      "ms": 702
     },
     {
       "group": "routes",
       "name": "dark/desktop #/ask",
       "status": "pass",
-      "ms": 650
+      "ms": 665
     },
     {
       "group": "routes",
       "name": "dark/desktop #/wrapped",
       "status": "pass",
-      "ms": 651
+      "ms": 635
     },
     {
       "group": "routes",
@@ -347,67 +347,67 @@
       "group": "routes",
       "name": "dark/desktop #/does-not-exist",
       "status": "pass",
-      "ms": 350
+      "ms": 365
     },
     {
       "group": "routes",
       "name": "dark/tablet #/home",
       "status": "pass",
-      "ms": 315
+      "ms": 309
     },
     {
       "group": "routes",
       "name": "dark/tablet #/library/all",
       "status": "pass",
-      "ms": 445
+      "ms": 443
     },
     {
       "group": "routes",
       "name": "dark/tablet #/library/unread",
       "status": "pass",
-      "ms": 375
+      "ms": 396
     },
     {
       "group": "routes",
       "name": "dark/tablet #/library/starred",
       "status": "pass",
-      "ms": 359
+      "ms": 353
     },
     {
       "group": "routes",
       "name": "dark/tablet #/library/archived",
       "status": "pass",
-      "ms": 375
+      "ms": 363
     },
     {
       "group": "routes",
       "name": "dark/tablet #/library/likes",
       "status": "pass",
-      "ms": 349
+      "ms": 369
     },
     {
       "group": "routes",
       "name": "dark/tablet #/library/category/ai",
       "status": "pass",
-      "ms": 373
+      "ms": 367
     },
     {
       "group": "routes",
       "name": "dark/tablet #/library/collection/col_qa_reading",
       "status": "pass",
-      "ms": 350
+      "ms": 369
     },
     {
       "group": "routes",
       "name": "dark/tablet #/library/tag/habits",
       "status": "pass",
-      "ms": 350
+      "ms": 335
     },
     {
       "group": "routes",
       "name": "dark/tablet #/library/author/devdan_codes",
       "status": "pass",
-      "ms": 343
+      "ms": 362
     },
     {
       "group": "routes",
@@ -419,511 +419,511 @@
       "group": "routes",
       "name": "dark/tablet #/insights",
       "status": "pass",
-      "ms": 672
+      "ms": 700
     },
     {
       "group": "routes",
       "name": "dark/tablet #/settings/general",
       "status": "pass",
-      "ms": 361
+      "ms": 335
     },
     {
       "group": "routes",
       "name": "dark/tablet #/settings/categories",
       "status": "pass",
-      "ms": 399
+      "ms": 364
     },
     {
       "group": "routes",
       "name": "dark/tablet #/settings/ai",
       "status": "pass",
-      "ms": 333
+      "ms": 349
     },
     {
       "group": "routes",
       "name": "dark/tablet #/settings/sync",
       "status": "pass",
-      "ms": 350
+      "ms": 351
     },
     {
       "group": "routes",
       "name": "dark/tablet #/settings/data",
       "status": "pass",
-      "ms": 332
+      "ms": 334
     },
     {
       "group": "routes",
       "name": "dark/tablet #/settings/plan",
       "status": "pass",
-      "ms": 317
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "dark/tablet #/settings/about",
       "status": "pass",
-      "ms": 351
+      "ms": 349
     },
     {
       "group": "routes",
       "name": "dark/tablet #/recall",
       "status": "pass",
-      "ms": 697
+      "ms": 662
     },
     {
       "group": "routes",
       "name": "dark/tablet #/shelf",
       "status": "pass",
-      "ms": 669
+      "ms": 653
     },
     {
       "group": "routes",
       "name": "dark/tablet #/ask",
       "status": "pass",
-      "ms": 680
+      "ms": 678
     },
     {
       "group": "routes",
       "name": "dark/tablet #/wrapped",
       "status": "pass",
-      "ms": 670
+      "ms": 662
     },
     {
       "group": "routes",
       "name": "dark/tablet #/welcome",
       "status": "pass",
-      "ms": 349
+      "ms": 374
     },
     {
       "group": "routes",
       "name": "dark/tablet #/does-not-exist",
       "status": "pass",
-      "ms": 365
+      "ms": 351
     },
     {
       "group": "routes",
       "name": "dark/mobile #/home",
       "status": "pass",
-      "ms": 315
+      "ms": 321
     },
     {
       "group": "routes",
       "name": "dark/mobile #/library/all",
       "status": "pass",
-      "ms": 410
+      "ms": 401
     },
     {
       "group": "routes",
       "name": "dark/mobile #/library/unread",
       "status": "pass",
-      "ms": 346
+      "ms": 365
     },
     {
       "group": "routes",
       "name": "dark/mobile #/library/starred",
       "status": "pass",
-      "ms": 369
+      "ms": 367
     },
     {
       "group": "routes",
       "name": "dark/mobile #/library/archived",
       "status": "pass",
-      "ms": 346
+      "ms": 331
     },
     {
       "group": "routes",
       "name": "dark/mobile #/library/likes",
       "status": "pass",
-      "ms": 348
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "dark/mobile #/library/category/ai",
       "status": "pass",
-      "ms": 357
+      "ms": 352
     },
     {
       "group": "routes",
       "name": "dark/mobile #/library/collection/col_qa_reading",
       "status": "pass",
-      "ms": 363
+      "ms": 349
     },
     {
       "group": "routes",
       "name": "dark/mobile #/library/tag/habits",
       "status": "pass",
-      "ms": 350
+      "ms": 352
     },
     {
       "group": "routes",
       "name": "dark/mobile #/library/author/devdan_codes",
       "status": "pass",
-      "ms": 365
+      "ms": 363
     },
     {
       "group": "routes",
       "name": "dark/mobile #/library/facet/link",
       "status": "pass",
-      "ms": 364
+      "ms": 348
     },
     {
       "group": "routes",
       "name": "dark/mobile #/insights",
       "status": "pass",
-      "ms": 649
+      "ms": 663
     },
     {
       "group": "routes",
       "name": "dark/mobile #/settings/general",
       "status": "pass",
-      "ms": 356
+      "ms": 373
     },
     {
       "group": "routes",
       "name": "dark/mobile #/settings/categories",
       "status": "pass",
-      "ms": 399
+      "ms": 398
     },
     {
       "group": "routes",
       "name": "dark/mobile #/settings/ai",
       "status": "pass",
-      "ms": 349
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "dark/mobile #/settings/sync",
       "status": "pass",
-      "ms": 333
+      "ms": 332
     },
     {
       "group": "routes",
       "name": "dark/mobile #/settings/data",
       "status": "pass",
-      "ms": 348
+      "ms": 333
     },
     {
       "group": "routes",
       "name": "dark/mobile #/settings/plan",
       "status": "pass",
-      "ms": 317
+      "ms": 319
     },
     {
       "group": "routes",
       "name": "dark/mobile #/settings/about",
       "status": "pass",
-      "ms": 350
+      "ms": 326
     },
     {
       "group": "routes",
       "name": "dark/mobile #/recall",
       "status": "pass",
-      "ms": 723
+      "ms": 638
     },
     {
       "group": "routes",
       "name": "dark/mobile #/shelf",
       "status": "pass",
-      "ms": 633
+      "ms": 666
     },
     {
       "group": "routes",
       "name": "dark/mobile #/ask",
       "status": "pass",
-      "ms": 650
+      "ms": 664
     },
     {
       "group": "routes",
       "name": "dark/mobile #/wrapped",
       "status": "pass",
-      "ms": 651
+      "ms": 653
     },
     {
       "group": "routes",
       "name": "dark/mobile #/welcome",
       "status": "pass",
-      "ms": 367
+      "ms": 348
     },
     {
       "group": "routes",
       "name": "dark/mobile #/does-not-exist",
       "status": "pass",
-      "ms": 364
+      "ms": 348
     },
     {
       "group": "routes",
       "name": "light/desktop #/home",
       "status": "pass",
-      "ms": 307
+      "ms": 309
     },
     {
       "group": "routes",
       "name": "light/desktop #/library/all",
       "status": "pass",
-      "ms": 477
+      "ms": 475
     },
     {
       "group": "routes",
       "name": "light/desktop #/library/unread",
       "status": "pass",
-      "ms": 415
+      "ms": 419
     },
     {
       "group": "routes",
       "name": "light/desktop #/library/starred",
       "status": "pass",
-      "ms": 352
+      "ms": 373
     },
     {
       "group": "routes",
       "name": "light/desktop #/library/archived",
       "status": "pass",
-      "ms": 363
+      "ms": 360
     },
     {
       "group": "routes",
       "name": "light/desktop #/library/likes",
       "status": "pass",
-      "ms": 351
+      "ms": 365
     },
     {
       "group": "routes",
       "name": "light/desktop #/library/category/ai",
       "status": "pass",
-      "ms": 356
+      "ms": 373
     },
     {
       "group": "routes",
       "name": "light/desktop #/library/collection/col_qa_reading",
       "status": "pass",
-      "ms": 379
+      "ms": 378
     },
     {
       "group": "routes",
       "name": "light/desktop #/library/tag/habits",
       "status": "pass",
-      "ms": 353
+      "ms": 384
     },
     {
       "group": "routes",
       "name": "light/desktop #/library/author/devdan_codes",
       "status": "pass",
-      "ms": 380
+      "ms": 364
     },
     {
       "group": "routes",
       "name": "light/desktop #/library/facet/link",
       "status": "pass",
-      "ms": 382
+      "ms": 390
     },
     {
       "group": "routes",
       "name": "light/desktop #/insights",
       "status": "pass",
-      "ms": 681
+      "ms": 670
     },
     {
       "group": "routes",
       "name": "light/desktop #/settings/general",
       "status": "pass",
-      "ms": 352
+      "ms": 341
     },
     {
       "group": "routes",
       "name": "light/desktop #/settings/categories",
       "status": "pass",
-      "ms": 383
+      "ms": 366
     },
     {
       "group": "routes",
       "name": "light/desktop #/settings/ai",
       "status": "pass",
-      "ms": 349
+      "ms": 333
     },
     {
       "group": "routes",
       "name": "light/desktop #/settings/sync",
       "status": "pass",
-      "ms": 315
+      "ms": 334
     },
     {
       "group": "routes",
       "name": "light/desktop #/settings/data",
       "status": "pass",
-      "ms": 333
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "light/desktop #/settings/plan",
       "status": "pass",
-      "ms": 350
+      "ms": 329
     },
     {
       "group": "routes",
       "name": "light/desktop #/settings/about",
       "status": "pass",
-      "ms": 350
+      "ms": 332
     },
     {
       "group": "routes",
       "name": "light/desktop #/recall",
       "status": "pass",
-      "ms": 713
+      "ms": 668
     },
     {
       "group": "routes",
       "name": "light/desktop #/shelf",
       "status": "pass",
-      "ms": 684
+      "ms": 686
     },
     {
       "group": "routes",
       "name": "light/desktop #/ask",
       "status": "pass",
-      "ms": 665
+      "ms": 649
     },
     {
       "group": "routes",
       "name": "light/desktop #/wrapped",
       "status": "pass",
-      "ms": 649
+      "ms": 652
     },
     {
       "group": "routes",
       "name": "light/desktop #/welcome",
       "status": "pass",
-      "ms": 335
+      "ms": 366
     },
     {
       "group": "routes",
       "name": "light/desktop #/does-not-exist",
       "status": "pass",
-      "ms": 350
+      "ms": 348
     },
     {
       "group": "routes",
       "name": "light/tablet #/home",
       "status": "pass",
-      "ms": 311
+      "ms": 317
     },
     {
       "group": "routes",
       "name": "light/tablet #/library/all",
       "status": "pass",
-      "ms": 449
+      "ms": 448
     },
     {
       "group": "routes",
       "name": "light/tablet #/library/unread",
       "status": "pass",
-      "ms": 359
+      "ms": 384
     },
     {
       "group": "routes",
       "name": "light/tablet #/library/starred",
       "status": "pass",
-      "ms": 374
+      "ms": 373
     },
     {
       "group": "routes",
       "name": "light/tablet #/library/archived",
       "status": "pass",
-      "ms": 373
+      "ms": 327
     },
     {
       "group": "routes",
       "name": "light/tablet #/library/likes",
       "status": "pass",
-      "ms": 352
+      "ms": 332
     },
     {
       "group": "routes",
       "name": "light/tablet #/library/category/ai",
       "status": "pass",
-      "ms": 370
+      "ms": 371
     },
     {
       "group": "routes",
       "name": "light/tablet #/library/collection/col_qa_reading",
       "status": "pass",
-      "ms": 366
+      "ms": 361
     },
     {
       "group": "routes",
       "name": "light/tablet #/library/tag/habits",
       "status": "pass",
-      "ms": 350
+      "ms": 340
     },
     {
       "group": "routes",
       "name": "light/tablet #/library/author/devdan_codes",
       "status": "pass",
-      "ms": 363
+      "ms": 362
     },
     {
       "group": "routes",
       "name": "light/tablet #/library/facet/link",
       "status": "pass",
-      "ms": 370
+      "ms": 357
     },
     {
       "group": "routes",
       "name": "light/tablet #/insights",
       "status": "pass",
-      "ms": 672
+      "ms": 657
     },
     {
       "group": "routes",
       "name": "light/tablet #/settings/general",
       "status": "pass",
-      "ms": 359
+      "ms": 352
     },
     {
       "group": "routes",
       "name": "light/tablet #/settings/categories",
       "status": "pass",
-      "ms": 366
+      "ms": 384
     },
     {
       "group": "routes",
       "name": "light/tablet #/settings/ai",
       "status": "pass",
-      "ms": 350
+      "ms": 317
     },
     {
       "group": "routes",
       "name": "light/tablet #/settings/sync",
       "status": "pass",
-      "ms": 333
+      "ms": 349
     },
     {
       "group": "routes",
       "name": "light/tablet #/settings/data",
       "status": "pass",
-      "ms": 333
+      "ms": 318
     },
     {
       "group": "routes",
       "name": "light/tablet #/settings/plan",
       "status": "pass",
-      "ms": 333
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "light/tablet #/settings/about",
       "status": "pass",
-      "ms": 333
+      "ms": 349
     },
     {
       "group": "routes",
       "name": "light/tablet #/recall",
       "status": "pass",
-      "ms": 696
+      "ms": 682
     },
     {
       "group": "routes",
       "name": "light/tablet #/shelf",
       "status": "pass",
-      "ms": 669
+      "ms": 684
     },
     {
       "group": "routes",
@@ -935,217 +935,217 @@
       "group": "routes",
       "name": "light/tablet #/wrapped",
       "status": "pass",
-      "ms": 652
+      "ms": 669
     },
     {
       "group": "routes",
       "name": "light/tablet #/welcome",
       "status": "pass",
-      "ms": 365
+      "ms": 349
     },
     {
       "group": "routes",
       "name": "light/tablet #/does-not-exist",
       "status": "pass",
-      "ms": 350
+      "ms": 349
     },
     {
       "group": "routes",
       "name": "light/mobile #/home",
       "status": "pass",
-      "ms": 307
+      "ms": 319
     },
     {
       "group": "routes",
       "name": "light/mobile #/library/all",
       "status": "pass",
-      "ms": 409
+      "ms": 417
     },
     {
       "group": "routes",
       "name": "light/mobile #/library/unread",
       "status": "pass",
-      "ms": 363
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "light/mobile #/library/starred",
       "status": "pass",
-      "ms": 337
+      "ms": 369
     },
     {
       "group": "routes",
       "name": "light/mobile #/library/archived",
       "status": "pass",
-      "ms": 348
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "light/mobile #/library/likes",
       "status": "pass",
-      "ms": 349
+      "ms": 348
     },
     {
       "group": "routes",
       "name": "light/mobile #/library/category/ai",
       "status": "pass",
-      "ms": 368
+      "ms": 352
     },
     {
       "group": "routes",
       "name": "light/mobile #/library/collection/col_qa_reading",
       "status": "pass",
-      "ms": 351
+      "ms": 349
     },
     {
       "group": "routes",
       "name": "light/mobile #/library/tag/habits",
       "status": "pass",
-      "ms": 366
+      "ms": 332
     },
     {
       "group": "routes",
       "name": "light/mobile #/library/author/devdan_codes",
       "status": "pass",
-      "ms": 379
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "light/mobile #/library/facet/link",
       "status": "pass",
-      "ms": 353
+      "ms": 351
     },
     {
       "group": "routes",
       "name": "light/mobile #/insights",
       "status": "pass",
-      "ms": 661
+      "ms": 645
     },
     {
       "group": "routes",
       "name": "light/mobile #/settings/general",
       "status": "pass",
-      "ms": 357
+      "ms": 338
     },
     {
       "group": "routes",
       "name": "light/mobile #/settings/categories",
       "status": "pass",
-      "ms": 399
+      "ms": 400
     },
     {
       "group": "routes",
       "name": "light/mobile #/settings/ai",
       "status": "pass",
-      "ms": 349
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "light/mobile #/settings/sync",
       "status": "pass",
-      "ms": 350
+      "ms": 351
     },
     {
       "group": "routes",
       "name": "light/mobile #/settings/data",
       "status": "pass",
-      "ms": 367
+      "ms": 349
     },
     {
       "group": "routes",
       "name": "light/mobile #/settings/plan",
       "status": "pass",
-      "ms": 350
+      "ms": 367
     },
     {
       "group": "routes",
       "name": "light/mobile #/settings/about",
       "status": "pass",
-      "ms": 349
+      "ms": 350
     },
     {
       "group": "routes",
       "name": "light/mobile #/recall",
       "status": "pass",
-      "ms": 714
+      "ms": 713
     },
     {
       "group": "routes",
       "name": "light/mobile #/shelf",
       "status": "pass",
-      "ms": 649
+      "ms": 651
     },
     {
       "group": "routes",
       "name": "light/mobile #/ask",
       "status": "pass",
-      "ms": 635
+      "ms": 650
     },
     {
       "group": "routes",
       "name": "light/mobile #/wrapped",
       "status": "pass",
-      "ms": 668
+      "ms": 650
     },
     {
       "group": "routes",
       "name": "light/mobile #/welcome",
       "status": "pass",
-      "ms": 348
+      "ms": 334
     },
     {
       "group": "routes",
       "name": "light/mobile #/does-not-exist",
       "status": "pass",
-      "ms": 347
+      "ms": 348
     },
     {
       "group": "library",
       "name": "key 1 switches to grid layout",
       "status": "pass",
-      "ms": 233
+      "ms": 231
     },
     {
       "group": "library",
       "name": "key 2 switches to list layout",
       "status": "pass",
-      "ms": 242
+      "ms": 236
     },
     {
       "group": "library",
       "name": "key 3 switches to table layout",
       "status": "pass",
-      "ms": 282
+      "ms": 300
     },
     {
       "group": "library",
       "name": "key 4 switches to gallery layout",
       "status": "pass",
-      "ms": 232
+      "ms": 233
     },
     {
       "group": "library",
       "name": "layout toggle buttons switch layouts (click)",
       "status": "pass",
-      "ms": 868
+      "ms": 933
     },
     {
       "group": "library",
       "name": "gallery shows only posts with media",
       "status": "pass",
-      "ms": 350
+      "ms": 351
     },
     {
       "group": "library",
       "name": "count pill matches the library",
       "status": "pass",
-      "ms": 124
+      "ms": 123
     },
     {
       "group": "library",
       "name": "search \"rust\" → count matches data",
       "status": "pass",
-      "ms": 711,
+      "ms": 669,
       "data": {
         "expected": 1,
         "shown": 1
@@ -1155,7 +1155,7 @@
       "group": "library",
       "name": "search \"from:mayabuilds\" → count matches data",
       "status": "pass",
-      "ms": 987,
+      "ms": 953,
       "data": {
         "expected": 6,
         "shown": 6
@@ -1165,7 +1165,7 @@
       "group": "library",
       "name": "search \"from:@priyadesigns\" → count matches data",
       "status": "pass",
-      "ms": 983,
+      "ms": 999,
       "data": {
         "expected": 5,
         "shown": 5
@@ -1175,7 +1175,7 @@
       "group": "library",
       "name": "search \"-from:mayabuilds\" → count matches data",
       "status": "pass",
-      "ms": 1014,
+      "ms": 1004,
       "data": {
         "expected": 58,
         "shown": 58
@@ -1185,7 +1185,7 @@
       "group": "library",
       "name": "search \"cat:ai\" → count matches data",
       "status": "pass",
-      "ms": 719,
+      "ms": 744,
       "data": {
         "expected": 7,
         "shown": 7
@@ -1195,7 +1195,7 @@
       "group": "library",
       "name": "search \"cat:design\" → count matches data",
       "status": "pass",
-      "ms": 846,
+      "ms": 834,
       "data": {
         "expected": 6,
         "shown": 6
@@ -1205,7 +1205,7 @@
       "group": "library",
       "name": "search \"has:image\" → count matches data",
       "status": "pass",
-      "ms": 1024,
+      "ms": 1003,
       "data": {
         "expected": 10,
         "shown": 10
@@ -1215,7 +1215,7 @@
       "group": "library",
       "name": "search \"has:video\" → count matches data",
       "status": "pass",
-      "ms": 844,
+      "ms": 841,
       "data": {
         "expected": 1,
         "shown": 1
@@ -1225,7 +1225,7 @@
       "group": "library",
       "name": "search \"has:link\" → count matches data",
       "status": "pass",
-      "ms": 839,
+      "ms": 855,
       "data": {
         "expected": 26,
         "shown": 26
@@ -1235,7 +1235,7 @@
       "group": "library",
       "name": "search \"has:note\" → count matches data",
       "status": "pass",
-      "ms": 847,
+      "ms": 809,
       "data": {
         "expected": 1,
         "shown": 1
@@ -1245,7 +1245,7 @@
       "group": "library",
       "name": "search \"has:tags\" → count matches data",
       "status": "pass",
-      "ms": 850,
+      "ms": 838,
       "data": {
         "expected": 53,
         "shown": 53
@@ -1255,7 +1255,7 @@
       "group": "library",
       "name": "search \"-has:link\" → count matches data",
       "status": "pass",
-      "ms": 801,
+      "ms": 815,
       "data": {
         "expected": 38,
         "shown": 38
@@ -1265,7 +1265,7 @@
       "group": "library",
       "name": "search \"is:starred\" → count matches data",
       "status": "pass",
-      "ms": 934,
+      "ms": 918,
       "data": {
         "expected": 11,
         "shown": 11
@@ -1275,7 +1275,7 @@
       "group": "library",
       "name": "search \"is:unread\" → count matches data",
       "status": "pass",
-      "ms": 856,
+      "ms": 851,
       "data": {
         "expected": 22,
         "shown": 22
@@ -1285,7 +1285,7 @@
       "group": "library",
       "name": "search \"is:read\" → count matches data",
       "status": "pass",
-      "ms": 846,
+      "ms": 814,
       "data": {
         "expected": 42,
         "shown": 42
@@ -1295,7 +1295,7 @@
       "group": "library",
       "name": "search \"is:thread\" → count matches data",
       "status": "pass",
-      "ms": 843,
+      "ms": 802,
       "data": {
         "expected": 2,
         "shown": 2
@@ -1305,7 +1305,7 @@
       "group": "library",
       "name": "search \"is:quote\" → count matches data",
       "status": "pass",
-      "ms": 831,
+      "ms": 843,
       "data": {
         "expected": 2,
         "shown": 2
@@ -1315,7 +1315,7 @@
       "group": "library",
       "name": "search \"is:long\" → count matches data",
       "status": "pass",
-      "ms": 906,
+      "ms": 808,
       "data": {
         "expected": 0,
         "shown": 0
@@ -1325,7 +1325,7 @@
       "group": "library",
       "name": "search \"after:90d\" → count matches data",
       "status": "pass",
-      "ms": 847,
+      "ms": 867,
       "data": {
         "expected": 29,
         "shown": 29
@@ -1335,7 +1335,7 @@
       "group": "library",
       "name": "search \"before:90d\" → count matches data",
       "status": "pass",
-      "ms": 805,
+      "ms": 795,
       "data": {
         "expected": 35,
         "shown": 35
@@ -1345,7 +1345,7 @@
       "group": "library",
       "name": "search \"min_likes:1k\" → count matches data",
       "status": "pass",
-      "ms": 950,
+      "ms": 885,
       "data": {
         "expected": 47,
         "shown": 47
@@ -1355,7 +1355,7 @@
       "group": "library",
       "name": "search \"lang:en\" → count matches data",
       "status": "pass",
-      "ms": 798,
+      "ms": 794,
       "data": {
         "expected": 57,
         "shown": 57
@@ -1365,7 +1365,7 @@
       "group": "library",
       "name": "search \"domain:example.com\" → count matches data",
       "status": "pass",
-      "ms": 940,
+      "ms": 955,
       "data": {
         "expected": 7,
         "shown": 7
@@ -1375,7 +1375,7 @@
       "group": "library",
       "name": "search \"\\\"small habit\\\"\" → count matches data",
       "status": "pass",
-      "ms": 888,
+      "ms": 870,
       "data": {
         "expected": 1,
         "shown": 1
@@ -1385,7 +1385,7 @@
       "group": "library",
       "name": "search \"-the\" → count matches data",
       "status": "pass",
-      "ms": 686,
+      "ms": 690,
       "data": {
         "expected": 27,
         "shown": 27
@@ -1395,7 +1395,7 @@
       "group": "library",
       "name": "search \"has:link from:mayabuilds\" → count matches data",
       "status": "pass",
-      "ms": 1175,
+      "ms": 1185,
       "data": {
         "expected": 4,
         "shown": 4
@@ -1405,7 +1405,7 @@
       "group": "library",
       "name": "search \"cat:ai -has:image\" → count matches data",
       "status": "pass",
-      "ms": 993,
+      "ms": 1002,
       "data": {
         "expected": 7,
         "shown": 7
@@ -1415,7 +1415,7 @@
       "group": "library",
       "name": "search \"tag:fine-tuning\" → count matches data",
       "status": "pass",
-      "ms": 910,
+      "ms": 916,
       "data": {
         "expected": 1,
         "shown": 1
@@ -1425,397 +1425,397 @@
       "group": "library",
       "name": "free-text results contain the term (rendered cards)",
       "status": "pass",
-      "ms": 715
+      "ms": 692
     },
     {
       "group": "library",
       "name": "exclusion \"-word\" hides every post containing it",
       "status": "pass",
-      "ms": 673
+      "ms": 656
     },
     {
       "group": "library",
       "name": "unknown operator is treated as text (no crash)",
       "status": "pass",
-      "ms": 1862
+      "ms": 1883
     },
     {
       "group": "library",
       "name": "no-match search shows the empty state with a clear action",
       "status": "pass",
-      "ms": 814
+      "ms": 807
     },
     {
       "group": "library",
       "name": "Escape clears the search and restores the full list",
       "status": "pass",
-      "ms": 1171
+      "ms": 1116
     },
     {
       "group": "library",
       "name": "deep link #/library/all?q=… applies the query",
       "status": "pass",
-      "ms": 1385
+      "ms": 1410
     },
     {
       "group": "library",
       "name": "quick filter chip toggles has:image",
       "status": "pass",
-      "ms": 1398
+      "ms": 1401
     },
     {
       "group": "library",
       "name": "sort \"Most liked\" orders by likes (list layout)",
       "status": "pass",
-      "ms": 621
+      "ms": 569
     },
     {
       "group": "library",
       "name": "sort \"Oldest saved\" puts the oldest save first",
       "status": "pass",
-      "ms": 735
+      "ms": 718
     },
     {
       "group": "actions",
       "name": "card star button toggles starred (and back)",
       "status": "pass",
-      "ms": 285
+      "ms": 199
     },
     {
       "group": "actions",
       "name": "keyboard: j focuses, s stars, r toggles read (and back)",
       "status": "pass",
-      "ms": 497
+      "ms": 398
     },
     {
       "group": "actions",
       "name": "keyboard: e archives the focused post; archived scope can restore it",
       "status": "pass",
-      "ms": 1637
+      "ms": 1541
     },
     {
       "group": "actions",
       "name": "card menu: Star / Mark as read / Archive items work",
       "status": "pass",
-      "ms": 1498
+      "ms": 1193
     },
     {
       "group": "actions",
       "name": "remove from twtdash → toast Undo restores the exact post",
       "status": "pass",
-      "ms": 1162
+      "ms": 1084
     },
     {
       "group": "actions",
       "name": "bulk archive → toast Undo unarchives every post",
       "status": "pass",
-      "ms": 1219
+      "ms": 1069
     },
     {
       "group": "actions",
       "name": "opening a post marks it read after a moment",
       "status": "pass",
-      "ms": 2191
+      "ms": 2029
     },
     {
       "group": "bulk",
       "name": "select mode + clicking cards selects them; bulk bar appears",
       "status": "pass",
-      "ms": 361
+      "ms": 369
     },
     {
       "group": "bulk",
       "name": "bulk star / unstar",
       "status": "pass",
-      "ms": 339
+      "ms": 299
     },
     {
       "group": "bulk",
       "name": "bulk mark read / unread",
       "status": "pass",
-      "ms": 301
+      "ms": 265
     },
     {
       "group": "bulk",
       "name": "bulk tag adds comma-separated tags (normalized)",
       "status": "pass",
-      "ms": 865
+      "ms": 851
     },
     {
       "group": "bulk",
       "name": "bulk category moves posts and marks them user-sorted",
       "status": "pass",
-      "ms": 795
+      "ms": 731
     },
     {
       "group": "bulk",
       "name": "bulk collection → \"New collection…\" creates it with the posts",
       "status": "pass",
-      "ms": 1205
+      "ms": 1186
     },
     {
       "group": "bulk",
       "name": "select all selects every post in view",
       "status": "pass",
-      "ms": 181
+      "ms": 150
     },
     {
       "group": "bulk",
       "name": "Escape clears the selection and hides the bar",
       "status": "pass",
-      "ms": 217
+      "ms": 211
     },
     {
       "group": "bulk",
       "name": "x toggles selection of the focused post; ctrl-click toggles a card",
       "status": "pass",
-      "ms": 583
+      "ms": 572
     },
     {
       "group": "bulk",
       "name": "bulk delete → Undo restores all posts",
       "status": "pass",
-      "ms": 1201
+      "ms": 1203
     },
     {
       "group": "bulk",
       "name": "table header checkbox selects all rows",
       "status": "pass",
-      "ms": 850
+      "ms": 746
     },
     {
       "group": "detail",
       "name": "clicking a card opens the detail panel at position 1",
       "status": "pass",
-      "ms": 246
+      "ms": 252
     },
     {
       "group": "detail",
       "name": "j / k move through posts; Esc closes",
       "status": "pass",
-      "ms": 540
+      "ms": 517
     },
     {
       "group": "detail",
       "name": "Enter opens the focused post; ArrowDown/ArrowUp navigate",
       "status": "pass",
-      "ms": 514
+      "ms": 501
     },
     {
       "group": "detail",
       "name": "previous/next header buttons and the last-post boundary",
       "status": "pass",
-      "ms": 268
+      "ms": 231
     },
     {
       "group": "detail",
       "name": "star / archive / read buttons in the panel update the post",
       "status": "pass",
-      "ms": 560
+      "ms": 568
     },
     {
       "group": "detail",
       "name": "private note autosaves (debounced) and shows on the card",
       "status": "pass",
-      "ms": 1439
+      "ms": 1501
     },
     {
       "group": "detail",
       "name": "tag editor adds (Enter / comma) and removes tags",
       "status": "pass",
-      "ms": 652
+      "ms": 650
     },
     {
       "group": "detail",
       "name": "clicking the backdrop closes the panel",
       "status": "pass",
-      "ms": 194
+      "ms": 198
     },
     {
       "group": "detail",
       "name": "panel navigation follows the filtered list (search)",
       "status": "pass",
-      "ms": 1830
+      "ms": 1698
     },
     {
       "group": "detail",
       "name": "Home: detail panel opens from a resurfaced post and Esc closes it",
       "status": "pass",
-      "ms": 622
+      "ms": 502
     },
     {
       "group": "detail",
       "name": "detail panel does not stay open when navigating to another screen",
       "status": "pass",
-      "ms": 1358
+      "ms": 1183
     },
     {
       "group": "palette",
       "name": "Ctrl+K opens, Esc closes, Ctrl+K toggles",
       "status": "pass",
-      "ms": 702
+      "ms": 422
     },
     {
       "group": "palette",
       "name": "palette \"insights stats analytics\" → #/insights",
       "status": "pass",
-      "ms": 868
+      "ms": 716
     },
     {
       "group": "palette",
       "name": "palette \"all bookmarks library\" → #/library/all",
       "status": "pass",
-      "ms": 885
+      "ms": 546
     },
     {
       "group": "palette",
       "name": "palette \"unread inbox\" → #/library/unread",
       "status": "pass",
-      "ms": 689
+      "ms": 476
     },
     {
       "group": "palette",
       "name": "palette \"starred favorites\" → #/library/starred",
       "status": "pass",
-      "ms": 709
+      "ms": 451
     },
     {
       "group": "palette",
       "name": "palette \"archive\" → #/library/archived",
       "status": "pass",
-      "ms": 532
+      "ms": 398
     },
     {
       "group": "palette",
       "name": "palette \"settings preferences\" → #/settings/general",
       "status": "pass",
-      "ms": 483
+      "ms": 351
     },
     {
       "group": "palette",
       "name": "palette \"ai categorize settings\" → #/settings/ai",
       "status": "pass",
-      "ms": 448
+      "ms": 349
     },
     {
       "group": "palette",
       "name": "palette \"home\" → #/home",
       "status": "pass",
-      "ms": 566
+      "ms": 383
     },
     {
       "group": "palette",
       "name": "palette keyboard: Enter on the first item, ArrowDown + Enter on the next",
       "status": "pass",
-      "ms": 1015
+      "ms": 661
     },
     {
       "group": "palette",
       "name": "palette filters items as you type",
       "status": "pass",
-      "ms": 836
+      "ms": 622
     },
     {
       "group": "palette",
       "name": "typing text + Enter searches all bookmarks",
       "status": "pass",
-      "ms": 1601
+      "ms": 1283
     },
     {
       "group": "palette",
       "name": "post results open the detail panel",
       "status": "pass",
-      "ms": 499
+      "ms": 500
     },
     {
       "group": "palette",
       "name": "category entries navigate to the category scope",
       "status": "pass",
-      "ms": 349
+      "ms": 320
     },
     {
       "group": "palette",
       "name": "\"Keyboard shortcuts\" command opens the help dialog",
       "status": "pass",
-      "ms": 383
+      "ms": 361
     },
     {
       "group": "palette",
       "name": "\"Toggle dark mode\" flips the theme",
       "status": "pass",
-      "ms": 749
+      "ms": 818
     },
     {
       "group": "palette",
       "name": "\"New collection\" command opens the collection dialog",
       "status": "pass",
-      "ms": 501
+      "ms": 433
     },
     {
       "group": "palette",
       "name": "palette does not trigger global shortcuts while typing",
       "status": "pass",
-      "ms": 766
+      "ms": 800
     },
     {
       "group": "shortcuts",
       "name": "? opens the shortcuts dialog; Esc closes it",
       "status": "pass",
-      "ms": 266
+      "ms": 387
     },
     {
       "group": "shortcuts",
       "name": "g h → #/home",
       "status": "pass",
-      "ms": 952
+      "ms": 1018
     },
     {
       "group": "shortcuts",
       "name": "g a → #/library/all",
       "status": "pass",
-      "ms": 583
+      "ms": 567
     },
     {
       "group": "shortcuts",
       "name": "g u → #/library/unread",
       "status": "pass",
-      "ms": 685
+      "ms": 667
     },
     {
       "group": "shortcuts",
       "name": "g s → #/library/starred",
       "status": "pass",
-      "ms": 615
+      "ms": 616
     },
     {
       "group": "shortcuts",
       "name": "g i → #/insights",
       "status": "pass",
-      "ms": 566
+      "ms": 551
     },
     {
       "group": "shortcuts",
       "name": "g c → #/settings/categories",
       "status": "pass",
-      "ms": 679
+      "ms": 647
     },
     {
       "group": "shortcuts",
       "name": "g r → #/recall",
       "status": "pass",
-      "ms": 602
+      "ms": 586
     },
     {
       "group": "shortcuts",
       "name": "g l → #/shelf",
       "status": "pass",
-      "ms": 554
+      "ms": 601
     },
     {
       "group": "shortcuts",
       "name": "g q → #/ask",
       "status": "pass",
-      "ms": 564
+      "ms": 565
     },
     {
       "group": "shortcuts",
@@ -1827,109 +1827,109 @@
       "group": "shortcuts",
       "name": "g-chord expires (g, pause, h does nothing)",
       "status": "pass",
-      "ms": 1836
+      "ms": 1758
     },
     {
       "group": "shortcuts",
       "name": "/ focuses the library search box",
       "status": "pass",
-      "ms": 346
+      "ms": 375
     },
     {
       "group": "shortcuts",
       "name": "shortcuts are ignored while typing in the search box",
       "status": "pass",
-      "ms": 900
+      "ms": 1049
     },
     {
       "group": "shortcuts",
       "name": "number keys do not switch layouts outside the library",
       "status": "pass",
-      "ms": 690
+      "ms": 765
     },
     {
       "group": "organize",
       "name": "create a collection from the sidebar → navigates to it",
       "status": "pass",
-      "ms": 1322
+      "ms": 1201
     },
     {
       "group": "organize",
       "name": "collection dialog: empty name cannot be submitted",
       "status": "pass",
-      "ms": 297
+      "ms": 281
     },
     {
       "group": "organize",
       "name": "add posts to the collection from the card menu",
       "status": "pass",
-      "ms": 2138
+      "ms": 2206
     },
     {
       "group": "organize",
       "name": "rename the collection (Edit dialog)",
       "status": "pass",
-      "ms": 513
+      "ms": 495
     },
     {
       "group": "organize",
       "name": "delete the collection keeps its posts",
       "status": "pass",
-      "ms": 543
+      "ms": 417
     },
     {
       "group": "organize",
       "name": "visiting a deleted collection URL shows an empty, non-crashing view",
       "status": "pass",
-      "ms": 672
+      "ms": 573
     },
     {
       "group": "organize",
       "name": "create a custom category in Settings → Categories",
       "status": "pass",
-      "ms": 1118
+      "ms": 995
     },
     {
       "group": "organize",
       "name": "rename + recolor the category (inline editing)",
       "status": "pass",
-      "ms": 513
+      "ms": 444
     },
     {
       "group": "organize",
       "name": "disable / enable the category with its switch",
       "status": "pass",
-      "ms": 216
+      "ms": 203
     },
     {
       "group": "organize",
       "name": "built-in categories cannot be deleted",
       "status": "pass",
-      "ms": 130
+      "ms": 135
     },
     {
       "group": "organize",
       "name": "move a post into the category, then deleting it moves posts to Other",
       "status": "pass",
-      "ms": 1854
+      "ms": 1484
     },
     {
       "group": "organize",
       "name": "dismissing the delete confirmation keeps the category",
       "status": "pass",
-      "ms": 747
+      "ms": 714
     },
     {
       "group": "organize",
       "name": "category scope for a deleted category id renders safely",
       "status": "pass",
-      "ms": 535
+      "ms": 517
     },
     {
       "group": "data",
       "name": "demo library loads for export",
       "status": "pass",
-      "ms": 1103,
+      "ms": 1130,
       "data": {
         "posts": 64
       }
@@ -1938,7 +1938,7 @@
       "group": "data",
       "name": "JSON backup contains every post",
       "status": "pass",
-      "ms": 638,
+      "ms": 815,
       "data": {
         "bytes": 97915
       }
@@ -1947,7 +1947,7 @@
       "group": "data",
       "name": "CSV export has a header and one row per post",
       "status": "pass",
-      "ms": 283,
+      "ms": 294,
       "data": {
         "rows": 64
       }
@@ -1956,7 +1956,7 @@
       "group": "data",
       "name": "Markdown export is grouped and links to the posts",
       "status": "pass",
-      "ms": 286,
+      "ms": 289,
       "data": {
         "links": 64
       }
@@ -1965,19 +1965,19 @@
       "group": "data",
       "name": "re-importing the JSON backup merges without duplicates",
       "status": "pass",
-      "ms": 1872
+      "ms": 1859
     },
     {
       "group": "theme",
       "name": "follows the system preference (dark)",
       "status": "pass",
-      "ms": 1271
+      "ms": 1861
     },
     {
       "group": "theme",
       "name": "text contrast meets WCAG AA (dark)",
       "status": "pass",
-      "ms": 124,
+      "ms": 130,
       "data": {
         "body": 11.78,
         "nav": 17.44,
@@ -1988,13 +1988,13 @@
       "group": "theme",
       "name": "follows the system preference (light)",
       "status": "pass",
-      "ms": 1197
+      "ms": 1147
     },
     {
       "group": "theme",
       "name": "text contrast meets WCAG AA (light)",
       "status": "pass",
-      "ms": 129,
+      "ms": 127,
       "data": {
         "body": 11.23,
         "nav": 17.17,
@@ -2005,13 +2005,13 @@
       "group": "theme",
       "name": "sidebar toggle switches the theme and it persists after reload",
       "status": "pass",
-      "ms": 2162
+      "ms": 2062
     },
     {
       "group": "popup",
       "name": "popup renders counts, search and actions (dark)",
       "status": "pass",
-      "ms": 1390,
+      "ms": 1329,
       "data": {
         "buttons": 13
       }
@@ -2020,7 +2020,7 @@
       "group": "popup",
       "name": "popup content fits its frame (dark)",
       "status": "pass",
-      "ms": 126,
+      "ms": 129,
       "data": {
         "width": 374,
         "overflowing": 0
@@ -2030,7 +2030,7 @@
       "group": "popup",
       "name": "popup renders counts, search and actions (light)",
       "status": "pass",
-      "ms": 1351,
+      "ms": 1277,
       "data": {
         "buttons": 13
       }
@@ -2039,7 +2039,7 @@
       "group": "popup",
       "name": "popup content fits its frame (light)",
       "status": "pass",
-      "ms": 130,
+      "ms": 128,
       "data": {
         "width": 374,
         "overflowing": 0
@@ -2049,43 +2049,43 @@
       "group": "mobile",
       "name": "#/home fits 360px without horizontal scroll (dark)",
       "status": "pass",
-      "ms": 614
+      "ms": 627
     },
     {
       "group": "mobile",
       "name": "#/library/all fits 360px without horizontal scroll (dark)",
       "status": "pass",
-      "ms": 909
+      "ms": 905
     },
     {
       "group": "mobile",
       "name": "#/insights fits 360px without horizontal scroll (dark)",
       "status": "pass",
-      "ms": 984
+      "ms": 997
     },
     {
       "group": "mobile",
       "name": "#/settings/general fits 360px without horizontal scroll (dark)",
       "status": "pass",
-      "ms": 718
+      "ms": 715
     },
     {
       "group": "mobile",
       "name": "#/settings/ai fits 360px without horizontal scroll (dark)",
       "status": "pass",
-      "ms": 668
+      "ms": 670
     },
     {
       "group": "mobile",
       "name": "#/recall fits 360px without horizontal scroll (dark)",
       "status": "pass",
-      "ms": 1030
+      "ms": 1032
     },
     {
       "group": "mobile",
       "name": "#/shelf fits 360px without horizontal scroll (dark)",
       "status": "pass",
-      "ms": 1012
+      "ms": 1006
     },
     {
       "group": "mobile",
@@ -2097,156 +2097,156 @@
       "group": "mobile",
       "name": "#/wrapped fits 360px without horizontal scroll (dark)",
       "status": "pass",
-      "ms": 972
+      "ms": 939
     },
     {
       "group": "mobile",
       "name": "drawer opens, navigates and closes (dark)",
       "status": "pass",
-      "ms": 844
+      "ms": 712
     },
     {
       "group": "mobile",
       "name": "primary controls are at least 32px tall (dark)",
       "status": "pass",
-      "ms": 390
+      "ms": 356
     },
     {
       "group": "mobile",
       "name": "#/home fits 360px without horizontal scroll (light)",
       "status": "pass",
-      "ms": 613
+      "ms": 622
     },
     {
       "group": "mobile",
       "name": "#/library/all fits 360px without horizontal scroll (light)",
       "status": "pass",
-      "ms": 778
+      "ms": 694
     },
     {
       "group": "mobile",
       "name": "#/insights fits 360px without horizontal scroll (light)",
       "status": "pass",
-      "ms": 990
+      "ms": 956
     },
     {
       "group": "mobile",
       "name": "#/settings/general fits 360px without horizontal scroll (light)",
       "status": "pass",
-      "ms": 661
+      "ms": 658
     },
     {
       "group": "mobile",
       "name": "#/settings/ai fits 360px without horizontal scroll (light)",
       "status": "pass",
-      "ms": 649
+      "ms": 648
     },
     {
       "group": "mobile",
       "name": "#/recall fits 360px without horizontal scroll (light)",
       "status": "pass",
-      "ms": 992
+      "ms": 1002
     },
     {
       "group": "mobile",
       "name": "#/shelf fits 360px without horizontal scroll (light)",
       "status": "pass",
-      "ms": 987
+      "ms": 951
     },
     {
       "group": "mobile",
       "name": "#/ask fits 360px without horizontal scroll (light)",
       "status": "pass",
-      "ms": 928
+      "ms": 956
     },
     {
       "group": "mobile",
       "name": "#/wrapped fits 360px without horizontal scroll (light)",
       "status": "pass",
-      "ms": 952
+      "ms": 978
     },
     {
       "group": "mobile",
       "name": "drawer opens, navigates and closes (light)",
       "status": "pass",
-      "ms": 758
+      "ms": 718
     },
     {
       "group": "mobile",
       "name": "primary controls are at least 32px tall (light)",
       "status": "pass",
-      "ms": 357
+      "ms": 350
     },
     {
       "group": "stress",
       "name": "10,000 posts: seed the library",
       "status": "pass",
-      "ms": 5431
+      "ms": 4193
     },
     {
       "group": "stress",
       "name": "10,000 posts: library paints and the full library loads",
       "status": "pass",
-      "ms": 2577,
+      "ms": 3138,
       "data": {
-        "paintedMs": 1419,
-        "completeMs": 2128,
-        "longTaskMs": 716
+        "paintedMs": 1810,
+        "completeMs": 2586,
+        "longTaskMs": 662
       }
     },
     {
       "group": "stress",
       "name": "10,000 posts: search answers each keystroke",
       "status": "pass",
-      "ms": 1652,
+      "ms": 1608,
       "data": {
-        "keyMedianMs": 134,
-        "keyMaxMs": 161
+        "keyMedianMs": 116,
+        "keyMaxMs": 166
       }
     },
     {
       "group": "stress",
       "name": "10,000 posts: the oldest post is reachable",
       "status": "pass",
-      "ms": 699,
+      "ms": 696,
       "data": {
-        "oldestMs": 57
+        "oldestMs": 52
       }
     },
     {
       "group": "stress",
       "name": "50,000 posts: seed the library",
       "status": "pass",
-      "ms": 57985
+      "ms": 42544
     },
     {
       "group": "stress",
       "name": "50,000 posts: library paints and the full library loads",
       "status": "pass",
-      "ms": 5131,
+      "ms": 5832,
       "data": {
-        "paintedMs": 1694,
-        "completeMs": 4500,
-        "longTaskMs": 895
+        "paintedMs": 2601,
+        "completeMs": 5146,
+        "longTaskMs": 841
       }
     },
     {
       "group": "stress",
       "name": "50,000 posts: search answers each keystroke",
       "status": "pass",
-      "ms": 2787,
+      "ms": 2542,
       "data": {
-        "keyMedianMs": 281,
-        "keyMaxMs": 468
+        "keyMedianMs": 233,
+        "keyMaxMs": 441
       }
     },
     {
       "group": "stress",
       "name": "50,000 posts: the oldest post is reachable",
       "status": "pass",
-      "ms": 727,
+      "ms": 698,
       "data": {
-        "oldestMs": 99
+        "oldestMs": 46
       }
     }
   ]

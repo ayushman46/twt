@@ -82,19 +82,23 @@ Recall, Shelf, Wrapped, search and categories run entirely on your device. Ask, 
 
 ## Status
 
-As of October 27, 2026. Every row says how it was checked.
+As of October 28, 2026. Every row says how it was checked.
 
 | Area | State | How it's checked |
 |---|---|---|
-| Library, layouts, search and operators, detail panel, bulk actions, command palette | Working | 358 unit tests and 339 end-to-end browser checks (desktop, tablet and phone; dark and light) |
+| Sync from x.com | Working against a simulated x.com; not yet verified against a live X account | The real built extension runs in Chrome against a local x.com simulator: full and quick sync over fetch and XHR, rate-limit retry, live save and remove, logged-out handling, popup and console (13 checks, also passing on a deliberately loaded CPU) |
+| Reading X's data | Working | Parser tests against recorded X responses, plus 2,700 fuzzed and malformed payloads that must never crash or store a bad value |
+| Library, layouts, search and operators, detail panel, bulk actions, command palette | Working | 437 unit tests and 339 end-to-end browser checks (desktop, tablet and phone; dark and light) |
+| Search in Indian scripts | Working | Hindi, Bengali, Tamil, Urdu and mixed-script queries; equivalent Unicode spellings match |
 | Categories, including Hindi, Hinglish and Indian scripts | Working | Unit tests and a labeled evaluation set |
-| Recall, Shelf, Wrapped | Working | Unit tests and browser checks |
-| Export (Markdown, CSV, JSON) and re-import | Working | Browser tests compare each file with the database |
+| Recall, Shelf, Wrapped | Working | Unit tests, property tests on empty to 5,000-post libraries, and browser checks |
+| Export (Markdown, CSV, JSON) and re-import | Working | Exact JSON round trip; 13 malformed or hostile backup files are rejected without touching the library; CSV cells can't run as spreadsheet formulas |
+| Upgrading from an earlier version | Working | A database from the previous version keeps every post, category, collection and index |
 | Large libraries | Working | 10,000 and 50,000-post stress tests: first screen in about 1 s and 2 s |
+| Memory | No leaks found | 400 screen visits on a 10,000-post library: DOM nodes and listeners stay flat, heap +3 % |
 | Accessibility | Working | axe-core: 0 violations on 10 screens × 2 themes × desktop and phone |
-| Hindi UI and eight beta Indian languages | Working for the core app | Dictionary tests and screenshots; Recall, Shelf, Ask and Wrapped are English for now |
-| Website (English and Hindi) | Working | Production build, lint and route checks |
-| Sync from x.com | Built, not yet verified against a live X account | Parser tests against recorded X responses |
+| Hindi UI and eight beta Indian languages | Working for the core app | Every screen in Hindi on desktop and phone in both themes (44 checks for overflow and clipped text); Recall, Shelf, Ask and Wrapped are English for now |
+| Website (English and Hindi) | Working | 723 automated checks on the production build: every page in both themes on desktop and phone (accessibility, overflow, console errors, SEO), pricing toggles, language switch, mobile menu, downloads, and 181 API checks with malformed and oversized requests. Lighthouse: accessibility, best practices and SEO 100 on every page; performance 79–84 under default mobile throttling on a slow test PC |
 | Ask, translation and AI sorting | Built; request handling tested with mocks | Needs a real NVIDIA key to verify answers |
 | twtdash Pro (licensing and hosted AI) | Built, not configured | Needs Lemon Squeezy and an NVIDIA key on the server |
 
@@ -224,7 +228,7 @@ Measured on production builds with a 10,000-post library and 4× CPU throttling 
 | Search keystroke | 2.0 s | **1.3 s** |
 | JavaScript heap | 55 MB | **26 MB** |
 
-At full speed on a normal PC: first content in 1.09 s, search at 108 ms per keystroke, scrolling at 59.5 FPS with no janky frames, and a jump to the oldest of 10,000 posts in 81 ms.
+At full speed on a normal PC: first content in about 1 s, scrolling at 59.5 FPS with no janky frames, and a jump to the oldest of 10,000 posts in 81 ms. Search narrows its results as you type: 42 ms per keystroke at 10,000 posts and 150 ms at 50,000.
 
 ## Pro and the hosted API
 
@@ -264,7 +268,15 @@ npm run release          # test, package, copy the downloads and build the site
 ```bash
 cd apps/extension
 node bench/e2e/run.mjs                 # end-to-end browser tests (routes, library, bulk, data, theme, popup, mobile, stress…)
+node bench/x-sim/run.mjs               # the real built extension against a simulated x.com
 node bench/qa/a11y.mjs --build         # accessibility audit with axe-core
+node bench/qa/hindi.mjs                # every screen in Hindi, desktop and phone
+node bench/qa/leak.mjs                 # memory-leak check on a 10,000-post library
+
+cd ../web
+npx next build && npx next start -p 3302   # then, in another terminal:
+node tests/site-check.mjs              # website and API checks
+node tests/lighthouse.mjs              # Lighthouse on every page
 node bench/demo-video.mjs              # re-record the demo video
 PERF_TESTS=1 npx vitest run            # include the timing tests
 NVIDIA_API_KEY=nvapi-… npm run test:live   # real requests through every AI model

@@ -11,6 +11,16 @@ import type { Article, Author, LinkCard, LinkRef, Media, Poll, QuotedTweet, Twee
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Json = any;
 
+// Typed readers: a field of the wrong type reads as missing, so a schema change
+// can never put a number where a string belongs (or NaN into a count).
+const str = (v: Json): string | undefined => (typeof v === 'string' ? v : undefined);
+const arr = (v: Json): Json[] => (Array.isArray(v) ? v : []);
+const obj = (v: Json): Json => (v && typeof v === 'object' ? v : {});
+function num(v: Json): number | undefined {
+  const n = typeof v === 'number' ? v : typeof v === 'string' && v.trim() ? Number(v) : NaN;
+  return Number.isFinite(n) ? n : undefined;
+}
+
 const TWITTER_EPOCH = 1288834974657n;
 
 export function snowflakeToMs(id: string | undefined | null): number | undefined {
@@ -53,42 +63,43 @@ export function unwrapTweet(result: Json): Json | null {
 
 function parseAuthor(userResult: Json, fallbackId?: string): Author {
   const u = userResult && (userResult.legacy || userResult.core) ? userResult : null;
-  const legacy = u?.legacy ?? {};
-  const avatarRaw: string = u?.avatar?.image_url ?? legacy.profile_image_url_https ?? '';
+  const legacy = obj(u?.legacy);
+  const avatarRaw = str(u?.avatar?.image_url) ?? str(legacy.profile_image_url_https) ?? '';
   return {
     id: String(u?.rest_id ?? fallbackId ?? ''),
-    name: u?.core?.name ?? legacy.name ?? '',
-    handle: u?.core?.screen_name ?? legacy.screen_name ?? '',
+    name: str(u?.core?.name) ?? str(legacy.name) ?? '',
+    handle: str(u?.core?.screen_name) ?? str(legacy.screen_name) ?? '',
     avatar: avatarRaw.replace('_normal.', '_bigger.'),
     verified: Boolean(u?.is_blue_verified || u?.verification?.verified || legacy.verified),
     // `legacy` was dropped from user objects in July 2026; counts moved to relationship_counts.
-    followers: u?.relationship_counts?.followers ?? legacy.followers_count ?? undefined,
+    followers: num(u?.relationship_counts?.followers) ?? num(legacy.followers_count),
   };
 }
 
 function parseMedia(legacy: Json): Media[] {
-  const list: Json[] = legacy?.extended_entities?.media ?? legacy?.entities?.media ?? [];
+  const list = arr(legacy?.extended_entities?.media ?? legacy?.entities?.media);
   const out: Media[] = [];
   for (const m of list) {
-    if (!m?.media_url_https) continue;
+    const url = str(m?.media_url_https);
+    if (!url) continue;
     const type: Media['type'] = m.type === 'video' ? 'video' : m.type === 'animated_gif' ? 'gif' : 'photo';
     let videoUrl: string | undefined;
-    const variants: Json[] | undefined = m.video_info?.variants;
-    if (variants?.length) {
+    const variants = arr(m.video_info?.variants);
+    if (variants.length) {
       const mp4 = variants
-        .filter((v) => v.content_type === 'video/mp4' && v.url)
-        .sort((a, b) => (b.bitrate ?? 0) - (a.bitrate ?? 0));
+        .filter((v) => v?.content_type === 'video/mp4' && str(v.url))
+        .sort((a, b) => (num(b.bitrate) ?? 0) - (num(a.bitrate) ?? 0));
       // Prefer a mid bitrate for smooth inline playback.
       videoUrl = (mp4.length > 2 ? mp4[1] : mp4[0])?.url;
     }
     out.push({
       type,
-      url: m.media_url_https,
-      width: m.original_info?.width,
-      height: m.original_info?.height,
-      alt: m.ext_alt_text || undefined,
+      url,
+      width: num(m.original_info?.width),
+      height: num(m.original_info?.height),
+      alt: str(m.ext_alt_text) || undefined,
       videoUrl,
-      durationMs: m.video_info?.duration_millis,
+      durationMs: num(m.video_info?.duration_millis),
     });
   }
   return out;
@@ -108,69 +119,70 @@ function parseText(raw: Json, legacy: Json, quotedId?: string): TextResult {
   let text: string;
   let entities: Json;
   let isNote = false;
-  if (note?.text) {
+  if (str(note?.text)) {
     text = decodeEntities(note.text);
-    entities = note.entity_set ?? {};
+    entities = obj(note.entity_set);
     isNote = true;
   } else {
     // X's indices are code points over the *unescaped* text, so decode first.
     // Only the start of display_text_range is used (it drops leading reply
     // mentions); trailing media/quote links are removed by value below, which
     // stays correct even when the range end is off.
-    const full = decodeEntities(legacy.full_text ?? legacy.text ?? '');
-    const range: [number, number] | undefined = legacy.display_text_range;
-    text = range?.[0] ? Array.from(full).slice(range[0]).join('') : full;
-    entities = legacy.entities ?? {};
+    const full = decodeEntities(str(legacy.full_text) ?? str(legacy.text) ?? '');
+    const start = num(legacy.display_text_range?.[0]);
+    text = start && start > 0 ? Array.from(full).slice(start).join('') : full;
+    entities = obj(legacy.entities);
   }
 
   const tco = new Map<string, string>();
   const links: LinkRef[] = [];
   const seenLinks = new Set<string>();
-  const urlEntities: Json[] = [...(entities.urls ?? []), ...(isNote ? (legacy.entities?.urls ?? []) : [])];
+  const urlEntities = [...arr(entities.urls), ...(isNote ? arr(legacy.entities?.urls) : [])];
   for (const u of urlEntities) {
-    if (!u?.url) continue;
-    const expanded: string = u.expanded_url ?? u.url;
-    tco.set(u.url, expanded);
+    const short = str(u?.url);
+    if (!short) continue;
+    const expanded = str(u.expanded_url) ?? short;
+    tco.set(short, expanded);
     const statusMatch = expanded.match(STATUS_URL_RE);
     if (statusMatch && quotedId && statusMatch[1] === quotedId) {
-      text = text.split(u.url).join('');
+      text = text.split(short).join('');
       continue;
     }
-    text = text.split(u.url).join(expanded);
+    text = text.split(short).join(expanded);
     if (!statusMatch && !seenLinks.has(expanded)) {
       seenLinks.add(expanded);
-      links.push({ url: expanded, display: u.display_url ?? expanded, domain: domainOf(expanded) });
+      links.push({ url: expanded, display: str(u.display_url) ?? expanded, domain: domainOf(expanded) });
     }
   }
-  const mediaList: Json[] = legacy.extended_entities?.media ?? legacy.entities?.media ?? [];
-  for (const m of mediaList) if (m?.url) text = text.split(m.url).join('');
+  const mediaList = arr(legacy.extended_entities?.media ?? legacy.entities?.media);
+  for (const m of mediaList) if (str(m?.url)) text = text.split(m.url).join('');
   // Leftover quote permalink (outside entities on some payloads).
-  const permalink: string | undefined = legacy.quoted_status_permalink?.url;
+  const permalink = str(legacy.quoted_status_permalink?.url);
   if (permalink) text = text.split(permalink).join('');
 
-  const hashtags: string[] = (entities.hashtags ?? []).map((h: Json) => String(h.text ?? '')).filter(Boolean);
-  const mentions: string[] = (entities.user_mentions ?? []).map((m: Json) => String(m.screen_name ?? '')).filter(Boolean);
+  const hashtags: string[] = arr(entities.hashtags).map((h: Json) => str(h?.text) ?? '').filter(Boolean);
+  const mentions: string[] = arr(entities.user_mentions).map((m: Json) => str(m?.screen_name) ?? '').filter(Boolean);
   return { text: text.replace(/[ \t]+\n/g, '\n').trim(), links, hashtags, mentions, isNote, tco };
 }
 
 function bindingValues(cardLegacy: Json): Record<string, Json> {
   const bv: Record<string, Json> = {};
-  for (const b of cardLegacy?.binding_values ?? []) if (b?.key) bv[b.key] = b.value;
+  for (const b of arr(cardLegacy?.binding_values)) if (str(b?.key)) bv[b.key] = b.value;
   return bv;
 }
 
 function parsePoll(cardLegacy: Json): Poll | undefined {
-  const name: string = cardLegacy?.name ?? '';
+  const name = str(cardLegacy?.name) ?? '';
   if (!/poll\d?choice/.test(name)) return undefined;
   const bv = bindingValues(cardLegacy);
   const options: Poll['options'] = [];
   for (let i = 1; i <= 4; i++) {
-    const label = bv[`choice${i}_label`]?.string_value;
+    const label = str(bv[`choice${i}_label`]?.string_value);
     if (!label) break;
-    options.push({ label, votes: Number(bv[`choice${i}_count`]?.string_value ?? 0) || 0 });
+    options.push({ label, votes: num(bv[`choice${i}_count`]?.string_value) ?? 0 });
   }
   if (!options.length) return undefined;
-  const end = Date.parse(bv.end_datetime_utc?.string_value ?? '');
+  const end = Date.parse(str(bv.end_datetime_utc?.string_value) ?? '');
   return { options, endsAt: Number.isFinite(end) ? end : undefined };
 }
 
@@ -178,14 +190,14 @@ function parseUnifiedCard(json: string): LinkCard | undefined {
   try {
     const uc = JSON.parse(json);
     const dest = Object.values(uc.destination_objects ?? {})[0] as Json;
-    const url: string | undefined = dest?.data?.url_data?.url;
+    const url = str(dest?.data?.url_data?.url);
     let title: string | undefined;
     for (const c of Object.values(uc.component_objects ?? {}) as Json[]) {
-      title ??= c?.data?.title?.content;
+      title ??= str(c?.data?.title?.content);
     }
     const media = Object.values(uc.media_entities ?? {})[0] as Json;
     if (!url) return undefined;
-    return { url, title, image: media?.media_url_https, domain: domainOf(url) };
+    return { url, title, image: str(media?.media_url_https), domain: domainOf(url) };
   } catch {
     return undefined;
   }
@@ -194,13 +206,14 @@ function parseUnifiedCard(json: string): LinkCard | undefined {
 function parseCard(raw: Json, tco: Map<string, string>): LinkCard | undefined {
   const cardLegacy = raw.card?.legacy;
   if (!cardLegacy) return undefined;
-  const name: string = cardLegacy.name ?? '';
+  const name = str(cardLegacy.name) ?? '';
   if (/poll\d?choice/.test(name)) return undefined;
   const bv = bindingValues(cardLegacy);
-  if (bv.unified_card?.string_value) return parseUnifiedCard(bv.unified_card.string_value);
-  const str = (k: string): string | undefined => bv[k]?.string_value || undefined;
-  const img = (k: string): string | undefined => bv[k]?.image_value?.url || undefined;
-  const title = str('title');
+  const unified = str(bv.unified_card?.string_value);
+  if (unified) return parseUnifiedCard(unified);
+  const text = (k: string): string | undefined => str(bv[k]?.string_value) || undefined;
+  const img = (k: string): string | undefined => str(bv[k]?.image_value?.url) || undefined;
+  const title = text('title');
   const image =
     img('summary_photo_image_large') ??
     img('thumbnail_image_large') ??
@@ -208,16 +221,16 @@ function parseCard(raw: Json, tco: Map<string, string>): LinkCard | undefined {
     img('photo_image_full_size_large') ??
     img('summary_photo_image') ??
     img('thumbnail_image');
-  const rawUrl = str('card_url') ?? cardLegacy.url ?? '';
+  const rawUrl = text('card_url') ?? str(cardLegacy.url) ?? '';
   const url = tco.get(rawUrl) ?? rawUrl;
   if (!title && !image) return undefined;
   if (!url || /^card:\/\//.test(url)) return undefined;
   return {
     url,
     title,
-    description: str('description'),
+    description: text('description'),
     image,
-    domain: str('vanity_url') ?? str('domain') ?? domainOf(url),
+    domain: text('vanity_url') ?? text('domain') ?? domainOf(url),
   };
 }
 
@@ -226,8 +239,8 @@ function parseArticle(raw: Json): Article | undefined {
   if (!art?.title) return undefined;
   return {
     title: String(art.title),
-    preview: art.preview_text || undefined,
-    cover: art.cover_media?.media_info?.original_img_url || undefined,
+    preview: str(art.preview_text) || undefined,
+    cover: str(art.cover_media?.media_info?.original_img_url) || undefined,
   };
 }
 
@@ -260,14 +273,14 @@ export function normalizeTweet(input: Json, nested = false, hops = 0): TweetData
   }
 
   const { text, links, hashtags, mentions, isNote, tco } = parseText(raw, legacy, quoted?.id ?? legacy.quoted_status_id_str);
-  const parsedDate = Date.parse(legacy.created_at ?? '');
+  const parsedDate = Date.parse(str(legacy.created_at) ?? '');
   const createdAt = Number.isFinite(parsedDate) ? parsedDate : (snowflakeToMs(id) ?? Date.now());
 
   return {
     id,
     url: tweetUrl(author.handle, id),
     text,
-    lang: legacy.lang ?? 'und',
+    lang: str(legacy.lang) ?? 'und',
     createdAt,
     author,
     media: parseMedia(legacy),
@@ -279,16 +292,16 @@ export function normalizeTweet(input: Json, nested = false, hops = 0): TweetData
     quoted,
     article: parseArticle(raw),
     metrics: {
-      likes: legacy.favorite_count ?? 0,
-      retweets: legacy.retweet_count ?? 0,
-      replies: legacy.reply_count ?? 0,
-      quotes: legacy.quote_count ?? 0,
-      bookmarks: legacy.bookmark_count ?? 0,
-      views: Number(raw.views?.count ?? 0) || 0,
+      likes: num(legacy.favorite_count) ?? 0,
+      retweets: num(legacy.retweet_count) ?? 0,
+      replies: num(legacy.reply_count) ?? 0,
+      quotes: num(legacy.quote_count) ?? 0,
+      bookmarks: num(legacy.bookmark_count) ?? 0,
+      views: num(raw.views?.count) ?? 0,
     },
     isReply: Boolean(legacy.in_reply_to_status_id_str),
-    replyTo: legacy.in_reply_to_screen_name || undefined,
-    conversationId: legacy.conversation_id_str || undefined,
+    replyTo: str(legacy.in_reply_to_screen_name) || undefined,
+    conversationId: str(legacy.conversation_id_str) || undefined,
     isNote,
   };
 }
@@ -332,7 +345,7 @@ export function parseTimeline(json: Json): TimelineParseResult {
   const handleItem = (ic: Json, sortIndex?: string) => {
     if (!ic) return;
     if (ic.cursorType) {
-      if (ic.cursorType === 'Bottom') cursorBottom = ic.value;
+      if (ic.cursorType === 'Bottom') cursorBottom = str(ic.value) ?? cursorBottom;
       return;
     }
     const res = ic.tweet_results?.result;
@@ -342,21 +355,23 @@ export function parseTimeline(json: Json): TimelineParseResult {
   };
 
   const handleEntry = (entry: Json) => {
-    if (!entry) return;
+    if (!entry || typeof entry !== 'object') return;
     entryCount++;
-    const entryId: string = entry.entryId ?? '';
-    const content = entry.content ?? {};
+    const entryId = str(entry.entryId) ?? '';
+    const content = obj(entry.content);
+    const sortIndex = str(entry.sortIndex);
     if (entryId.startsWith('promoted-')) return;
     if (entryId.startsWith('cursor-bottom') || content.cursorType === 'Bottom') {
-      cursorBottom = content.value ?? content.itemContent?.value ?? cursorBottom;
+      cursorBottom = str(content.value) ?? str(content.itemContent?.value) ?? cursorBottom;
       return;
     }
     if (entryId.startsWith('cursor-') || content.cursorType) return;
-    if (content.itemContent) handleItem(content.itemContent, entry.sortIndex);
-    else if (Array.isArray(content.items)) for (const it of content.items) handleItem(it?.item?.itemContent, entry.sortIndex);
+    if (content.itemContent) handleItem(content.itemContent, sortIndex);
+    else if (Array.isArray(content.items)) for (const it of content.items) handleItem(it?.item?.itemContent, sortIndex);
   };
 
   for (const ins of findInstructions(json)) {
+    if (!ins || typeof ins !== 'object') continue;
     if (Array.isArray(ins.entries)) ins.entries.forEach(handleEntry);
     if (ins.entry) handleEntry(ins.entry);
     if (Array.isArray(ins.moduleItems)) for (const mi of ins.moduleItems) handleItem(mi?.item?.itemContent, undefined);
@@ -404,7 +419,8 @@ export function parseBookmarkFolders(json: Json): XFolder[] {
       out.push({ id: String(v.id), name: String(v.name) });
       continue;
     }
-    for (const key of Object.keys(v)) {
+    // Children are pushed last-first so they pop in document order (X's folder order).
+    for (const key of Object.keys(v).reverse()) {
       const child = v[key];
       if (child && typeof child === 'object') stack.push({ v: child, d: d + 1 });
     }

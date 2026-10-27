@@ -1,0 +1,277 @@
+{
+  "at": "2026-10-27T20:53:19.378Z",
+  "summary": {
+    "total": 44,
+    "pass": 44,
+    "fail": 0,
+    "warn": 0,
+    "skip": 0
+  },
+  "results": [
+    {
+      "group": "hindi",
+      "name": "#/home in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1083
+    },
+    {
+      "group": "hindi",
+      "name": "#/library/all in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1681
+    },
+    {
+      "group": "hindi",
+      "name": "#/insights in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1583
+    },
+    {
+      "group": "hindi",
+      "name": "#/recall in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1508
+    },
+    {
+      "group": "hindi",
+      "name": "#/shelf in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1524
+    },
+    {
+      "group": "hindi",
+      "name": "#/ask in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1384
+    },
+    {
+      "group": "hindi",
+      "name": "#/wrapped in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1510
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/general in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1111
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/ai in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1146
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/categories in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1297
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/data in Hindi (dark/desktop)",
+      "status": "pass",
+      "ms": 1078
+    },
+    {
+      "group": "hindi",
+      "name": "#/home in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 1038
+    },
+    {
+      "group": "hindi",
+      "name": "#/library/all in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 1196
+    },
+    {
+      "group": "hindi",
+      "name": "#/insights in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 1396
+    },
+    {
+      "group": "hindi",
+      "name": "#/recall in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 1404
+    },
+    {
+      "group": "hindi",
+      "name": "#/shelf in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 1330
+    },
+    {
+      "group": "hindi",
+      "name": "#/ask in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 1304
+    },
+    {
+      "group": "hindi",
+      "name": "#/wrapped in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 1345
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/general in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 1051
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/ai in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 996
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/categories in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 1235
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/data in Hindi (dark/mobile)",
+      "status": "pass",
+      "ms": 1043
+    },
+    {
+      "group": "hindi",
+      "name": "#/home in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 840
+    },
+    {
+      "group": "hindi",
+      "name": "#/library/all in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 1235
+    },
+    {
+      "group": "hindi",
+      "name": "#/insights in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 1269
+    },
+    {
+      "group": "hindi",
+      "name": "#/recall in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 1264
+    },
+    {
+      "group": "hindi",
+      "name": "#/shelf in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 1276
+    },
+    {
+      "group": "hindi",
+      "name": "#/ask in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 1290
+    },
+    {
+      "group": "hindi",
+      "name": "#/wrapped in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 1199
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/general in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 1065
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/ai in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 955
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/categories in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 1177
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/data in Hindi (light/desktop)",
+      "status": "pass",
+      "ms": 900
+    },
+    {
+      "group": "hindi",
+      "name": "#/home in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 884
+    },
+    {
+      "group": "hindi",
+      "name": "#/library/all in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 1066
+    },
+    {
+      "group": "hindi",
+      "name": "#/insights in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 1315
+    },
+    {
+      "group": "hindi",
+      "name": "#/recall in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 1231
+    },
+    {
+      "group": "hindi",
+      "name": "#/shelf in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 1235
+    },
+    {
+      "group": "hindi",
+      "name": "#/ask in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 1180
+    },
+    {
+      "group": "hindi",
+      "name": "#/wrapped in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 1170
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/general in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 882
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/ai in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 885
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/categories in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 1015
+    },
+    {
+      "group": "hindi",
+      "name": "#/settings/data in Hindi (light/mobile)",
+      "status": "pass",
+      "ms": 904
+    }
+  ],
+  "screenshots": "C:\\Users\\Ayush\\AppData\\Local\\Temp\\claude\\C--Users-Ayush-Downloads-twt\\b4332329-e788-4b49-ad4a-dc77917b01c5\\scratchpad\\qa\\hindi-shots"
+}

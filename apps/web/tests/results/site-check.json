@@ -1,0 +1,5789 @@
+{
+  "baseUrl": "http://localhost:3302",
+  "finishedAt": "2026-10-27T22:17:13.590Z",
+  "durationMs": 109632,
+  "browser": "Chrome/156.0.8078.48",
+  "devLicenseChecks": true,
+  "summary": {
+    "total": 723,
+    "passed": 723,
+    "failed": 0,
+    "warnings": 0
+  },
+  "checks": [
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/terms",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "HTTP 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no horizontal overflow",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: exactly one <h1>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: <title>",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: meta description",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: canonical",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: html lang",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: indexable",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: hreflang alternates",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: og:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "SEO: twitter:image returns 200",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "images have alt text",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "dark",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "links/buttons/images have accessible names",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "desktop"
+    },
+    {
+      "group": "page",
+      "name": "no unused preloads",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no console errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no page errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "page",
+      "name": "no failed same-origin requests",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "scheme": "light",
+      "viewport": "phone"
+    },
+    {
+      "group": "links",
+      "name": "internal link resolves: /",
+      "status": "pass",
+      "details": "",
+      "page": "/, /install, /privacy, /terms, /hi, /hi/install"
+    },
+    {
+      "group": "links",
+      "name": "internal link resolves: /install",
+      "status": "pass",
+      "details": "",
+      "page": "/, /install, /privacy, /terms, /hi/install"
+    },
+    {
+      "group": "links",
+      "name": "internal link resolves: /hi",
+      "status": "pass",
+      "details": "",
+      "page": "/, /install, /privacy, /terms, /hi, /hi/install"
+    },
+    {
+      "group": "links",
+      "name": "internal link resolves: /privacy",
+      "status": "pass",
+      "details": "",
+      "page": "/, /install, /privacy, /terms, /hi, /hi/install"
+    },
+    {
+      "group": "links",
+      "name": "internal link resolves: /terms",
+      "status": "pass",
+      "details": "",
+      "page": "/, /install, /privacy, /terms, /hi, /hi/install"
+    },
+    {
+      "group": "links",
+      "name": "internal link resolves: /hi/install",
+      "status": "pass",
+      "details": "",
+      "page": "/install, /hi, /hi/install"
+    },
+    {
+      "group": "links",
+      "name": "internal link resolves: /downloads/twtdash-chrome.zip",
+      "status": "pass",
+      "details": "",
+      "page": "/install, /hi/install"
+    },
+    {
+      "group": "links",
+      "name": "internal link resolves: /downloads/twtdash-firefox.zip",
+      "status": "pass",
+      "details": "",
+      "page": "/install, /hi/install"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /#main",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /#features",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /#new",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /#pricing",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /#faq",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /install#chrome",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /install#firefox",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /#nvidia-key",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /install#first-sync",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /install#main",
+      "status": "pass",
+      "details": "",
+      "page": "/install"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /privacy#main",
+      "status": "pass",
+      "details": "",
+      "page": "/privacy"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /terms#main",
+      "status": "pass",
+      "details": "",
+      "page": "/terms"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /hi#main",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /hi#features",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /hi#new",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /hi#pricing",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /hi#faq",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /hi/install#chrome",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /hi/install#firefox",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /hi#nvidia-key",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /hi/install#first-sync",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "links",
+      "name": "anchor exists: /hi/install#main",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install"
+    },
+    {
+      "group": "links",
+      "name": "external links (not fetched)",
+      "status": "pass",
+      "details": "https://build.nvidia.com/ https://developer.chrome.com/docs/webstore/program-policies/policies https://github.com/ayushman46/twt/issues https://wa.me/?text=twtdash%3A%20%E0%A4%85%E0%A4%AA%E0%A4%A8%E0%A5%87%20%E0%A4%B8%E0%A4%BE%E0%A4%B0%E0%A5%87%20X%20bookmarks%20sync%20%E0%A4%95%E0%A4%B0%E0%A5%87%E0%A4%82%2C%20%E0%A4%B8%E0%A4%B2%E0%A5%80%E0%A4%95%E0%A5%87%20%E0%A4%B8%E0%A5%87%20%E0%A4%B0%E0%A4%96%E0%A5%87%E0%A4%82%20%E0%A4%94%E0%A4%B0%20%E0%A4%A4%E0%A5%81%E0%A4%B0%E0%A4%82%E0%A4%A4%20%E0%A4%96%E0%A5%8B%E0%A4%9C%E0%A5%87%E0%A4%82%E0%A5%A4%20Laptop%20%E0%A4%AA%E0%A4%B0%20install%20%E0%A4%95%E0%A4%B0%E0%A5%87%E0%A4%82%3A%20https%3A%2F%2Ftwtdash.vercel.app%2Fhi https://wa.me/?text=twtdash%3A%20sync%2C%20sort%20and%20search%20all%20your%20X%20bookmarks.%20Install%20it%20on%20your%20laptop%3A%20https%3A%2F%2Ftwtdash.vercel.app https://www.lemonsqueezy.com/ https://www.nvidia.com/en-us/about-nvidia/privacy-policy/"
+    },
+    {
+      "group": "site",
+      "name": "sitemap.xml lists every page",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "site",
+      "name": "sitemap.xml URLs return 200",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "site",
+      "name": "robots.txt references the sitemap",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "site",
+      "name": "robots.txt keeps /api out of the index",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "site",
+      "name": "unknown page returns 404",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "site",
+      "name": "404 page: one <h1>, link home, noindex",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "site",
+      "name": "404 page: no overflow",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "site",
+      "name": "404 page: axe (critical/serious)",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "site",
+      "name": "404 page: no errors",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "functional",
+      "name": "pricing: $ shown by default outside India",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "currency toggle: ₹ shows rupee prices",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "currency toggle: aria-pressed follows choice",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "period toggle: monthly changes prices",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "period toggle: aria-pressed follows choice",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "pricing with ₹ + monthly selected: axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop",
+      "scheme": "dark"
+    },
+    {
+      "group": "functional",
+      "name": "pricing with ₹ + monthly selected: axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop",
+      "scheme": "light"
+    },
+    {
+      "group": "functional",
+      "name": "currency choice persists after reload",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "period choice persists after reload",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "toggles switch back to $ yearly",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "pricing: no errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "pricing: $ shown by default outside India",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "currency toggle: ₹ shows rupee prices",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "currency toggle: aria-pressed follows choice",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "period toggle: monthly changes prices",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "period toggle: aria-pressed follows choice",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "pricing with ₹ + monthly selected: axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone",
+      "scheme": "dark"
+    },
+    {
+      "group": "functional",
+      "name": "pricing with ₹ + monthly selected: axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone",
+      "scheme": "light"
+    },
+    {
+      "group": "functional",
+      "name": "currency choice persists after reload",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "period choice persists after reload",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "toggles switch back to $ yearly",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "pricing: no errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "India detection: Asia/Kolkata → ₹ on /",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "functional",
+      "name": "India detection: Asia/Kolkata → ₹ on /install",
+      "status": "pass",
+      "details": "",
+      "page": "/install"
+    },
+    {
+      "group": "functional",
+      "name": "India detection: Asia/Kolkata → ₹ before first paint when opening /#pricing",
+      "status": "pass",
+      "details": "",
+      "page": "/#pricing"
+    },
+    {
+      "group": "functional",
+      "name": "India detection: Asia/Kolkata → ₹ on /#pricing",
+      "status": "pass",
+      "details": "",
+      "page": "/#pricing"
+    },
+    {
+      "group": "functional",
+      "name": "India detection: America/New_York → $ on /",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "functional",
+      "name": "India detection: America/New_York → $ on /install",
+      "status": "pass",
+      "details": "",
+      "page": "/install"
+    },
+    {
+      "group": "functional",
+      "name": "India detection: America/New_York → $ before first paint when opening /#pricing",
+      "status": "pass",
+      "details": "",
+      "page": "/#pricing"
+    },
+    {
+      "group": "functional",
+      "name": "India detection: America/New_York → $ on /#pricing",
+      "status": "pass",
+      "details": "",
+      "page": "/#pricing"
+    },
+    {
+      "group": "functional",
+      "name": "language switcher / → /hi",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "language switcher /hi → /",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "language switcher /install → /hi/install",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "language switcher /hi/install → /install",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "desktop"
+    },
+    {
+      "group": "functional",
+      "name": "language switcher / → /hi",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "language switcher /hi → /",
+      "status": "pass",
+      "details": "",
+      "page": "/hi",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "language switcher /install → /hi/install",
+      "status": "pass",
+      "details": "",
+      "page": "/install",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "language switcher /hi/install → /install",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: has items",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: first item open with expanded=true",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: other items closed with expanded=false",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: Enter opens an item (expanded=true)",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: Space closes it again (expanded=false)",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: Space opens it",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: keyboard focus is visible",
+      "status": "pass",
+      "details": "",
+      "page": "/"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: has items",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: first item open with expanded=true",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: other items closed with expanded=false",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: Enter opens an item (expanded=true)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: Space closes it again (expanded=false)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: Space opens it",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "functional",
+      "name": "FAQ: keyboard focus is visible",
+      "status": "pass",
+      "details": "",
+      "page": "/hi"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: starts closed",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: opens (aria-expanded=true, visible)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: page scroll not locked",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu open: axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone",
+      "scheme": "dark"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu open: axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone",
+      "scheme": "light"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: Tab walks the menu then leaves it (no trap)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: Escape closes and returns focus to the toggle",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: toggle button closes it",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: closes after following a link (/#features)",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: no errors",
+      "status": "pass",
+      "details": "",
+      "page": "/",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: starts closed",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: opens (aria-expanded=true, visible)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: page scroll not locked",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu open: axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone",
+      "scheme": "dark"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu open: axe WCAG 2.1 AA (critical/serious)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone",
+      "scheme": "light"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: Tab walks the menu then leaves it (no trap)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: Escape closes and returns focus to the toggle",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: toggle button closes it",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: closes after following a link (/hi#features)",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "mobile menu: no errors",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install",
+      "viewport": "phone"
+    },
+    {
+      "group": "functional",
+      "name": "install: download links point at the zips",
+      "status": "pass",
+      "details": "",
+      "page": "/install"
+    },
+    {
+      "group": "functional",
+      "name": "install: download links carry the download attribute",
+      "status": "pass",
+      "details": "",
+      "page": "/install"
+    },
+    {
+      "group": "functional",
+      "name": "install: download links point at the zips",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install"
+    },
+    {
+      "group": "functional",
+      "name": "install: download links carry the download attribute",
+      "status": "pass",
+      "details": "",
+      "page": "/hi/install"
+    },
+    {
+      "group": "functional",
+      "name": "download /downloads/twtdash-chrome.zip: 200, zip type, zip bytes",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "functional",
+      "name": "download /downloads/twtdash-firefox.zip: 200, zip type, zip bytes",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "GET /api/health → {ok:true, ai:boolean, licensing:boolean}",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "GET /api/health is not cached",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "GET /api/health sends CORS headers",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "OPTIONS /api/health → CORS preflight",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "OPTIONS /api/categorize → CORS preflight",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "OPTIONS /api/ask → CORS preflight",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "OPTIONS /api/license/activate → CORS preflight",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "OPTIONS /api/license/validate → CORS preflight",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize without auth → 401 {error:{code,message}}",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize 401 carries CORS headers",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize without instance header → 401",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize with a non-Bearer scheme → 401",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize with an absurd key → 401",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize with junk credentials → clean JSON error",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize with junk credentials → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask without auth → 401 {error:{code,message}}",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask 401 carries CORS headers",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask without instance header → 401",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask with a non-Bearer scheme → 401",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask with an absurd key → 401",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask with junk credentials → clean JSON error",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask with junk credentials → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize malformed JSON (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize malformed JSON (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize truncated JSON (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize truncated JSON (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize empty body (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize empty body (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON array (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON array (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON string (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON string (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON null (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON null (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize wrong field types (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize wrong field types (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize deeply nested JSON (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize deeply nested JSON (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize invalid UTF-8 (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize invalid UTF-8 (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize oversized body (authorized) → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize oversized chunked body (authorized) → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize oversized chunked body (authorized) is cut off early",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize malformed JSON (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize malformed JSON (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize truncated JSON (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize truncated JSON (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize empty body (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize empty body (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON array (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON array (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON string (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON string (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON null (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize JSON null (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize wrong field types (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize wrong field types (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize deeply nested JSON (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize deeply nested JSON (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize invalid UTF-8 (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize invalid UTF-8 (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize oversized body (unauthenticated) → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize oversized chunked body (unauthenticated) → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize oversized chunked body (unauthenticated) is cut off early",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask malformed JSON (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask malformed JSON (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask truncated JSON (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask truncated JSON (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask empty body (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask empty body (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON array (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON array (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON string (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON string (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON null (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON null (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask wrong field types (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask wrong field types (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask deeply nested JSON (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask deeply nested JSON (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask invalid UTF-8 (authorized) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask invalid UTF-8 (authorized) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask oversized body (authorized) → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask oversized chunked body (authorized) → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask oversized chunked body (authorized) is cut off early",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask malformed JSON (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask malformed JSON (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask truncated JSON (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask truncated JSON (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask empty body (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask empty body (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON array (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON array (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON string (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON string (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON null (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask JSON null (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask wrong field types (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask wrong field types (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask deeply nested JSON (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask deeply nested JSON (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask invalid UTF-8 (unauthenticated) → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask invalid UTF-8 (unauthenticated) → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask oversized body (unauthenticated) → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask oversized chunked body (unauthenticated) → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask oversized chunked body (unauthenticated) is cut off early",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate malformed JSON → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate malformed JSON → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate truncated JSON → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate truncated JSON → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate empty body → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate empty body → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate JSON array → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate JSON array → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate JSON string → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate JSON string → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate JSON null → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate JSON null → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate wrong field types → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate wrong field types → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate deeply nested JSON → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate deeply nested JSON → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate invalid UTF-8 → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate invalid UTF-8 → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate oversized body → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate oversized chunked body → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate oversized chunked body is cut off early",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate malformed JSON → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate malformed JSON → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate truncated JSON → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate truncated JSON → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate empty body → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate empty body → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate JSON array → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate JSON array → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate JSON string → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate JSON string → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate JSON null → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate JSON null → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate wrong field types → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate wrong field types → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate deeply nested JSON → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate deeply nested JSON → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate invalid UTF-8 → clean 4xx",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate invalid UTF-8 → error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate oversized body → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate oversized chunked body → 400/413",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate oversized chunked body is cut off early",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize invalid payload (authorized) → 400",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/categorize invalid payload (authorized) → 400",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask invalid payload (authorized) → 400",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask invalid payload (authorized) → 400",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/ask invalid payload (authorized) → 400",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate with a junk key → clean JSON",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate with a junk key → valid:false or an error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate with a junk key → clean JSON",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/validate with a junk key → valid:false or an error body",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/activate with a 5,000-char key → 400",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "GET /api/categorize → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "PUT /api/categorize → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "DELETE /api/categorize → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "PATCH /api/categorize → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "GET /api/ask → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "PUT /api/ask → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "DELETE /api/ask → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "PATCH /api/ask → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "GET /api/license/activate → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "PUT /api/license/activate → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "DELETE /api/license/activate → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "PATCH /api/license/activate → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "GET /api/license/validate → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "PUT /api/license/validate → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "DELETE /api/license/validate → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "PATCH /api/license/validate → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/health → 405, no HTML",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "GET /api/does-not-exist → JSON 404",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/does-not-exist → JSON 404",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "GET /api/license → JSON 404",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license → JSON 404",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "GET /api/license/does-not-exist → JSON 404",
+      "status": "pass",
+      "details": ""
+    },
+    {
+      "group": "api",
+      "name": "POST /api/license/does-not-exist → JSON 404",
+      "status": "pass",
+      "details": ""
+    }
+  ]
+}

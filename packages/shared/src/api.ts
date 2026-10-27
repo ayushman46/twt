@@ -119,6 +119,7 @@ export type ApiErrorCode =
   | 'license_invalid'
   | 'rate_limited'
   | 'bad_request'
+  | 'not_found'
   | 'refusal'
   | 'upstream_error'
   | 'server_misconfigured';

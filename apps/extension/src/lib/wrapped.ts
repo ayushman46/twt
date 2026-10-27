@@ -54,8 +54,12 @@ export type OffsetFn = (ts: number) => number;
  */
 export function makeOffsetFn(timeZone?: string): OffsetFn {
   let raw: OffsetFn;
+  // Probe only instants Date/Intl handle: a week probe next to the last valid date (8.64e15)
+  // throws, local time past it is NaN, Intl prints BCE years without a sign and Date.UTC
+  // reads years < 100 as 19xx. Offsets that far out are local mean time anyway.
+  const valid = (ts: number) => Math.max(-59_011_459_200_000, Math.min(8.64e15 - DAY, ts));
   if (!timeZone) {
-    raw = (ts) => -new Date(ts).getTimezoneOffset();
+    raw = (ts) => -new Date(valid(ts)).getTimezoneOffset();
   } else {
     const fmt = new Intl.DateTimeFormat('en-US', {
       timeZone,
@@ -67,7 +71,8 @@ export function makeOffsetFn(timeZone?: string): OffsetFn {
       minute: 'numeric',
       second: 'numeric',
     });
-    raw = (ts) => {
+    raw = (input) => {
+      const ts = valid(input);
       const parts = fmt.formatToParts(ts);
       const get = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? 0);
       const asUtc = Date.UTC(get('year'), get('month') - 1, get('day'), get('hour') % 24, get('minute'), get('second'));
@@ -757,7 +762,8 @@ function buildTimeline(
   else {
     if (!days.length) return { unit: 'month', buckets: [] };
     const { y, m } = civilFromDays(days[0]!);
-    fromKey = y * 12 + (m - 1);
+    // X launched in 2006: an older date is corrupt and would stretch the chart over millennia.
+    fromKey = Math.max(y * 12 + (m - 1), 2006 * 12);
   }
   const toKey = Math.max(fromKey, period === 'year' ? Math.min(nowKey, range.year * 12 + 11) : nowKey);
   if (period === 'all' && toKey - fromKey >= 36) {
